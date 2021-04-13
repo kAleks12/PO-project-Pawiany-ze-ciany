@@ -13,6 +13,7 @@ private:
     int posX_;
     int posY_;
 public:
+    Being();
     Being(std::string, int, int/*, int, int*/ );
     void Show();
     void ChangeHp(int);
