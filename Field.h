@@ -6,14 +6,14 @@
 
 class Field {
 
-    Being whatContains_[2];
+    Being* whatContains_[2];
     bool isEmpty_;
-    int xCoord_;
-    int yCoord_;
 public:
-    void addBeing(int,Being);
+    Field();
+    void addBeing(Being *);
     void removeBeing(int);
-    void removeBeing();
+    void showField();
+    bool isEmpty();
 };
 
 

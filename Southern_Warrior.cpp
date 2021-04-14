@@ -11,9 +11,9 @@ Southern_Warrior::Southern_Warrior()
     posY_ = 0;
 }
 Southern_Warrior::Southern_Warrior(std::string name, int attackDamage, int speed, std::string weaponName, int weaponDamage, bool isBoothHanded, int weight, std::string weaponName2, int weaponDamage2, bool isBoothHanded2, int weight2){
-    name_=name;
-    attackDamage_=attackDamage;
-    speed_=speed;
+    name_ = name;
+    attackDamage_ = attackDamage;
+    speed_ = speed;
     objWeapon_.fill(weaponName, weaponDamage, isBoothHanded, weight);
     objWeapon2_.fill(weaponName2, weaponDamage2, isBoothHanded2, weight2);
 }

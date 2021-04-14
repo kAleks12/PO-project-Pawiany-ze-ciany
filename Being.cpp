@@ -7,8 +7,8 @@ Being::Being(std::string name, int attackDamage, int speed/*, int startingPosX, 
 {}
 
 void Being::show() {
-    std::cout << "Name of the object: " << name_ << "\tHealth: " << healthPoints_ << "\tAttack damage: " << attackDamage_ << "\tSpeed: " << speed_ << std::endl;
-    std::cout << "position of the object: " << posX_<<","<<posY_<<" , is object alive? "<<isAlive_<<std::endl;
+    std::cout << "Hero's name: " << name_ << "\tHealth: " << healthPoints_ << "%\tAttack damage: " << attackDamage_ << "\tSpeed: " << speed_ << std::endl;
+    std::cout << "Hero's position: " << posX_ << "," << posY_ << " , is he alive? " << isAlive_ << std::endl;
 }
 void Being::changeHp(int hpModifier){
     if((healthPoints_ + hpModifier <= 100) && (healthPoints_ + hpModifier >= 0))
