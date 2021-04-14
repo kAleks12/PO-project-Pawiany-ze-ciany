@@ -4,24 +4,37 @@
 //     and
 // Michał Malewicz
 //
+#include "Being.h"
 
 #include <iostream>
 #include <windows.h>
-#include <time.h>
 #include <vector>
-#include "Being.h"
+#include <random>
+#include <cstdlib>
+#include <ctime>
+#include <thread>
+#include <chrono>
+#include <fstream>
 
 int main() {
-    std::vector < Being > istoty;
-    int rozmiar=100;
-    srand(time(NULL));
-    int los = (rand()%(2*rozmiar+1))-rozmiar;
-    for(int i=0;i<10;i++)
-    {
-        los = (rand()%(2*rozmiar+1))-rozmiar;
-        std::cout<<los<<std::endl;
+    //std::vector < Being > istoty;
+    std::ofstream file ("wynik.txt") ;
+    srand(time(nullptr));
+    std::random_device rd;
+    std::mt19937 mt(rd());
+    std::uniform_int_distribution<int> dist(1, 10);
+    for(int i=0; i<50;i++){
+        file << dist(mt) << " ++ " ;
     }
-    Being beka("Thomas",10,10);
+    file << std::endl << "===============================================" << std::endl;
+    for(int i=0; i<50;i++){
+        file << (rand () % 10) + 1 << " ++ " ;
+    }
+    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+
+
+
+    /*Being beka("Thomas",10,10);
     Being baka("Sheep",5,5);
     beka.Show();
     baka.Show();
@@ -35,4 +48,5 @@ int main() {
     tablica_bytow[0].Show();
 
     system("Pause");
+     */
 }
