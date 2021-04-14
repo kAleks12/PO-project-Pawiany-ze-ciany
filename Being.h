@@ -4,8 +4,8 @@
 #include <string>
 
 class Being {
-private:
-    int healthPoints_ ;
+protected:
+    int healthPoints_=100;
     std::string name_;
     int attackDamage_;
     int speed_;
