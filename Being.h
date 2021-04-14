@@ -15,9 +15,8 @@ protected:
 public:
     Being();
     Being(std::string, int, int/*, int, int*/ );
-    void Show();
-    void ChangeHp(int);
-
+    virtual void show();
+    void changeHp(int);
 };
 
 

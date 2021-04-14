@@ -6,13 +6,13 @@
 #include "Armor.h"
 
 class Knight:public Being{
-    Weapon hisWeapon_;
-    Armor hisArmor_;
+    Weapon objWeapon_;
+    Armor objArmor_;
 public:
     Knight();
-    void Show();
     Knight(std::string, int, int, std::string, int, bool, int, std::string, int, int);
 
+    void show() override;
 };
 
 

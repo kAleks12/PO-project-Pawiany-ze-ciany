@@ -7,11 +7,11 @@ class Armor {
 private:
     std::string name_;
     int armorPoints_;
-    int slowdown_;
+    int weight_;
 public:
     Armor();
-    void Show();
-    void Fill(std::string, int, int);
+    void show();
+    void fill(std::string, int, int);
 
 };
 

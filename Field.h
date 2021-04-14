@@ -13,7 +13,6 @@ class Field {
 public:
     void addBeing(int,Being);
     void removeBeing(int);
-
     void removeBeing();
 };
 

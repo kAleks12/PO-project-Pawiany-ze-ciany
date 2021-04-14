@@ -9,11 +9,11 @@ private:
     std::string name_;
     int damage_;
     bool bothHanded_;
-    int slowdown_;
+    int weight_;
 public:
     Weapon();
-    void Show();
-    void Fill(std::string, int, bool, int);
+    void show();
+    void fill(std::string, int, bool, int);
 };
 
 
