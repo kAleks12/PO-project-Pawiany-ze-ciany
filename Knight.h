@@ -5,6 +5,8 @@
 #include "Weapon.h"
 #include "Armor.h"
 
+#include <iostream>
+
 class Knight:public Being{
     Weapon objWeapon_;
     Armor objArmor_;

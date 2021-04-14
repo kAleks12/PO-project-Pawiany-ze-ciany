@@ -7,11 +7,10 @@
 #include "Slav.h"
 
 class Map {
-    Field map[100][100];
+    Field fields [100][100];
 public:
     void spawn(Being *, int, int);
     void remove(int, int, int);
-
 };
 
 #endif //PO_MAP_H

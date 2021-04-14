@@ -21,5 +21,3 @@ void Knight::show() {
     objWeapon_.show();
     objArmor_.show();
 }
-
-

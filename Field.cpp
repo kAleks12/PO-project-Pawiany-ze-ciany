@@ -16,9 +16,6 @@ void Field::addBeing( Being * hero) {
             whatContains_[1] = hero;
             isEmpty_ = false;
         }
-
-
-
     }
 
 }
@@ -26,7 +23,6 @@ void Field::addBeing( Being * hero) {
 void Field::removeBeing(int position) {
     isEmpty_ = true;
     whatContains_[position] = nullptr;
-
 }
 
 void Field::showField() {
@@ -46,7 +42,4 @@ void Field::showField() {
     }
 }
 
-bool Field::isEmpty() {
-    return isEmpty_;
-
-}
+bool Field::isEmpty() {return isEmpty_;}

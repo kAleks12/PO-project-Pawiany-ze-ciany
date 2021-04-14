@@ -18,7 +18,6 @@ Southern_Warrior::Southern_Warrior(std::string name, int attackDamage, int speed
     objWeapon2_.fill(weaponName2, weaponDamage2, isBoothHanded2, weight2);
 }
 
-
 void Southern_Warrior::show() {
     Being::show();
     objWeapon_.show();
