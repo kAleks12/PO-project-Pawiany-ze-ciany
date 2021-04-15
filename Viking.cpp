@@ -9,13 +9,6 @@ int Viking::numOfVikingsAlive_ = 0;
 
 Viking::Viking() {
 
-    name_ = "empty";
-    strength_ = 0;
-    speed_ = 0;
-    isAlive_ = true;
-    posX_ = 0;
-    posY_ = 0;
-
     id_[0] = 'V';
     id_[1] = name_[0];
     if(numOfVikingsCreated_<10){
@@ -34,18 +27,18 @@ Viking::Viking() {
 Viking::Viking(std::string name) {
 
     std::random_device rd;
-    std::mt19937 mt(rd());
+    std::mt19937 randomSeed(rd());
 
     name_ = name;
     speed_ = 2;
 
     std::uniform_int_distribution <int> strengthRange (17,20);
-    strength_=strengthRange(mt);
+    strength_=strengthRange(randomSeed);
 
 
     std::uniform_int_distribution <int> weaponDamageRange (20,23);
-    objWeapon_.fill("Axe", weaponDamageRange(mt), false, 3);
-    objArmor_.fill("Shield", 10, 2);
+    objWeapon_.fill("Axe", weaponDamageRange(randomSeed), 3);
+    objArmor_.fill(10, 2);
 
     id_[0] = 'V';
     id_[1] = name_[0];

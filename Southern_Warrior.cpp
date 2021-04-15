@@ -6,12 +6,6 @@ int Southern_Warrior::numOfWarriorAlive_ = 0;
 
 Southern_Warrior::Southern_Warrior()
 {
-    name_ = "empty";
-    strength_ = 0;
-    speed_ = 0;
-    isAlive_ = true;
-    posX_ = 0;
-    posY_ = 0;
 
     id_[0] = 'N';
     id_[1] = name_[0];
@@ -41,8 +35,8 @@ Southern_Warrior::Southern_Warrior(std::string name){
 
 
     std::uniform_int_distribution <int> weaponDamageRange (10,15);//nie nice
-    objWeapon_.fill("Bulat", weaponDamageRange(mt), false, 4);
-    objWeapon2_.fill("Bulat", weaponDamageRange(mt), false, 4);
+    objWeapon_.fill("Bulat", weaponDamageRange(mt), 4);
+    objWeapon2_.fill("Bulat", weaponDamageRange(mt), 4);
 
     id_[0] = 'N';
     id_[1] = name_[0];

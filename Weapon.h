@@ -7,13 +7,12 @@
 class Weapon {
 private:
     std::string name_;
-    int damage_;
-    bool bothHanded_;
+    int attackPoints_;
     int weight_;
 public:
     Weapon();
     void show();
-    void fill(std::string, int, bool, int);
+    void fill(std::string, int, int);
 };
 
 

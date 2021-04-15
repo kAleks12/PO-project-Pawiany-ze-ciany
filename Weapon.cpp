@@ -1,15 +1,14 @@
 #include <iostream>
 #include "Weapon.h"
 
-Weapon::Weapon(): name_{"empty"}, damage_{0}, bothHanded_{false}, weight_{0}
+Weapon::Weapon(): name_{"empty"}, attackPoints_{0}, weight_{0}
 {}
 
 void Weapon::show() {
-     std::cout << "Weapon name: " << name_ << "\tWeapon's damage: " << damage_ << "\tWeapons weight: " << weight_ << "\tIs it two-handed? " << bothHanded_ <<  std::endl;
+     std::cout << "Weapon name: " << name_ << "\tWeapon's damage: " << attackPoints_ << "\tWeapons weight: " << weight_ << std::endl;
 }
-void Weapon::fill(std::string weaponName, int weaponDamage, bool isBoothHanded, int weight) {
+void Weapon::fill(std::string weaponName, int weaponDamage, int weight) {
     name_= weaponName;
-    damage_= weaponDamage;
-    bothHanded_= isBoothHanded;
+    attackPoints_= weaponDamage;
     weight_= weight;
 }

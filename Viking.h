@@ -9,7 +9,6 @@
 #include "Weapon.h"
 #include "Armor.h"
 
-
 class Viking: public Being {
 private:
     static int numOfVikingsCreated_;

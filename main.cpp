@@ -29,8 +29,7 @@ int attack(int armor, int weapon) {
 */
 
 int main() {
-    std::fstream fNames;
-    fNames.open( "names.txt", std::fstream::in );
+    std::ifstream fNames("names.txt");
     /*
     std::vector < Being > beings;
 
@@ -62,27 +61,32 @@ int main() {
     aleks.show();*/
 
     std::random_device rd;
-    std::mt19937 mt(rd());
-    std::uniform_int_distribution <int> slavLimRange (0,99);
+    std::mt19937 randomSeed(rd());
 
     Map adventureMap;
+    int numOfObjLim = 400;
 
-    int numOfObjLim;
+    while(numOfObjLim > 225) {
+        std::cout << "Give me amount of objects to create:  ";
+        std::cin >> numOfObjLim;
+    }
 
-    std::cout << "Give me amount of objects to create " << std::endl;
-    //std::cin >> numOfObjLim;
-    numOfObjLim = 1;
-
-    int slavLim = slavLimRange(mt);
-    slavLim = 5;
-
-
+    int numOfSlavs, numOfNomads, numOfKnights;
+    if(numOfObjLim >= 100) {
+        std::uniform_int_distribution<int> slavsLimRange(40, 99);
+        numOfSlavs = slavsLimRange(randomSeed);
+        numOfNomads = 75 - (static_cast<int>((225 - static_cast <float> (numOfSlavs))*(0.75))%100);
+        numOfKnights = 225 - numOfSlavs - numOfNomads;
+    }
+    else {
+        std::uniform_int_distribution <int> slavLimRange (0,numOfObjLim);
+    }
+    std::cout << numOfSlavs << " ++ " << numOfNomads << " ++ " <<  numOfKnights << "\n";
+    /*
     if(fNames.good()) {
-        std::string name;
-        fNames >> name;
-        std::cout << fNames.is_open() << std::endl;
 
-        for (int i = 0; i < slavLim; i++) {
+        std::string name;
+        for (int i = 0; i < numOfSlavs; i++) {
             //fNames >> name;
             std::cout << name << std::endl;
             Slav * tmp = new Slav();
@@ -97,13 +101,5 @@ int main() {
         std::cout << "Plik nie zostal znaleziony" << std::endl;
         return 0;
     }
-
-
-
-
-
-
-
-
-
+    */
 }

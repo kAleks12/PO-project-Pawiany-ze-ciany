@@ -5,13 +5,6 @@ int Slav::numOfSlavsAlive_ = 0;
 
 Slav::Slav() {
 
-    name_ = "empty";
-    strength_ = 0;
-    speed_ = 0;
-    isAlive_ = true;
-    posX_ = 0;
-    posY_ = 0;
-
     id_[0] = 'S';
     id_[1] = name_[0];
     if(numOfSlavsCreated_<10){
@@ -40,7 +33,7 @@ Slav::Slav(std::string name){
 
 
     std::uniform_int_distribution <int> weaponDamageRange (10,12);
-    objWeapon_.fill("spear", weaponDamageRange(mt), true, 3);
+    objWeapon_.fill("spear", weaponDamageRange(mt), 3);
 
     id_[0] = 'S';
     id_[1] = name_[0];

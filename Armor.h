@@ -5,13 +5,13 @@
 
 class Armor {
 private:
-    std::string name_;
     int armorPoints_;
     int weight_;
+    int wearPoints_ = 100;
 public:
     Armor();
     void show();
-    void fill(std::string, int, int);
+    void fill(int, int);
 
 };
 
