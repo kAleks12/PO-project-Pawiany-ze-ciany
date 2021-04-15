@@ -1,21 +1,62 @@
 #include <string>
 #include "Southern_Warrior.h"
 
+int Southern_Warrior::numOfWarriorsCreated_ = 0;
+int Southern_Warrior::numOfWarriorAlive_ = 0;
+
 Southern_Warrior::Southern_Warrior()
 {
     name_ = "empty";
-    attackDamage_ = 0;
+    strength_ = 0;
     speed_ = 0;
     isAlive_ = true;
     posX_ = 0;
     posY_ = 0;
+
+    id_[0] = 'N';
+    id_[1] = name_[0];
+    if(numOfWarriorsCreated_<10){
+        id_[2] = '0';
+        id_[3] = '0' + static_cast<char>(numOfWarriorsCreated_);
+    }
+    else{
+        id_[2] = '0' + static_cast<char>(numOfWarriorsCreated_/10);
+        id_[3] = '0' + static_cast<char>(numOfWarriorsCreated_%10);
+    }
+
+    numOfWarriorsCreated_++;
+    numOfWarriorAlive_++;
 }
-Southern_Warrior::Southern_Warrior(std::string name, int attackDamage, int speed, std::string weaponName, int weaponDamage, bool isBoothHanded, int weight, std::string weaponName2, int weaponDamage2, bool isBoothHanded2, int weight2){
+
+Southern_Warrior::Southern_Warrior(std::string name){
+
+    std::random_device rd;
+    std::mt19937 mt(rd());
+
     name_ = name;
-    attackDamage_ = attackDamage;
-    speed_ = speed;
-    objWeapon_.fill(weaponName, weaponDamage, isBoothHanded, weight);
-    objWeapon2_.fill(weaponName2, weaponDamage2, isBoothHanded2, weight2);
+    speed_ = 3;
+
+    std::uniform_int_distribution <int> strengthRange (12,15);
+    strength_=strengthRange(mt);
+
+
+    std::uniform_int_distribution <int> weaponDamageRange (10,15);//nie nice
+    objWeapon_.fill("Bulat", weaponDamageRange(mt), false, 4);
+    objWeapon2_.fill("Bulat", weaponDamageRange(mt), false, 4);
+
+    id_[0] = 'N';
+    id_[1] = name_[0];
+    if(numOfWarriorsCreated_<10){
+        id_[2] = '0';
+        id_[3] = '0' + static_cast<char>(numOfWarriorsCreated_);
+    }
+    else{
+        id_[2] = '0' + static_cast<char>(numOfWarriorsCreated_/10);
+        id_[3] = '0' + static_cast<char>(numOfWarriorsCreated_%10);
+    }
+
+    numOfWarriorsCreated_++;
+    numOfWarriorAlive_++;
 }
 
 void Southern_Warrior::show() {

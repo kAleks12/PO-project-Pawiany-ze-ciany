@@ -3,17 +3,17 @@
 
 Field::Field() {
 
-    whatContains_[0] = nullptr;
-    whatContains_[1] = nullptr;
+    heroesAtThisField_[0] = nullptr;
+    heroesAtThisField_[1] = nullptr;
     isEmpty_ = true;
 }
 
 void Field::addBeing( Being * hero) {
     if((hero != nullptr) && isEmpty_){
-        if(whatContains_[0]== nullptr)
-            whatContains_[0] = hero;
+        if(heroesAtThisField_[0]== nullptr)
+            heroesAtThisField_[0] = hero;
         else{
-            whatContains_[1] = hero;
+            heroesAtThisField_[1] = hero;
             isEmpty_ = false;
         }
     }
@@ -22,7 +22,7 @@ void Field::addBeing( Being * hero) {
 
 void Field::removeBeing(int position) {
     isEmpty_ = true;
-    whatContains_[position] = nullptr;
+    heroesAtThisField_[position] = nullptr;
 }
 
 void Field::showField() {
@@ -31,13 +31,13 @@ void Field::showField() {
     std::cout << "Pole jest puste" << std::endl;
     else {
         std::cout << "Zawartosc pola: \n\n";
-        if (whatContains_[0] != nullptr) {
+        if (heroesAtThisField_[0] != nullptr) {
             std::cout << "Hero 1 \n";
-            (whatContains_[0])->show();
+            (heroesAtThisField_[0])->show();
         }
-        if (whatContains_[1] != nullptr) {
+        if (heroesAtThisField_[1] != nullptr) {
             std::cout << "Hero 2: \n";
-            (whatContains_[1])->show();
+            (heroesAtThisField_[1])->show();
         }
     }
 }

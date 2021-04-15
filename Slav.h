@@ -7,10 +7,12 @@
 
 class Slav: public Being{
 private:
+    static int numOfSlavsCreated_;
+    static int numOfSlavsAlive_;
     Weapon objWeapon_;
 public:
     Slav();
-    Slav(std::string, int, int, std::string, int, bool, int);
+    Slav(std::string);
 
     void show() override;
 

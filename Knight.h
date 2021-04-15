@@ -8,11 +8,13 @@
 #include <iostream>
 
 class Knight:public Being{
+    static int numOfKnightsCreated_;
+    static int numOfKnightsAlive_;
     Weapon objWeapon_;
     Armor objArmor_;
 public:
     Knight();
-    Knight(std::string, int, int, std::string, int, bool, int, std::string, int, int);
+    Knight(std::string);
 
     void show() override;
 };
