@@ -24,9 +24,8 @@ void Field::removeBeing(int position) {
     isEmpty_ = true;
     heroesAtThisField_[position] = nullptr;
 }
-
+/*
 void Field::showField() {
-
     if(isEmpty_)
     std::cout << "Pole jest puste" << std::endl;
     else {
@@ -41,5 +40,5 @@ void Field::showField() {
         }
     }
 }
-
+*/
 bool Field::isEmpty() {return isEmpty_;}

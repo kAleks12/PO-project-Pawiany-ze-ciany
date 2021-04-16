@@ -58,4 +58,6 @@ Viking::Viking(std::string name) {
 
 void Viking::show() {
     Being::show();
+    objWeapon_.show();
+    objArmor_.show();
 }

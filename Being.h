@@ -18,6 +18,7 @@ public:
     Being(std::string, int, int );
     virtual void show();
     void changeHp(int);
+    std::string  getId();
 };
 
 

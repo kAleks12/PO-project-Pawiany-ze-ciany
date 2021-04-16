@@ -6,13 +6,14 @@
 
 class Field {
 
+    friend class Map;
     Being* heroesAtThisField_[2];
     bool isEmpty_;
 public:
     Field();
     void addBeing(Being *);
     void removeBeing(int);
-    void showField();
+    void show();
     bool isEmpty();
 
     std::string getNames();

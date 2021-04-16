@@ -11,6 +11,7 @@ void Being::show() {
     std::cout << "Hero's name: " << name_ << "\tHealth: " << healthPoints_ << "%\tAttack damage: " << strength_ << "\tSpeed: " << speed_ << std::endl;
     std::cout << "Hero's position: " << posX_ << "," << posY_ << "\n\n";
 }
+
 void Being::changeHp(int hpModifier){
     if((healthPoints_ + hpModifier <= 100) && (healthPoints_ + hpModifier >= 0))
     this -> healthPoints_ += hpModifier;
@@ -18,4 +19,8 @@ void Being::changeHp(int hpModifier){
     healthPoints_ = 100;
     else
     healthPoints_ = 0;
+}
+
+std::string Being::getId() {
+    return this->id_;
 }
