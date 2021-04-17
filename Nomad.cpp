@@ -1,29 +1,28 @@
 #include <string>
 #include "Nomad.h"
 
-int Nomad::numOfWarriorsCreated_ = 0;
-int Nomad::numOfWarriorAlive_ = 0;
+int Nomad::numOfNomadsCreated_ = 0;
+int Nomad::numOfNomadsAlive_ = 0;
 
 Nomad::Nomad()
 {
-
     id_[0] = 'N';
     id_[1] = name_[0];
-    if(numOfWarriorsCreated_<10){
+    if(numOfNomadsCreated_<10){
         id_[2] = '0';
-        id_[3] = '0' + static_cast<char>(numOfWarriorsCreated_);
+        id_[3] = '0' + static_cast<char>(numOfNomadsCreated_);
     }
     else{
-        id_[2] = '0' + static_cast<char>(numOfWarriorsCreated_/10);
-        id_[3] = '0' + static_cast<char>(numOfWarriorsCreated_%10);
+        id_[2] = '0' + static_cast<char>(numOfNomadsCreated_/10);
+        id_[3] = '0' + static_cast<char>(numOfNomadsCreated_%10);
     }
 
-    numOfWarriorsCreated_++;
-    numOfWarriorAlive_++;
+    numOfNomadsCreated_++;
+    numOfNomadsCreated_++;
 }
 
-Nomad::Nomad(std::string name){
-
+Nomad::Nomad(std::string name)
+{
     std::random_device rd;
     std::mt19937 mt(rd());
 
@@ -40,17 +39,17 @@ Nomad::Nomad(std::string name){
 
     id_[0] = 'N';
     id_[1] = name_[0];
-    if(numOfWarriorsCreated_<10){
+    if(numOfNomadsCreated_ < 10){
         id_[2] = '0';
-        id_[3] = '0' + static_cast<char>(numOfWarriorsCreated_);
+        id_[3] = '0' + static_cast <char> (numOfNomadsCreated_);
     }
     else{
-        id_[2] = '0' + static_cast<char>(numOfWarriorsCreated_/10);
-        id_[3] = '0' + static_cast<char>(numOfWarriorsCreated_%10);
+        id_[2] = '0' + static_cast <char> (numOfNomadsCreated_/10);
+        id_[3] = '0' + static_cast <char> (numOfNomadsCreated_%10);
     }
 
-    numOfWarriorsCreated_++;
-    numOfWarriorAlive_++;
+    numOfNomadsCreated_++;
+    numOfNomadsAlive_++;
 }
 
 void Nomad::show() {

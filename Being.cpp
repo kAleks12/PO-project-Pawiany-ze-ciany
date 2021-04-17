@@ -24,3 +24,8 @@ void Being::changeHp(int hpModifier){
 std::string Being::getId() {
     return this->id_;
 }
+
+void Being::setCoords(int xPos, int yPos) {
+    this->posX_ = xPos;
+    this->posY_ = yPos;
+}

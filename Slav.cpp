@@ -53,5 +53,4 @@ Slav::Slav(std::string name){
 void Slav::show() {
     Being::show();
     objWeapon_.show();
-
 }

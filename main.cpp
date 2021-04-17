@@ -98,7 +98,7 @@ int main() {
         std::string name;
         int tmpXPos, tmpYPos;
 
-        /* Tworzenie i umieszcanie na mapie obiektów klasy Slav */
+        /* Tworzenie i umieszczanie na mapie obiektów klasy Slav */
 
         for (int i = 0; i < numOfSlavs; i++) {
             fNames >> name;
@@ -106,11 +106,13 @@ int main() {
             do {
                 tmpXPos = adventureMap.drawPos();
                 tmpYPos = adventureMap.drawPos();
-            } while(!adventureMap.isFieldEmpty(tmpXPos, tmpYPos));
+            } while(adventureMap.isFieldFull(tmpXPos, tmpYPos));
+            tmp -> setCoords(tmpXPos,tmpYPos);
             adventureMap.spawn(tmp, tmpXPos, tmpYPos);
+            std::cout << "Done " << i << " out of " << numOfSlavs << "\n";
         }
-
-        /* Tworzenie i umieszcanie na mapie obiektów klasy Nomad */
+        std::cout << "\nDone " << numOfSlavs << " Slavs\n\n";
+        /* Tworzenie i umieszczanie na mapie obiektów klasy Nomad */
 
         for (int i = 0; i < numOfNomads; i++) {
             fNames >> name;
@@ -118,11 +120,14 @@ int main() {
             do {
                 tmpXPos = adventureMap.drawPos();
                 tmpYPos = adventureMap.drawPos();
-            } while(!adventureMap.isFieldEmpty(tmpXPos, tmpYPos));
+            } while(adventureMap.isFieldFull(tmpXPos, tmpYPos));
+            tmp -> setCoords(tmpXPos,tmpYPos);
             adventureMap.spawn(tmp, tmpXPos, tmpYPos);
+            std::cout << "Done " << i << " out of " << numOfNomads << "\n";
         }
+        std::cout << "\nDone " << numOfNomads << " Nomads\n\n";
 
-        /* Tworzenie i umieszcanie na mapie obiektów klasy Knight */
+        /* Tworzenie i umieszczanie na mapie obiektów klasy Knight */
 
         for (int i = 0; i < numOfKnights; i++) {
             fNames >> name;
@@ -130,11 +135,14 @@ int main() {
             do {
                 tmpXPos = adventureMap.drawPos();
                 tmpYPos = adventureMap.drawPos();
-            } while(!adventureMap.isFieldEmpty(tmpXPos, tmpYPos));
+            } while(adventureMap.isFieldFull(tmpXPos, tmpYPos));
+            tmp -> setCoords(tmpXPos,tmpYPos);
             adventureMap.spawn(tmp, tmpXPos, tmpYPos);
+            std::cout << "Done " << i << " out of " << numOfKnights << "\n";
         }
+        std::cout << "\nDone " << numOfKnights << " Knights\n\n";
 
-        /* Tworzenie i umieszcanie na mapie obiektów klasy Viking */
+        /* Tworzenie i umieszczanie na mapie obiektów klasy Viking */
 
         for (int i = 0; i < numOfVikings; i++) {
             fNames >> name;
@@ -142,14 +150,16 @@ int main() {
             do {
                 tmpXPos = adventureMap.drawPos();
                 tmpYPos = adventureMap.drawPos();
-            } while(!adventureMap.isFieldEmpty(tmpXPos, tmpYPos));
+            } while(adventureMap.isFieldFull(tmpXPos, tmpYPos));
+            tmp -> setCoords(tmpXPos,tmpYPos);
             adventureMap.spawn(tmp, tmpXPos, tmpYPos);
+            std::cout << "Done " << i << " out of " << numOfVikings << "\n";
         }
+        std::cout << "\nDone " << numOfVikings << " Vikings\n\n";
     }
     else {
         std::cout << "File \"names.txt\" not found" << std::endl;
         return 69;
     }
-    std::cout << "Kurwo jebana rob sie\n";
     adventureMap.show();
 }

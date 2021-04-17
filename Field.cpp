@@ -2,26 +2,21 @@
 #include "Field.h"
 
 Field::Field() {
-
     heroesAtThisField_[0] = nullptr;
     heroesAtThisField_[1] = nullptr;
-    isEmpty_ = true;
 }
 
 void Field::addBeing( Being * hero) {
-    if((hero != nullptr) && isEmpty_){
+    if((hero != nullptr) && isSpace()){
         if(heroesAtThisField_[0]== nullptr)
             heroesAtThisField_[0] = hero;
         else{
             heroesAtThisField_[1] = hero;
-            isEmpty_ = false;
         }
     }
-
 }
 
 void Field::removeBeing(int position) {
-    isEmpty_ = true;
     heroesAtThisField_[position] = nullptr;
 }
 /*
@@ -41,4 +36,10 @@ void Field::showField() {
     }
 }
 */
-bool Field::isEmpty() {return isEmpty_;}
+bool Field::isEmpty() {
+    return (heroesAtThisField_[0] == nullptr) && (heroesAtThisField_[1] == nullptr) ? true : false;
+}
+
+bool Field::isSpace() {
+    return (heroesAtThisField_[0] != nullptr) && (heroesAtThisField_[1] != nullptr) ? false : true;
+}

@@ -10,15 +10,17 @@
 #include <ctime>
 #include <cstdlib>
 #include <random>
+#include <windows.h>
 
 class Map {
-    static const int mapSize_ = 50;
+    static const int mapSize_ = 10;
     Field fields_ [mapSize_][mapSize_];
 public:
     void spawn(Being *, int, int);
     void remove(int, int, int);
     void show();
     int drawPos();
+    bool isFieldFull(int, int);
     bool isFieldEmpty(int, int);
 };
 

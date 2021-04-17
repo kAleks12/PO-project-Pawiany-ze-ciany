@@ -7,8 +7,8 @@
 
 class Nomad: public Being{
 private:
-    static int numOfWarriorsCreated_;
-    static int numOfWarriorAlive_;
+    static int numOfNomadsCreated_;
+    static int numOfNomadsAlive_;
     Weapon objWeapon_;
     Weapon objWeapon2_;
 public:

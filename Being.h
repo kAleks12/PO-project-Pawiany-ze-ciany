@@ -19,6 +19,7 @@ public:
     virtual void show();
     void changeHp(int);
     std::string  getId();
+    void setCoords(int, int);
 };
 
 
