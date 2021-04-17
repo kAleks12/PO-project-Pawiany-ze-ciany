@@ -15,10 +15,10 @@ bool Map::isFieldFull(int xPos, int yPos) {
 
 void Map::show() {
     std::cout << "=====================================================================================================\n";
-    for(int i = 0; i < mapSize_;i++){
-        for(int j = 0; j < mapSize_; j++){
+    for(int j = 0; j < mapSize_;j++){
+        for(int i = 0; i < mapSize_; i++){
             SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
-            if(fields_[i][j].isEmpty()) std::cout << " + empty +";
+            if(fields_[i][j].isEmpty(0)&&fields_[i][j].isEmpty(1)) std::cout << " + empty +";
             else {
                 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
                 if(fields_[i][j].heroesAtThisField_[0] != nullptr) std::cout << " " << fields_[i][j].heroesAtThisField_[0] -> getId() << "/";
@@ -42,4 +42,18 @@ int Map::drawPos() {
 
     for(int i = 0; i < rand() % 10000;i++) randomNum = posRange(randomSeed);
     return randomNum;
+}
+
+bool Map::isFieldEmpty(int xPos, int yPos, int pos) {
+    return (fields_[xPos] [yPos].isEmpty(pos));
+}
+
+void Map::fieldShowField(int xPos, int yPos) {
+
+    fields_[xPos][yPos].showField();
+
+}
+
+Being * Map::fieldGetHero(int xPos, int yPos, int pos) {
+    return fields_[xPos][yPos].getHero(pos);
 }

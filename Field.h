@@ -7,16 +7,16 @@
 class Field {
 
     friend class Map;
-    Being* heroesAtThisField_[2];
+    Being * heroesAtThisField_[2];
 public:
     Field();
     void addBeing(Being *);
     void removeBeing(int);
     void show();
-    bool isEmpty();
+    bool isEmpty(int);
     bool isSpace();
-
-    std::string getNames();
+    void showField();
+    Being * getHero(int);
 };
 
 

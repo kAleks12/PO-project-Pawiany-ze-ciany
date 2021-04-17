@@ -19,9 +19,9 @@ void Field::addBeing( Being * hero) {
 void Field::removeBeing(int position) {
     heroesAtThisField_[position] = nullptr;
 }
-/*
+
 void Field::showField() {
-    if(isEmpty_)
+    if((isEmpty(0))&&(isEmpty(1)))
     std::cout << "Pole jest puste" << std::endl;
     else {
         std::cout << "Zawartosc pola: \n\n";
@@ -35,11 +35,16 @@ void Field::showField() {
         }
     }
 }
-*/
-bool Field::isEmpty() {
-    return (heroesAtThisField_[0] == nullptr) && (heroesAtThisField_[1] == nullptr) ? true : false;
+
+bool Field::isEmpty(int pos) {
+    return (heroesAtThisField_[pos] == nullptr) ? true : false;
 }
 
 bool Field::isSpace() {
     return (heroesAtThisField_[0] != nullptr) && (heroesAtThisField_[1] != nullptr) ? false : true;
+}
+
+Being * Field::getHero(int pos) {
+
+    return heroesAtThisField_[pos];
 }

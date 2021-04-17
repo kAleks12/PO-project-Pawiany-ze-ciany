@@ -19,9 +19,11 @@ public:
     void spawn(Being *, int, int);
     void remove(int, int, int);
     void show();
-    int drawPos();
+    static int drawPos();
     bool isFieldFull(int, int);
-    bool isFieldEmpty(int, int);
+    bool isFieldEmpty(int, int, int);
+    void fieldShowField(int, int);
+    Being * fieldGetHero(int, int, int);
 };
 
 #endif //PO_MAP_H
