@@ -12,7 +12,6 @@ public:
     Armor();
     void show();
     void fill(int, int);
-
 };
 
 

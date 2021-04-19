@@ -13,17 +13,20 @@
 #include <windows.h>
 
 class Map {
+private:
     static const int mapSize_ = 10;
     Field fields_ [mapSize_][mapSize_];
+    static const bool isPytkaGrubas = true;
 public:
     void spawn(Being *, int, int);
     void remove(int, int, int);
-    void show();
-    static int drawPos();
     bool isFieldFull(int, int);
     bool isFieldEmpty(int, int, int);
-    void fieldShowField(int, int);
+    static int getMapSize();
     Being * fieldGetHero(int, int, int);
+    static int drawPos();
+    void showField(int, int);
+    void show();
 };
 
 #endif //PO_MAP_H

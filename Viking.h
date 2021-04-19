@@ -20,8 +20,6 @@ public:
     Viking(std::string);
 
     void show() override;
-
-
 };
 
 

@@ -7,7 +7,7 @@
 
 #include <iostream>
 
-class Knight:public Being{
+class Knight: public Being{
     static int numOfKnightsCreated_;
     static int numOfKnightsAlive_;
     Weapon objWeapon_;
@@ -15,9 +15,7 @@ class Knight:public Being{
 public:
     Knight();
     Knight(std::string);
-
     void show() override;
 };
-
 
 #endif //MAP_H_KNIGHTS_H

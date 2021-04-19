@@ -32,7 +32,6 @@ Knight::Knight(std::string name){
     std::uniform_int_distribution <int> strengthRange (15,17);
     strength_=strengthRange(mt);
 
-
     std::uniform_int_distribution <int> weaponDamageRange (17,22);
     objWeapon_.fill("Two-handed sword", weaponDamageRange(mt), 5);
     objArmor_.fill(30, 20);
