@@ -2,10 +2,14 @@
 #include "Nomad.h"
 
 int Nomad::numOfNomadsCreated_ = 0;
-int Nomad::numOfNomadsAlive_ = 0;
 
 Nomad::Nomad()
 {
+    Item bulat("bulat");
+    Item lightArmor("larmor");
+    backpack_.push_back(bulat);
+    backpack_.push_back(lightArmor);
+
     id_[0] = 'N';
     id_[1] = name_[0];
     if(numOfNomadsCreated_<10){
@@ -17,7 +21,6 @@ Nomad::Nomad()
         id_[3] = '0' + static_cast<char>(numOfNomadsCreated_%10);
     }
 
-    numOfNomadsCreated_++;
     numOfNomadsCreated_++;
 }
 
@@ -32,10 +35,13 @@ Nomad::Nomad(std::string name)
     std::uniform_int_distribution <int> strengthRange (12,15);
     strength_=strengthRange(mt);
 
+    Item bulat("bulat");
+    Item lightArmor("larmor");
 
-    std::uniform_int_distribution <int> weaponDamageRange (10,15);//nie nice
-    objWeapon_.fill("Bulat", weaponDamageRange(mt), 4);
-    objWeapon2_.fill("Bulat", weaponDamageRange(mt), 4);
+    backpack_.push_back(lightArmor);
+    objArmor_ = "light armor";
+    backpack_.push_back(bulat);
+    objWeapon_ =  "bulat";
 
     id_[0] = 'N';
     id_[1] = name_[0];
@@ -49,11 +55,9 @@ Nomad::Nomad(std::string name)
     }
 
     numOfNomadsCreated_++;
-    numOfNomadsAlive_++;
 }
 
 void Nomad::show() {
+    std::cout << "\n\nObject is using -> " << objWeapon_ << " as a weapon, and wears -> " << objArmor_ << "\n" ;
     Being::show();
-    objWeapon_.show();
-    objWeapon2_.show();
 }
