@@ -2,6 +2,7 @@
 #define PO_BEING_H
 
 #include "../Items/Item.h"
+//#include "../Terrain/Map.h"
 
 #include <string>
 #include <random>
@@ -24,6 +25,7 @@ public:
     std::string getId();
     float getTotalAttackPower();
     virtual void show();
+    void move(int posX, int posY);
 };
 
 #endif //PO_BEING_H

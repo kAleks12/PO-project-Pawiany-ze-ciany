@@ -1,4 +1,3 @@
-
 #include "Map.h"
 
 void Map::spawn(Being * hero, int xPos, int yPos) {
@@ -64,4 +63,9 @@ void Map::show() {
 
 void Map::showField(int xPos, int yPos) {
     fields_[xPos][yPos].showField();
+}
+
+void Map::move(int pos, int fromX, int fromY, int whereX, int whereY) {
+    fields_[whereX][whereY].addBeing(fields_[fromX][fromY].getHero(pos));
+    fields_[fromX][fromY].removeBeing(pos);
 }

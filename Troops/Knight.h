@@ -3,8 +3,6 @@
 
 #include "Being.h"
 
-#include <iostream>
-
 class Knight: public Being{
     static int numOfKnightsCreated_;
     std::string objArmor_;

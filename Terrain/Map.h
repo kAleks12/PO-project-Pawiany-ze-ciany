@@ -26,6 +26,7 @@ public:
     static int drawPos();
     void showField(int, int);
     void show();
+    void move(int, int, int, int, int);
 };
 
 #endif //PO_MAP_H

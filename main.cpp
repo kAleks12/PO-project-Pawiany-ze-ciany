@@ -6,20 +6,17 @@
 //
 
 #include <iostream>
-//#include <vector>
 #include <random>
 #include <ctime>
 #include <cstdlib>
 #include <fstream>
 #include <string>
 
-#include "Nomad.h"
-#include "Knight.h"
-#include "Slav.h"
-#include "Viking.h"
-#include "Map.h"
+#include "Troops//Being.h"
+#include "Troops/Tribe.h"
+#include "Terrain/Map.h"
 
-void move(int pos, int xFrom, int yFrom, int xWhere, int yWhere, Map & adventureMap){
+void move1(int pos, int xFrom, int yFrom, int xWhere, int yWhere, Map & adventureMap){
     if((!adventureMap.isFieldFull(xWhere, yWhere))&&(!adventureMap.isFieldEmpty(xFrom, yFrom, pos))){
         if(adventureMap.isFieldEmpty(xWhere, yWhere, 0)) {
             adventureMap.spawn(adventureMap.fieldGetHero(xFrom, yFrom, 0), xWhere, yWhere);
@@ -32,12 +29,21 @@ void move(int pos, int xFrom, int yFrom, int xWhere, int yWhere, Map & adventure
         adventureMap.remove(xFrom, yFrom, pos);
     }
     else
-        //std::cout << adventureMap.isFieldFull(xWhere, yWhere) << " " << adventureMap.isFieldEmpty(xFrom, yFrom, pos) << std::endl;
         std::cout << "Where is full, or From is empty" << std::endl;
-    //ZMIENIC KORDY POSTACI!!!!!!!!!!!!!!!!!!!!!!!
 }
 
-template <typename ClassName> inline void generateClassObject(std::string name, Map & map){
+void move(int pos, int xFrom, int yFrom, int xWhere, int yWhere, Map & adventureMap){
+
+    if(adventureMap.isFieldEmpty(xFrom, yFrom, pos)||adventureMap.isFieldFull(xWhere, yWhere)){
+        std::cout << "Where is full, or From is empty\n";
+    }
+    else{
+        adventureMap.fieldGetHero(xFrom, yFrom, pos)->move(xWhere, yWhere);
+        adventureMap.move(pos, xFrom, yFrom, xWhere, yWhere);
+    }
+}
+
+template <typename ClassName> inline void generateClassObject(std::string name, Map & map, Tribe & currentTribe){
     int tmpXPos, tmpYPos;
     auto tmp = new ClassName(name);
     do {
@@ -139,7 +145,7 @@ inline void adjustNumberOfObjects( int & numOfObjects1, int & numOfObjects2, int
     }
 }
 
-void generateMap(Map & adventureMap){
+void fillMap(Map & adventureMap, Tribe & currentTribe){
     std::ifstream fNames("names.txt");
     std::mt19937 engine {std::random_device{}()};
     std::uniform_int_distribution <int> limRange(1, 99);
@@ -152,9 +158,10 @@ void generateMap(Map & adventureMap){
     int numOfVikings = 0;
 
     //Getting user input
-    while((numOfObj > Map::getMapSize()*2) || (numOfObj > 400) || (numOfObj <= 0))  {
-        std::cout << "Give me amount of objects to create: ";
-        std::cin >> numOfObj;
+    while((numOfObj > Map::getMapSize()*2) || (numOfObj > 100) || (numOfObj <= 0))  {
+        //std::cout << "Give me amount of objects to create: ";
+        //std::cin >> numOfObj;
+        numOfObj = 5;
     }
 
     //Checking if entered number is too small to draw
@@ -196,7 +203,9 @@ void generateMap(Map & adventureMap){
 
         for (int i = 0; i < numOfSlavs; i++) {
             fNames >> name;
-            generateClassObject <Slav> (name, adventureMap);
+            generateClassObject <Slav> (name, adventureMap, currentTribe);
+            Slav tmp(name);
+            currentTribe.addSlav(tmp);
             //std::cout << "Done " << i << " out of " << numOfSlavs << "\n";
         }
         std::cout << "\nDone " << numOfSlavs << " Slavs!\n";
@@ -205,7 +214,9 @@ void generateMap(Map & adventureMap){
 
         for (int i = 0; i < numOfNomads; i++) {
             fNames >> name;
-            generateClassObject <Nomad> (name, adventureMap);
+            generateClassObject <Nomad> (name, adventureMap, currentTribe);
+            Nomad tmp(name);
+            currentTribe.addNomad(tmp);
             //std::cout << "Done " << i << " out of " << numOfNomads << "\n";
         }
         std::cout << "Done " << numOfNomads << " Nomads!\n";
@@ -214,7 +225,9 @@ void generateMap(Map & adventureMap){
 
         for (int i = 0; i < numOfVikings; i++) {
             fNames >> name;
-            generateClassObject <Viking> (name, adventureMap);
+            generateClassObject <Viking> (name, adventureMap, currentTribe);
+            Viking tmp(name);
+            currentTribe.addViking(tmp);
             //std::cout << "Done " << i << " out of " << numOfVikings << "\n";
         }
         std::cout << "Done " << numOfVikings << " Vikings!\n";
@@ -223,7 +236,9 @@ void generateMap(Map & adventureMap){
 
         for (int i = 0; i < numOfKnights; i++) {
             fNames >> name;
-            generateClassObject <Knight> (name, adventureMap);
+            generateClassObject <Knight> (name, adventureMap, currentTribe);
+            Knight tmp(name);
+            currentTribe.addKnight(tmp);
             //std::cout << "Done " << i << " out of " << numOfKnights << "\n";
         }
         std::cout << "Done " << numOfKnights << " Knights!\n\n";
@@ -235,8 +250,30 @@ void generateMap(Map & adventureMap){
 }
 
 int main() {
+
+    Tribe northEast;
+    Tribe southEast;
+    Tribe northWest;
+    Tribe southWest;
+
     Map adventureMap;
-    generateMap(adventureMap);
+    fillMap(adventureMap, northEast);
+    fillMap(adventureMap, southEast);
+    fillMap(adventureMap, northWest);
+    fillMap(adventureMap, southWest);
+
+    northEast.show();
+    southEast.show();
+    northWest.show();
+    southWest.show();
 
     adventureMap.show();
+
+    while(1){
+        int x1, y1, x2, y2, pos;
+    std::cout << "Podaj skad x y, gdzie x y pos\n";
+    std::cin >> x1 >> y1 >> x2 >> y2 >> pos;
+        move(pos, x1, y1, x2, y2, adventureMap);
+        adventureMap.show();
+    }
 }

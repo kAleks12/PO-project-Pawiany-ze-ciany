@@ -40,3 +40,7 @@ void Being::show() {
         tmp.show();
     }
 }
+
+void Being::move(int posX, int posY) {
+    setCoords(posX, posY);
+}
