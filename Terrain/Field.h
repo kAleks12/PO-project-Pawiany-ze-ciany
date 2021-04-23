@@ -13,7 +13,7 @@ public:
     void addBeing(Being *);
     void removeBeing(int);
     Being * getHero(int);
-    bool isEmpty(int);
+    bool isPosEmpty(int);
     bool isSpace();
     void showField();
 };

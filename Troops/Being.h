@@ -2,7 +2,6 @@
 #define PO_BEING_H
 
 #include "../Items/Item.h"
-//#include "../Terrain/Map.h"
 
 #include <string>
 #include <random>

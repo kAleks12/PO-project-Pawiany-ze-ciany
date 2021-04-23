@@ -11,47 +11,33 @@
 #include <cstdlib>
 #include <fstream>
 #include <string>
+#include <windows.h>
 
-#include "Troops//Being.h"
 #include "Troops/Tribe.h"
 #include "Terrain/Map.h"
 
-void move1(int pos, int xFrom, int yFrom, int xWhere, int yWhere, Map & adventureMap){
-    if((!adventureMap.isFieldFull(xWhere, yWhere))&&(!adventureMap.isFieldEmpty(xFrom, yFrom, pos))){
-        if(adventureMap.isFieldEmpty(xWhere, yWhere, 0)) {
-            adventureMap.spawn(adventureMap.fieldGetHero(xFrom, yFrom, 0), xWhere, yWhere);
-            adventureMap.fieldGetHero(xFrom, yFrom, 0)->setCoords(xWhere, yWhere);
-        }
-        else {
-            adventureMap.spawn(adventureMap.fieldGetHero(xFrom, yFrom, 1), xWhere, yWhere);
-            adventureMap.fieldGetHero(xFrom, yFrom, 1)->setCoords(xWhere, yWhere);
-        }
-        adventureMap.remove(xFrom, yFrom, pos);
+inline int drawPos() {
+    std::random_device rd;
+    std::mt19937 randomSeed(rd());
+    std::uniform_int_distribution<int> posRange(0, (sqrt(Map::getMapSize())-1));
+    int randomNum;
+    Sleep(1000);
+    while(rand () % 15 != 10) {
+        randomNum = posRange(randomSeed);
     }
-    else
-        std::cout << "Where is full, or From is empty" << std::endl;
+    return randomNum;
 }
 
-void move(int pos, int xFrom, int yFrom, int xWhere, int yWhere, Map & adventureMap){
-
-    if(adventureMap.isFieldEmpty(xFrom, yFrom, pos)||adventureMap.isFieldFull(xWhere, yWhere)){
-        std::cout << "Where is full, or From is empty\n";
-    }
-    else{
-        adventureMap.fieldGetHero(xFrom, yFrom, pos)->move(xWhere, yWhere);
-        adventureMap.move(pos, xFrom, yFrom, xWhere, yWhere);
-    }
-}
-
-template <typename ClassName> inline void generateClassObject(std::string name, Map & map, Tribe & currentTribe){
+template <typename ClassName> inline ClassName* generateClassObject(std::string name, Map & map, Tribe & currentTribe){
     int tmpXPos, tmpYPos;
     auto tmp = new ClassName(name);
     do {
-        tmpXPos = Map::drawPos();
-        tmpYPos = Map::drawPos();
+        tmpXPos = drawPos();
+        tmpYPos = drawPos();
     } while(map.isFieldFull(tmpXPos, tmpYPos));
     tmp -> setCoords(tmpXPos,tmpYPos);
     map.spawn(tmp, tmpXPos, tmpYPos);
+    return tmp;
 }
 
 inline void adjustNumberOfObjects( int & numOfObjects1, int & numOfObjects2, int & numOfObjects3, int & numOfObjects4, int difference)
@@ -151,7 +137,7 @@ void fillMap(Map & adventureMap, Tribe & currentTribe){
     std::uniform_int_distribution <int> limRange(1, 99);
     srand(time(nullptr));
 
-    int numOfObj = Map::getMapSize()*2 + 400;
+    int numOfObj = Map::getMapSize() * 2 + 400;
     int numOfSlavs = 0;
     int numOfNomads = 0;
     int numOfKnights = 0;
@@ -165,7 +151,7 @@ void fillMap(Map & adventureMap, Tribe & currentTribe){
     }
 
     //Checking if entered number is too small to draw
-    switch(numOfObj){
+    switch (numOfObj) {
         case 1:
             numOfSlavs++;
             break;
@@ -185,49 +171,47 @@ void fillMap(Map & adventureMap, Tribe & currentTribe){
             numOfKnights++;
             break;
         default:
-            while(rand() % 15 != 10){
+            while (rand() % 15 != 10) {
                 numOfSlavs = limRange(engine);
                 numOfNomads = limRange(engine);
                 numOfVikings = limRange(engine);
                 numOfKnights = limRange(engine);
             }
-            adjustNumberOfObjects(numOfSlavs, numOfNomads, numOfVikings, numOfKnights, (numOfNomads + numOfSlavs + numOfKnights + numOfVikings) - numOfObj);
+            adjustNumberOfObjects(numOfSlavs, numOfNomads, numOfVikings, numOfKnights,
+                                  (numOfNomads + numOfSlavs + numOfKnights + numOfVikings) - numOfObj);
             break;
     }
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
-    std::cout <<"\nList of objects -> Slavs: " << numOfSlavs << "; Nomads:  " << numOfNomads << "; Vikings:  " << numOfVikings << "; Knights:  " <<  numOfKnights << ";\tTotal: " << numOfNomads + numOfSlavs + numOfKnights + numOfVikings << "\n";
-
-    if(fNames.good()) {
-        std::string name;
-        //Creating and spawning Slav objects
+    std::cout << "\nList of objects -> Slavs: " << numOfSlavs << "; Nomads:  " << numOfNomads << "; Vikings:  "
+              << numOfVikings << "; Knights:  " << numOfKnights << ";\tTotal: "
+              << numOfNomads + numOfSlavs + numOfKnights + numOfVikings << "\n";
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
+    std::string name;
+    //Creating and spawning Slav objects
 
         for (int i = 0; i < numOfSlavs; i++) {
             fNames >> name;
-            generateClassObject <Slav> (name, adventureMap, currentTribe);
-            Slav tmp(name);
+            Slav tmp = *(generateClassObject <Slav> (name, adventureMap, currentTribe));
             currentTribe.addSlav(tmp);
+            //tmp.show();
             //std::cout << "Done " << i << " out of " << numOfSlavs << "\n";
         }
         std::cout << "\nDone " << numOfSlavs << " Slavs!\n";
 
-        // Creating and spawning Nomad objects
-
         for (int i = 0; i < numOfNomads; i++) {
             fNames >> name;
-            generateClassObject <Nomad> (name, adventureMap, currentTribe);
-            Nomad tmp(name);
+            Nomad tmp = *(generateClassObject <Nomad> (name, adventureMap, currentTribe)) ;
             currentTribe.addNomad(tmp);
+            //tmp.show();
             //std::cout << "Done " << i << " out of " << numOfNomads << "\n";
         }
         std::cout << "Done " << numOfNomads << " Nomads!\n";
 
-        // Creating and spawning Viking objects
-
         for (int i = 0; i < numOfVikings; i++) {
             fNames >> name;
-            generateClassObject <Viking> (name, adventureMap, currentTribe);
-            Viking tmp(name);
+            Viking tmp = *(generateClassObject <Viking> (name, adventureMap, currentTribe)) ;
             currentTribe.addViking(tmp);
+            //tmp.show();
             //std::cout << "Done " << i << " out of " << numOfVikings << "\n";
         }
         std::cout << "Done " << numOfVikings << " Vikings!\n";
@@ -236,17 +220,13 @@ void fillMap(Map & adventureMap, Tribe & currentTribe){
 
         for (int i = 0; i < numOfKnights; i++) {
             fNames >> name;
-            generateClassObject <Knight> (name, adventureMap, currentTribe);
-            Knight tmp(name);
+            Knight tmp = *(generateClassObject <Knight> (name, adventureMap, currentTribe));
             currentTribe.addKnight(tmp);
+            //tmp.show();
             //std::cout << "Done " << i << " out of " << numOfKnights << "\n";
         }
         std::cout << "Done " << numOfKnights << " Knights!\n\n";
         fNames.close();
-    }
-    else {
-        std::cout << "File \"names.txt\" not found" << std::endl;
-    }
 }
 
 int main() {
@@ -257,6 +237,7 @@ int main() {
     Tribe southWest;
 
     Map adventureMap;
+
     fillMap(adventureMap, northEast);
     fillMap(adventureMap, southEast);
     fillMap(adventureMap, northWest);
@@ -269,11 +250,11 @@ int main() {
 
     adventureMap.show();
 
-    while(1){
+    while(true){
         int x1, y1, x2, y2, pos;
-    std::cout << "Podaj skad x y, gdzie x y pos\n";
-    std::cin >> x1 >> y1 >> x2 >> y2 >> pos;
-        move(pos, x1, y1, x2, y2, adventureMap);
+        std::cout << "Podaj podaj koordynaty pola i pozycje (x,y,pos) z której chcesz przeniesc istote, oraz kooordynaty pola (x,y) gdzie chcesz ja przeniesc :) \n";
+        std::cin >> x1 >> y1 >> pos >> x2 >> y2;
+        adventureMap.move(x1,y1,pos,x2,y2);
         adventureMap.show();
     }
 }

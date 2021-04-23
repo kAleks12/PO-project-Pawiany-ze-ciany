@@ -25,7 +25,7 @@ Being * Field::getHero(int pos) {
     return heroesAtThisField_[pos];
 }
 
-bool Field::isEmpty(int pos) {
+bool Field::isPosEmpty(int pos) {
     return (heroesAtThisField_[pos] == nullptr);
 }
 
@@ -34,7 +34,7 @@ bool Field::isSpace() {
 }
 
 void Field::showField() {
-    if((isEmpty(0))&&(isEmpty(1)))
+    if((isPosEmpty(0))&&(isPosEmpty(1)))
         std::cout << "Pole jest puste" << std::endl;
     else {
         std::cout << "Zawartosc pola: \n\n";

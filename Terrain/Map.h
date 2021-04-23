@@ -20,13 +20,12 @@ public:
     void spawn(Being *, int, int);
     void remove(int, int, int);
     bool isFieldFull(int, int);
-    bool isFieldEmpty(int, int, int);
     static int getMapSize();
     Being * fieldGetHero(int, int, int);
-    static int drawPos();
     void showField(int, int);
     void show();
     void move(int, int, int, int, int);
+    bool isPosEmpty(int, int, int);
 };
 
 #endif //PO_MAP_H
