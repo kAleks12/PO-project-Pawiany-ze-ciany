@@ -4,6 +4,7 @@
 #include "../Items/Item.h"
 
 #include <string>
+#include <stdio.h>
 #include <random>
 
 
@@ -15,7 +16,7 @@ protected:
     int speed_;
     int posX_;
     int posY_;
-    char id_[4];
+    std::string id_;
     std::vector <Item> backpack_;
 public:
     Being();

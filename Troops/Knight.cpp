@@ -11,31 +11,38 @@ Knight::Knight() {
     backpack_.push_back(heavyArmor);
     objWeapon_ =  "heavy armor";
 
-    id_[0] = 'K';
-    id_[1] = name_[0];
-    if(numOfKnightsCreated_<10){
-        id_[2] = '0';
-        id_[3] = '0' + static_cast<char>(numOfKnightsCreated_);
+    int numOfDigits = 0;
+    int tmp = numOfKnightsCreated_;
+    for(;tmp > 0;numOfDigits++){
+        tmp /= 10;
     }
-    else{
-        id_[2] = '0' + static_cast<char>(numOfKnightsCreated_/10);
-        id_[3] = '0' + static_cast<char>(numOfKnightsCreated_%10);
+    if(numOfDigits == 0 || numOfDigits == 1){
+        id_[0] = 'K';
+        id_[1] = '0';
+        id_[2] = numOfKnightsCreated_ + '0';
+        id_[3] = name_[0];
     }
-
+    else {
+        tmp = numOfKnightsCreated_;
+        for (int i = numOfDigits + 1; i >= 0; i--) {
+            if (i == 0) id_[i] = 'K';
+            else {
+                if (i == numOfDigits + 1) id_[i] = name_[0];
+                else {
+                    id_[i] = tmp % 10 + '0';
+                    tmp /= 10;
+                }
+            }
+        }
+    }
     numOfKnightsCreated_++;
 }
 
 Knight::Knight(std::string name){
-
-
-    std::random_device rd;
-    std::mt19937 mt(rd());
-
     name_ = name;
     speed_ = 1;
 
-    std::uniform_int_distribution <int> strengthRange (15,17);
-    strength_=strengthRange(mt);
+    strength_= 15;
 
     Item sword("sword");
     Item heavyArmor("harmor");
@@ -45,17 +52,32 @@ Knight::Knight(std::string name){
     backpack_.push_back(heavyArmor);
     objArmor_ =  "heavy armor";
 
-    id_[0] = 'K';
-    id_[1] = name_[0];
-    if(numOfKnightsCreated_<10){
-        id_[2] = '0';
-        id_[3] = '0' + static_cast<char>(numOfKnightsCreated_);
-    }
-    else{
-        id_[2] = '0' + static_cast<char>(numOfKnightsCreated_/10);
-        id_[3] = '0' + static_cast<char>(numOfKnightsCreated_%10);
-    }
+    int numOfDigits = 0;
+    int tmp = numOfKnightsCreated_;
+    char nameTmp[81];
 
+    for(;tmp > 0;numOfDigits++){
+        tmp /= 10;
+    }
+    if(numOfDigits == 0 || numOfDigits == 1){
+        id_[0] = 'K';
+        id_[1] = '0';
+        id_[2] = numOfKnightsCreated_ + '0';
+        id_[3] = name_[0];
+    }
+    else {
+        tmp = numOfKnightsCreated_;
+        for (int i = numOfDigits + 1; i >= 0; i--) {
+            if (i == 0) id_[i] = 'K';
+            else {
+                if (i == numOfDigits + 1) id_[i] = name_[0];
+                else {
+                    id_[i] = tmp % 10 + '0';
+                    tmp /= 10;
+                }
+            }
+        }
+    }
     numOfKnightsCreated_++;
 }
 

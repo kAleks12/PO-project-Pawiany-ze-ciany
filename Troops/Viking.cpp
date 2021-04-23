@@ -10,17 +10,33 @@ Viking::Viking() {
     Item axe1("axe"), axe2("axe");
     backpack_.push_back(axe1);
     backpack_.push_back(axe2);
-    id_[0] = 'V';
-    id_[1] = name_[0];
-    if(numOfVikingsCreated_<10){
-        id_[2] = '0';
-        id_[3] = '0' + static_cast<char>(numOfVikingsCreated_);
-    }
-    else{
-        id_[2] = '0' + static_cast<char>(numOfVikingsCreated_/10);
-        id_[3] = '0' + static_cast<char>(numOfVikingsCreated_%10);
+
+    int numOfDigits = 0;
+    int tmp = numOfVikingsCreated_;
+
+    for(;tmp > 0;numOfDigits++){
+        tmp /= 10;
     }
 
+    if(numOfDigits == 0 || numOfDigits == 1){
+        id_[0] = 'V';
+        id_[1] = '0';
+        id_[2] = numOfVikingsCreated_ + '0';
+        id_[3] = name_[0];
+    }
+    else {
+        tmp = numOfVikingsCreated_;
+        for (int i = numOfDigits + 1; i >= 0; i--) {
+            if (i == 0) id_[i] = 'V';
+            else {
+                if (i == numOfDigits + 1) id_[i] = name_[0];
+                else {
+                    id_[i] = tmp % 10 + '0';
+                    tmp /= 10;
+                }
+            }
+        }
+    }
     numOfVikingsCreated_++;
 }
 
@@ -46,17 +62,30 @@ Viking::Viking(std::string name) {
     objWeapon2_ =  "axe";
 
 
-    id_[0] = 'V';
-    id_[1] = name_[0];
-    if(numOfVikingsCreated_<10){
-        id_[2] = '0';
-        id_[3] = '0' + static_cast<char>(numOfVikingsCreated_);
+    int numOfDigits = 0;
+    int tmp = numOfVikingsCreated_;
+    for(;tmp > 0;numOfDigits++){
+        tmp /= 10;
     }
-    else{
-        id_[2] = '0' + static_cast<char>(numOfVikingsCreated_/10);
-        id_[3] = '0' + static_cast<char>(numOfVikingsCreated_%10);
+    if(numOfDigits == 0 || numOfDigits == 1){
+        id_[0] = 'V';
+        id_[1] = '0';
+        id_[2] = numOfVikingsCreated_ + '0';
+        id_[3] = name_[0];
     }
-
+    else {
+        tmp = numOfVikingsCreated_;
+        for (int i = numOfDigits + 1; i >= 0; i--) {
+            if (i == 0) id_[i] = 'V';
+            else {
+                if (i == numOfDigits + 1) id_[i] = name_[0];
+                else {
+                    id_[i] = tmp % 10 + '0';
+                    tmp /= 10;
+                }
+            }
+        }
+    }
     numOfVikingsCreated_++;
 }
 

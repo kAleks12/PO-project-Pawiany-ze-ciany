@@ -17,6 +17,5 @@ public:
     void addKnight(const Knight &);
     void addNomad(const Nomad &);
     void addViking(const Viking &);
-
     void show();
 };

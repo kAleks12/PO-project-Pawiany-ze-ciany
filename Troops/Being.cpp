@@ -1,8 +1,7 @@
 #include "Being.h"
 #include <iostream>
-#include <string.h>
 
-Being::Being(): name_{"empty"}, strength_{0}, speed_{0}, posX_{0}, posY_{0}
+Being::Being(): name_{"empty"}, id_{"init"}, strength_{0}, speed_{0}, posX_{0}, posY_{0}
 {}
 
 /*Being::Being(std::string name, int attackDamage, int speed): name_{name}, strength_{attackDamage}, speed_{speed}, posX_{0}, posY_{0}
@@ -18,12 +17,7 @@ void Being::changeHp(int hpModifier){
 }
 
 std::string Being::getId() {
-    std::string tmp = "----";
-    tmp[0] = id_[0];
-    tmp[1] = id_[1];
-    tmp[2] = id_[2];
-    tmp[3] = id_[3];
-    return tmp;
+    return id_;
 }
 
 void Being::setCoords(int xPos, int yPos) {
@@ -40,7 +34,7 @@ float Being::getTotalAttackPower() {
 }
 
 void Being::show() {
-    std::cout << "Hero's ID: " << id_[0] << id_[1] << id_[2] << id_[3] << " at position: " << posX_ << "," << posY_ << "\n";
+    std::cout << "Hero's ID: " << id_.c_str() << " at position: " << posX_ << "," << posY_ << "\n";
     std::cout << "Hero's name: " << name_ << "\tHealth: " << healthPoints_ << "%\tAttack damage: " << strength_ << "\tSpeed: " << speed_ << std::endl;
     for(auto & tmp : backpack_){
         tmp.show();

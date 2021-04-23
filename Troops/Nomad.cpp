@@ -10,17 +10,30 @@ Nomad::Nomad()
     backpack_.push_back(bulat);
     backpack_.push_back(lightArmor);
 
-    id_[0] = 'N';
-    id_[1] = name_[0];
-    if(numOfNomadsCreated_<10){
-        id_[2] = '0';
-        id_[3] = '0' + static_cast<char>(numOfNomadsCreated_);
+    int numOfDigits = 0;
+    int tmp = numOfNomadsCreated_;
+    for(;tmp > 0;numOfDigits++){
+        tmp /= 10;
     }
-    else{
-        id_[2] = '0' + static_cast<char>(numOfNomadsCreated_/10);
-        id_[3] = '0' + static_cast<char>(numOfNomadsCreated_%10);
+    if(numOfDigits == 0 || numOfDigits == 1){
+        id_[0] = 'N';
+        id_[1] = '0';
+        id_[2] = numOfNomadsCreated_ + '0';
+        id_[3] = name_[0];
     }
-
+    else {
+        tmp = numOfNomadsCreated_;
+        for (int i = numOfDigits + 1; i >= 0; i--) {
+            if (i == 0) id_[i] = 'N';
+            else {
+                if (i == numOfDigits + 1) id_[i] = name_[0];
+                else {
+                    id_[i] = tmp % 10 + '0';
+                    tmp /= 10;
+                }
+            }
+        }
+    }
     numOfNomadsCreated_++;
 }
 
@@ -43,17 +56,30 @@ Nomad::Nomad(std::string name)
     backpack_.push_back(bulat);
     objWeapon_ =  "bulat";
 
-    id_[0] = 'N';
-    id_[1] = name_[0];
-    if(numOfNomadsCreated_ < 10){
-        id_[2] = '0';
-        id_[3] = '0' + static_cast <char> (numOfNomadsCreated_);
+    int numOfDigits = 0;
+    int tmp = numOfNomadsCreated_;
+    for(;tmp > 0;numOfDigits++){
+        tmp /= 10;
     }
-    else{
-        id_[2] = '0' + static_cast <char> (numOfNomadsCreated_/10);
-        id_[3] = '0' + static_cast <char> (numOfNomadsCreated_%10);
+    if(numOfDigits == 0 || numOfDigits == 1){
+        id_[0] = 'N';
+        id_[1] = '0';
+        id_[2] = numOfNomadsCreated_ + '0';
+        id_[3] = name_[0];
     }
-
+    else {
+        tmp = numOfNomadsCreated_;
+        for (int i = numOfDigits + 1; i >= 0; i--) {
+            if (i == 0) id_[i] = 'N';
+            else {
+                if (i == numOfDigits + 1) id_[i] = name_[0];
+                else {
+                    id_[i] = tmp % 10 + '0';
+                    tmp /= 10;
+                }
+            }
+        }
+    }
     numOfNomadsCreated_++;
 }
 
