@@ -13,6 +13,7 @@
 #include <random>
 #include <windows.h>
 #include <list>
+#include <time.h>
 
 class Map {
 private:
@@ -39,6 +40,7 @@ public:
     static void getItems(Field, Being*);
     void encounter(Field &, int);
     void iteration();
+    int boundryCheck(int);
 };
 
 #endif //PO_MAP_H

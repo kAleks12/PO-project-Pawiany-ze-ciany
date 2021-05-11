@@ -101,137 +101,50 @@ void Map::showField(int xPos, int yPos) {
     fields_[xPos][yPos].showField();
 }
 
-void Map::move(Being* hero, int moveDirection)
-{
-    switch(hero -> getId()[0]) {
+void Map::move(Being* hero, int moveDirection) {
+    int speedModificator;
+    switch (hero->getId()[0]) {
         case 'S':
-            switch (moveDirection) {
-                case 0:
-                    if(getY(hero)-3 < 0)
-                    changePos(getX(hero), getY(hero), getPos(hero), getX(hero), 0);
-                    else changePos(getX(hero), getY(hero), getPos(hero), getX(hero), getY(hero) - 3);
-                    break;
-                case 1:
-                    if(getY(hero)-3 < 0 || getX(hero)-3 < 0) {
-                        if(getY(hero)-3 < 0 && getX(hero)-3 < 0) changePos(getX(hero), getY(hero), getPos(hero), 0, 0);
-                        if(getY(hero)-3 < 0) changePos(getX(hero), getY(hero), getPos(hero), getX(hero) - 3, 0);
-                        if(getX(hero)-3 < 0) changePos(getX(hero), getY(hero), getPos(hero), 0, getY(hero) - 3);
-                    }
-                    else changePos(getX(hero), getY(hero), getPos(hero), getX(hero) - 3, getY(hero) - 3);
-                    break;
-                case 2:
-                    changePos(getX(hero), getY(hero), getPos(hero), getX(hero) - 3, getY(hero));
-                    break;
-                case 3:
-                    changePos(getX(hero), getY(hero), getPos(hero), getX(hero) - 3, getY(hero) + 3);
-                    break;
-                case 4:
-                    changePos(getX(hero), getY(hero), getPos(hero), getX(hero), getY(hero) + 3);
-                    break;
-                case 5:
-                    changePos(getX(hero), getY(hero), getPos(hero), getX(hero) + 3, getY(hero) + 3);
-                    break;
-                case 6:
-                    changePos(getX(hero), getY(hero), getPos(hero), getX(hero) + 3, getY(hero));
-                    break;
-                case 7:
-                    changePos(getX(hero), getY(hero), getPos(hero), getX(hero) + 3, getY(hero) - 3);
-                    break;
-                default:
-                    std::cout << "Wrong direction!";
-            }
+            speedModificator = 3;
             break;
         case 'N':
-            switch(moveDirection){
-                case 0:
-                    changePos(getX(hero), getY(hero), getPos(hero), getX(hero), getY(hero) - 2);
-                    break;
-                case 1:
-                    changePos(getX(hero), getY(hero), getPos(hero), getX(hero) - 2, getY(hero) - 2);
-                    break;
-                case 2:
-                    changePos(getX(hero), getY(hero), getPos(hero), getX(hero) - 2, getY(hero));
-                    break;
-                case 3:
-                    changePos(getX(hero), getY(hero), getPos(hero), getX(hero) - 2, getY(hero) + 2);
-                    break;
-                case 4:
-                    changePos(getX(hero), getY(hero), getPos(hero), getX(hero), getY(hero) + 2);
-                    break;
-                case 5:
-                    changePos(getX(hero), getY(hero), getPos(hero), getX(hero) + 2, getY(hero) + 2);
-                    break;
-                case 6:
-                    changePos(getX(hero), getY(hero), getPos(hero), getX(hero) + 2, getY(hero));
-                    break;
-                case 7:
-                    changePos(getX(hero), getY(hero), getPos(hero), getX(hero) + 2, getY(hero) - 2);
-                    break;
-                default:
-                    std::cout << "Wrong direction!";
-            }
+            speedModificator = 2;
             break;
         case 'V':
-            switch(moveDirection){
-                case 0:
-                    changePos(getX(hero), getY(hero), getPos(hero), getX(hero), getY(hero) - 2);
-                    break;
-                case 1:
-                    changePos(getX(hero), getY(hero), getPos(hero), getX(hero) - 2, getY(hero) - 2);
-                    break;
-                case 2:
-                    changePos(getX(hero), getY(hero), getPos(hero), getX(hero) - 2, getY(hero));
-                    break;
-                case 3:
-                    changePos(getX(hero), getY(hero), getPos(hero), getX(hero) - 2, getY(hero) + 2);
-                    break;
-                case 4:
-                    changePos(getX(hero), getY(hero), getPos(hero), getX(hero), getY(hero) + 2);
-                    break;
-                case 5:
-                    changePos(getX(hero), getY(hero), getPos(hero), getX(hero) + 2, getY(hero) + 2);
-                    break;
-                case 6:
-                    changePos(getX(hero), getY(hero), getPos(hero), getX(hero) + 2, getY(hero));
-                    break;
-                case 7:
-                    changePos(getX(hero), getY(hero), getPos(hero), getX(hero) + 2, getY(hero) - 2);
-                    break;
-                default:
-                    std::cout << "Wrong direction!";
-            }
+            speedModificator = 2;
             break;
         case 'K':
-            switch(moveDirection){
+            speedModificator = 1;
+            break;
+    }
+            switch (moveDirection) {
                 case 0:
-                    changePos(getX(hero), getY(hero), getPos(hero), getX(hero), getY(hero) - 1);
+                    changePos(getX(hero), getY(hero), getPos(hero), getX(hero), boundryCheck(getY(hero) - speedModificator));
                     break;
                 case 1:
-                    changePos(getX(hero), getY(hero), getPos(hero), getX(hero) - 1, getY(hero) - 1);
+                    changePos(getX(hero), getY(hero), getPos(hero), boundryCheck(getX(hero) - speedModificator), boundryCheck(getY(hero) - speedModificator));
                     break;
                 case 2:
-                    changePos(getX(hero), getY(hero), getPos(hero), getX(hero) - 1, getY(hero));
+                    changePos(getX(hero), getY(hero), getPos(hero), boundryCheck(getX(hero) - speedModificator), getY(hero));
                     break;
                 case 3:
-                    changePos(getX(hero), getY(hero), getPos(hero), getX(hero) - 1, getY(hero) + 1);
+                    changePos(getX(hero), getY(hero), getPos(hero), boundryCheck(getX(hero) - speedModificator), boundryCheck(getY(hero) + speedModificator));
                     break;
                 case 4:
-                    changePos(getX(hero), getY(hero), getPos(hero), getX(hero), getY(hero) + 1);
+                    changePos(getX(hero), getY(hero), getPos(hero), getX(hero), boundryCheck(getY(hero) + speedModificator));
                     break;
                 case 5:
-                    changePos(getX(hero), getY(hero), getPos(hero), getX(hero) + 1, getY(hero) + 1);
+                    changePos(getX(hero), getY(hero), getPos(hero), boundryCheck(getX(hero) + speedModificator), boundryCheck(getY(hero) + speedModificator));
                     break;
                 case 6:
-                    changePos(getX(hero), getY(hero), getPos(hero), getX(hero) + 1, getY(hero));
+                    changePos(getX(hero), getY(hero), getPos(hero), boundryCheck(getX(hero) + speedModificator), getY(hero));
                     break;
                 case 7:
-                    changePos(getX(hero), getY(hero), getPos(hero), getX(hero) + 1, getY(hero) - 1);
+                    changePos(getX(hero), getY(hero), getPos(hero), boundryCheck(getX(hero) + speedModificator), boundryCheck(getY(hero) - speedModificator));
                     break;
                 default:
                     std::cout << "Wrong direction!";
             }
-            break;
-    }
 
 }
 
@@ -260,7 +173,11 @@ void Map::iteration()
 {
     for(Being* hero : allHeroes_) {
         if(hero->isAlive()) {
-            move(hero, 5);
+
+            srand (time(NULL));
+            int movement = rand() % 8;
+
+            move(hero, movement);
             getItems(fields_[getX(hero)][getY(hero)], hero);
             if (isFieldFull(getX(hero), getY(hero))) {
                 encounter(fields_[getX(hero)][getY(hero)], getPos(hero));
@@ -269,4 +186,12 @@ void Map::iteration()
         else delete hero;
     }
 
+}
+
+int Map::boundryCheck(int where) {
+    if(where >= mapSize_)
+        where = mapSize_-1;
+    if(where < 0)
+        where = 0;
+    return where;
 }

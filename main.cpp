@@ -152,8 +152,9 @@ void fillMap(Map & adventureMap){
 
         //Getting user input
         while ((numOfObj > Map::getMapSize() / 2)  || (numOfObj <= 0)) {
-            std::cout << "Give me amount of objects to create: ";
-            std::cin >> numOfObj;
+            //std::cout << "Give me amount of objects to create: ";
+            //std::cin >> numOfObj;
+            numOfObj = 10;
         }
 
         //Checking if entered number is too small to draw
@@ -235,13 +236,10 @@ int main() {
 
     fillMap(adventureMap);
     adventureMap.show();
-    adventureMap.iteration();
-    //while(true){
-        //int x1, y1, x2, y2, pos;
-        //std::cout << "Podaj podaj koordynaty pola i pozycje (x,y,pos) z ktorej chcesz przeniesc istote, oraz kooordynaty pola (x,y) gdzie\n chcesz ja przeniesc :) \n";
-        //std::cin >> x1 >> y1 >> pos >> x2 >> y2;
-        //adventureMap.changePos(x1,y1,pos,x2,y2);
-
+    while(1) {
+        adventureMap.iteration();
         adventureMap.show();
-    //}
+        char a;
+        std::cin>>a;
+    }
 }
