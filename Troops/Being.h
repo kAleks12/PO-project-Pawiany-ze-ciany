@@ -4,7 +4,7 @@
 #include "../Items/Item.h"
 
 #include <string>
-#include <stdio.h>
+#include <cstdio>
 #include <random>
 
 
@@ -13,19 +13,18 @@ protected:
     int healthPoints_ = 100;
     std::string name_;
     int strength_;
-    int speed_;
-    int posX_;
-    int posY_;
-    std::string id_;
+    int tribe_;
+    char id_ [81];
     std::vector <Item> backpack_;
 public:
     Being();
     void changeHp(int);
-    void setCoords(int, int);
     std::string getId();
     float getTotalAttackPower();
+    [[nodiscard]] int getTribe() const;
     virtual void show();
-    void move(int posX, int posY);
+    void addItem(const Item&);
+    bool isAlive();
 };
 
 #endif //PO_BEING_H

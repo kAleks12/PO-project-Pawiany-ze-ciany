@@ -5,48 +5,24 @@
 #include "Viking.h"
 
 int Viking::numOfVikingsCreated_ = 0;
+int Viking::moveCap_ =2 ;
 
 Viking::Viking() {
     Item axe1("axe"), axe2("axe");
     backpack_.push_back(axe1);
     backpack_.push_back(axe2);
 
-    int numOfDigits = 0;
-    int tmp = numOfVikingsCreated_;
-
-    for(;tmp > 0;numOfDigits++){
-        tmp /= 10;
-    }
-
-    if(numOfDigits == 0 || numOfDigits == 1){
-        id_[0] = 'V';
-        id_[1] = '0';
-        id_[2] = numOfVikingsCreated_ + '0';
-        id_[3] = name_[0];
-    }
-    else {
-        tmp = numOfVikingsCreated_;
-        for (int i = numOfDigits + 1; i >= 0; i--) {
-            if (i == 0) id_[i] = 'V';
-            else {
-                if (i == numOfDigits + 1) id_[i] = name_[0];
-                else {
-                    id_[i] = tmp % 10 + '0';
-                    tmp /= 10;
-                }
-            }
-        }
-    }
     numOfVikingsCreated_++;
 }
 
-Viking::Viking(std::string name) {
+Viking::Viking(std::string name, int tribe) {
 
     std::random_device rd;
     std::mt19937 randomSeed(rd());
 
+    tribe_ = tribe;
     name_ = name;
-    speed_ = 2;
+    moveCap_ = 2;
 
     std::uniform_int_distribution <int> strengthRange (17,20);
     strength_=strengthRange(randomSeed);
@@ -73,19 +49,19 @@ Viking::Viking(std::string name) {
         id_[2] = numOfVikingsCreated_ + '0';
         id_[3] = name_[0];
     }
-    else {
+    else{
         tmp = numOfVikingsCreated_;
-        for (int i = numOfDigits + 1; i >= 0; i--) {
-            if (i == 0) id_[i] = 'V';
-            else {
-                if (i == numOfDigits + 1) id_[i] = name_[0];
-                else {
-                    id_[i] = tmp % 10 + '0';
-                    tmp /= 10;
-                }
-            }
+        numOfDigits+=2;
+
+        id_[numOfDigits] = '\0';
+        id_[--numOfDigits] = name_[0];
+        while(numOfDigits>=1) {
+            id_[--numOfDigits] = tmp % 10 + '0';
+            tmp /= 10;
         }
+        id_[0]= 'V';
     }
+
     numOfVikingsCreated_++;
 }
 

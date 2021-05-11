@@ -5,9 +5,9 @@
 #include "../Troops/Being.h"
 
 class Field {
-    friend class Map;
 private:
     Being * heroesAtThisField_[2];
+    std::vector <Item> itemsAtThisField_;
 public:
     Field();
     void addBeing(Being *);
@@ -16,6 +16,10 @@ public:
     bool isPosEmpty(int);
     bool isSpace();
     void showField();
+    void addItem(int);
+    Item giveItem();
+
+    bool areItems();
 };
 
 

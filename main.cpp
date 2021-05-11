@@ -13,10 +13,10 @@
 #include <string>
 #include <windows.h>
 
-#include "Troops/Tribe.h"
-#include "Terrain/Map.h"
-std::mt19937 engine {std::random_device{}()};
 
+#include "Terrain/Map.h"
+
+std::mt19937 engine {std::random_device{}()};
 
 inline std::string drawName(){
     std::ifstream fNames("names.txt");
@@ -38,14 +38,13 @@ inline int drawPos() {
     return randomNum;
 }
 
-template <typename ClassName> inline ClassName* generateClassObject(std::string name, Map & map, Tribe & currentTribe){
+template <typename ClassName> inline ClassName* generateClassObject(std::string name, Map & map, int tribe){
     int tmpXPos, tmpYPos;
-    auto tmp = new ClassName(name);
+    auto tmp = new ClassName(name,tribe);
     do {
         tmpXPos = drawPos();
         tmpYPos = drawPos();
     } while(map.isFieldFull(tmpXPos, tmpYPos));
-    tmp -> setCoords(tmpXPos,tmpYPos);
     map.spawn(tmp, tmpXPos, tmpYPos);
     return tmp;
 }
@@ -141,78 +140,76 @@ inline void adjustNumberOfObjects( int & numOfObjects1, int & numOfObjects2, int
     }
 }
 
-void fillMap(Map & adventureMap, Tribe & currentTribe){
+void fillMap(Map & adventureMap){
     std::uniform_int_distribution <int> limRange(1, 99);
     srand(time(nullptr));
+    for(int j=0;j<4;j++) {
+        int numOfObj = Map::getMapSize() * 2 + 400;
+        int numOfSlavs = 0;
+        int numOfNomads = 0;
+        int numOfKnights = 0;
+        int numOfVikings = 0;
 
-    int numOfObj = Map::getMapSize() * 2 + 400;
-    int numOfSlavs = 0;
-    int numOfNomads = 0;
-    int numOfKnights = 0;
-    int numOfVikings = 0;
+        //Getting user input
+        while ((numOfObj > Map::getMapSize() / 2)  || (numOfObj <= 0)) {
+            std::cout << "Give me amount of objects to create: ";
+            std::cin >> numOfObj;
+        }
 
-    //Getting user input
-    while((numOfObj > Map::getMapSize()/2) || (numOfObj > 100) || (numOfObj <= 0))  {
-        std::cout << "Give me amount of objects to create: ";
-        std::cin >> numOfObj;
-    }
-
-    //Checking if entered number is too small to draw
-    switch (numOfObj) {
-        case 1:
-            numOfSlavs++;
-            break;
-        case 2:
-            numOfSlavs++;
-            numOfNomads++;
-            break;
-        case 3:
-            numOfSlavs++;
-            numOfNomads++;
-            numOfVikings++;
-            break;
-        case 4:
-            numOfSlavs++;
-            numOfNomads++;
-            numOfVikings++;
-            numOfKnights++;
-            break;
-        default:
-            numOfSlavs = limRange(engine);
-            numOfNomads = limRange(engine);
-            numOfVikings = limRange(engine);
-            numOfKnights = limRange(engine);
-            adjustNumberOfObjects(numOfSlavs, numOfNomads, numOfVikings, numOfKnights,(numOfNomads + numOfSlavs + numOfKnights + numOfVikings) - numOfObj);
-            break;
-    }
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
-    std::cout << "\nList of objects -> Slavs: " << numOfSlavs << "; Nomads:  " << numOfNomads << "; Vikings:  "
-              << numOfVikings << "; Knights:  " << numOfKnights << ";\tTotal: "
-              << numOfNomads + numOfSlavs + numOfKnights + numOfVikings << "\n";
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
-    std::string name;
-    //Creating and spawning Slav objects
+        //Checking if entered number is too small to draw
+        switch (numOfObj) {
+            case 1:
+                numOfSlavs++;
+                break;
+            case 2:
+                numOfSlavs++;
+                numOfNomads++;
+                break;
+            case 3:
+                numOfSlavs++;
+                numOfNomads++;
+                numOfVikings++;
+                break;
+            case 4:
+                numOfSlavs++;
+                numOfNomads++;
+                numOfVikings++;
+                numOfKnights++;
+                break;
+            default:
+                numOfSlavs = limRange(engine);
+                numOfNomads = limRange(engine);
+                numOfVikings = limRange(engine);
+                numOfKnights = limRange(engine);
+                adjustNumberOfObjects(numOfSlavs, numOfNomads, numOfVikings, numOfKnights,
+                                      (numOfNomads + numOfSlavs + numOfKnights + numOfVikings) - numOfObj);
+                break;
+        }
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
+        std::cout << "\nList of objects -> Slavs: " << numOfSlavs << "; Nomads:  " << numOfNomads << "; Vikings:  "
+                  << numOfVikings << "; Knights:  " << numOfKnights << ";\tTotal: "
+                  << numOfNomads + numOfSlavs + numOfKnights + numOfVikings << "\n";
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
+        std::string name;
+        //Creating and spawning Slav objects
 
         for (int i = 0; i < numOfSlavs; i++) {
-            Slav tmp = *(generateClassObject <Slav> (drawName(), adventureMap, currentTribe));
-            currentTribe.addSlav(tmp);
-            tmp.show();
+            adventureMap.addHero(generateClassObject<Slav>(drawName(), adventureMap,j));
+            //tmp.show();
             //std::cout << "Done " << i << " out of " << numOfSlavs << "\n";
         }
         std::cout << "\nDone " << numOfSlavs << " Slavs!\n";
 
         for (int i = 0; i < numOfNomads; i++) {
-            Nomad tmp = *(generateClassObject <Nomad> (drawName(), adventureMap, currentTribe)) ;
-            currentTribe.addNomad(tmp);
-            tmp.show();
+            adventureMap.addHero(generateClassObject<Nomad>(drawName(), adventureMap,j));
+            //tmp.show();
             //std::cout << "Done " << i << " out of " << numOfNomads << "\n";
         }
         std::cout << "Done " << numOfNomads << " Nomads!\n";
 
         for (int i = 0; i < numOfVikings; i++) {
-            Viking tmp = *(generateClassObject <Viking> (drawName(), adventureMap, currentTribe)) ;
-            currentTribe.addViking(tmp);
-            tmp.show();
+            adventureMap.addHero(generateClassObject<Viking>(drawName(), adventureMap,j));
+            //tmp.show();
             //std::cout << "Done " << i << " out of " << numOfVikings << "\n";
         }
         std::cout << "Done " << numOfVikings << " Vikings!\n";
@@ -220,12 +217,12 @@ void fillMap(Map & adventureMap, Tribe & currentTribe){
         // Creating and spawning Knight objects
 
         for (int i = 0; i < numOfKnights; i++) {
-            Knight tmp = *(generateClassObject <Knight> (drawName(), adventureMap, currentTribe));
-            currentTribe.addKnight(tmp);
-            tmp.show();
+            adventureMap.addHero(generateClassObject<Knight>(drawName(), adventureMap,j));
+            //tmp.show();
             //std::cout << "Done " << i << " out of " << numOfKnights << "\n";
         }
         std::cout << "Done " << numOfKnights << " Knights!\n\n";
+    }
 }
 
 void simulation(Map & adventureMap)
@@ -234,31 +231,17 @@ void simulation(Map & adventureMap)
 }
 
 int main() {
-
-    Tribe northEast;
-    Tribe southEast;
-    Tribe northWest;
-    Tribe southWest;
-
     Map adventureMap;
 
-    fillMap(adventureMap, northEast);
-    fillMap(adventureMap, southEast);
-    fillMap(adventureMap, northWest);
-    fillMap(adventureMap, southWest);
-
-    /*northEast.show();
-    southEast.show();
-    northWest.show();
-    southWest.show();*/
-
+    fillMap(adventureMap);
     adventureMap.show();
+    adventureMap.iteration();
+    //while(true){
+        //int x1, y1, x2, y2, pos;
+        //std::cout << "Podaj podaj koordynaty pola i pozycje (x,y,pos) z ktorej chcesz przeniesc istote, oraz kooordynaty pola (x,y) gdzie\n chcesz ja przeniesc :) \n";
+        //std::cin >> x1 >> y1 >> pos >> x2 >> y2;
+        //adventureMap.changePos(x1,y1,pos,x2,y2);
 
-    while(true){
-        int x1, y1, x2, y2, pos;
-        std::cout << "Podaj podaj koordynaty pola i pozycje (x,y,pos) z ktorej chcesz przeniesc istote, oraz kooordynaty pola (x,y) gdzie\n chcesz ja przeniesc :) \n";
-        std::cin >> x1 >> y1 >> pos >> x2 >> y2;
-        adventureMap.move(x1,y1,pos,x2,y2);
         adventureMap.show();
-    }
+    //}
 }

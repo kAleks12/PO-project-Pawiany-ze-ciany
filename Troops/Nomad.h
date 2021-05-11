@@ -6,11 +6,12 @@
 class Nomad: public Being{
 private:
     static int numOfNomadsCreated_;
+    static int moveCap_;
     std::string objArmor_;
     std::string objWeapon_;
 public:
     Nomad();
-    explicit Nomad(std::string);
+    explicit Nomad(std::string, int );
 
     void show() override;
 };

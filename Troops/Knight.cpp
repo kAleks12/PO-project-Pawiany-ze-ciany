@@ -1,7 +1,7 @@
 #include "Knight.h"
 
 int Knight::numOfKnightsCreated_ = 0;
-
+int Knight::moveCap_ = 1;
 Knight::Knight() {
     Item sword("sword");
     Item heavyArmor("harmor");
@@ -11,37 +11,13 @@ Knight::Knight() {
     backpack_.push_back(heavyArmor);
     objWeapon_ =  "heavy armor";
 
-    int numOfDigits = 0;
-    int tmp = numOfKnightsCreated_;
-    for(;tmp > 0;numOfDigits++){
-        tmp /= 10;
-    }
-    if(numOfDigits == 0 || numOfDigits == 1){
-        id_[0] = 'K';
-        id_[1] = '0';
-        id_[2] = numOfKnightsCreated_ + '0';
-        id_[3] = name_[0];
-    }
-    else {
-        tmp = numOfKnightsCreated_;
-        for (int i = numOfDigits + 1; i >= 0; i--) {
-            if (i == 0) id_[i] = 'K';
-            else {
-                if (i == numOfDigits + 1) id_[i] = name_[0];
-                else {
-                    id_[i] = tmp % 10 + '0';
-                    tmp /= 10;
-                }
-            }
-        }
-    }
     numOfKnightsCreated_++;
 }
 
-Knight::Knight(std::string name){
+Knight::Knight(std::string name, int tribe){
     name_ = name;
-    speed_ = 1;
-
+    moveCap_ = 1;
+    tribe_ = tribe;
     strength_= 15;
 
     Item sword("sword");
@@ -54,7 +30,6 @@ Knight::Knight(std::string name){
 
     int numOfDigits = 0;
     int tmp = numOfKnightsCreated_;
-    char nameTmp[81];
 
     for(;tmp > 0;numOfDigits++){
         tmp /= 10;
@@ -65,19 +40,19 @@ Knight::Knight(std::string name){
         id_[2] = numOfKnightsCreated_ + '0';
         id_[3] = name_[0];
     }
-    else {
+    else{
         tmp = numOfKnightsCreated_;
-        for (int i = numOfDigits + 1; i >= 0; i--) {
-            if (i == 0) id_[i] = 'K';
-            else {
-                if (i == numOfDigits + 1) id_[i] = name_[0];
-                else {
-                    id_[i] = tmp % 10 + '0';
-                    tmp /= 10;
-                }
-            }
+        numOfDigits+=2;
+
+        id_[numOfDigits] = '\0';
+        id_[--numOfDigits] = name_[0];
+        while(numOfDigits>=1) {
+            id_[--numOfDigits] = tmp % 10 + '0';
+            tmp /= 10;
         }
+        id_[0]= 'K';
     }
+
     numOfKnightsCreated_++;
 }
 

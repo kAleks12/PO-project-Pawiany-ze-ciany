@@ -1,7 +1,7 @@
 #include "Slav.h"
 
 int Slav::numOfSlavsCreated_ = 0;
-
+int Slav::moveCap_ = 3;
 
 Slav::Slav() {
 
@@ -13,40 +13,17 @@ Slav::Slav() {
     backpack_.push_back(spear);
     objWeapon_ =  "spear";
 
-    int numOfDigits = 0;
-    int tmp = numOfSlavsCreated_;
-    for(;tmp > 0;numOfDigits++){
-        tmp /= 10;
-    }
-    if(numOfDigits == 0 || numOfDigits == 1){
-        id_[0] = 'S';
-        id_[1] = '0';
-        id_[2] = numOfSlavsCreated_ + '0';
-        id_[3] = name_[0];
-    }
-    else {
-        tmp = numOfSlavsCreated_;
-        for (int i = numOfDigits + 1; i >= 0; i--) {
-            if (i == 0) id_[i] = 'S';
-            else {
-                if (i == numOfDigits + 1) id_[i] = name_[0];
-                else {
-                    id_[i] = tmp % 10 + '0';
-                    tmp /= 10;
-                }
-            }
-        }
-    }
     numOfSlavsCreated_++;
 }
 
-Slav::Slav(std::string name){
+Slav::Slav(std::string name, int tribe){
 
     std::random_device rd;
     std::mt19937 mt(rd());
 
+    tribe_ = tribe;
     name_ = name;
-    speed_ = 3;
+    moveCap_ = 3;
 
     std::uniform_int_distribution <int> strengthRange (10,12);
     strength_=strengthRange(mt);
@@ -72,19 +49,19 @@ Slav::Slav(std::string name){
         id_[2] = numOfSlavsCreated_ + '0';
         id_[3] = name_[0];
     }
-    else {
+    else{
         tmp = numOfSlavsCreated_;
-        for (int i = numOfDigits + 1; i >= 0; i--) {
-            if (i == 0) id_[i] = 'S';
-            else {
-                if (i == numOfDigits + 1) id_[i] = name_[0];
-                else {
-                    id_[i] = tmp % 10 + '0';
-                    tmp /= 10;
-                }
-            }
+        numOfDigits+=2;
+
+        id_[numOfDigits] = '\0';
+        id_[--numOfDigits] = name_[0];
+        while(numOfDigits>=1) {
+            id_[--numOfDigits] = tmp % 10 + '0';
+            tmp /= 10;
         }
+        id_[0]= 'S';
     }
+
     numOfSlavsCreated_++;
 }
 
