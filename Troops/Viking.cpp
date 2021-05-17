@@ -7,9 +7,14 @@
 int Viking::numOfVikingsCreated_ = 0;
 
 Viking::Viking() {
-    Item axe1("axe"), axe2("axe");
-    backpack_.push_back(axe1);
-    backpack_.push_back(axe2);
+
+    Item axes("double axes"), lightArmor("larmor");
+
+    axes.changeState();
+    lightArmor.changeState();
+
+    backpack_.push_back(lightArmor);
+    backpack_.push_back(axes);
 
     numOfVikingsCreated_++;
 }
@@ -27,14 +32,12 @@ Viking::Viking(std::string name, int tribe) {
     strength_=strengthRange(randomSeed);
 
 
-    Item axe1("axe"), axe2("axe"), lightArmor("larmor");
+    Item axes("double axes"), lightArmor("larmor");
+    axes.changeState();
+    lightArmor.changeState();
 
     backpack_.push_back(lightArmor);
-    objArmor_ = "light armor";
-    backpack_.push_back(axe1);
-    objWeapon1_ =  "axe";
-    backpack_.push_back(axe2);
-    objWeapon2_ =  "axe";
+    backpack_.push_back(axes);
 
 
     int numOfDigits = 0;
@@ -64,10 +67,11 @@ Viking::Viking(std::string name, int tribe) {
     numOfVikingsCreated_++;
 }
 
-
-
 void Viking::show() {
-    std::cout << "\n\nObject is using -> " << objWeapon1_ << " and " << objWeapon2_ << " as weapons, and wears -> " << objArmor_ << "\n" ;
+    std::cout << "\n\nObject's weapons -> ";
+    findWeapon().show();
+    std::cout << "\n\nObject's armor -> ";
+    findArmor().show();
     Being::show();
 }
 

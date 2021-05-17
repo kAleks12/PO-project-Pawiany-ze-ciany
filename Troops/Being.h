@@ -28,8 +28,13 @@ public:
 
     std::string getId();
     int getTotalAttackPower();
-    int getSpeed() const;
+    int getDefense();
+    [[nodiscard]] int getSpeed() const;
     [[nodiscard]] int getTribe() const;
+    Item& findArmor();
+    Item& findWeapon();
+    void useEq();
+    int getHp();
 
     virtual void show() = 0;
     virtual void destroy() = 0;

@@ -5,8 +5,6 @@
 
 class Knight: public Being{
     static int numOfKnightsCreated_;
-    std::string objArmor_;
-    std::string objWeapon_;
     bool isOnHorse;
 public:
     Knight();

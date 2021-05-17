@@ -11,8 +11,8 @@ class Viking: public Being {
 private:
     static int numOfVikingsCreated_;
     std::string objArmor_;
-    std::string objWeapon1_;
-    std::string objWeapon2_;
+    std::string objWeapon_;
+
 public:
     Viking();
     ~Viking();

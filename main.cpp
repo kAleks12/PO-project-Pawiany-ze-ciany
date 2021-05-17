@@ -48,6 +48,11 @@ template <typename ClassName> inline ClassName* generateClassObject(std::string 
     return tmp;
 }
 
+inline void generateItem(Map & map, int itemId)
+{
+
+}
+
 inline void adjustNumberOfObjects( int & numOfObjects1, int & numOfObjects2, int & numOfObjects3, int & numOfObjects4, int difference)
 {
     if(difference < 0) {
@@ -140,10 +145,13 @@ inline void adjustNumberOfObjects( int & numOfObjects1, int & numOfObjects2, int
 }
 
 void fillMap(Map & adventureMap){
-    std::uniform_int_distribution <int> limRange(1, 99);
-    srand(time(nullptr));
+    std::uniform_int_distribution <int> heroesRange(1, 99);
+    std::uniform_int_distribution <int> itemsRange(1, 9);
+    int numOfItems = 0;
+
     for(int j=0;j<4;j++) {
         int numOfObj = Map::getMapSize() * 2 + 400;
+
         int numOfSlavs = 0;
         int numOfNomads = 0;
         int numOfKnights = 0;
@@ -151,8 +159,10 @@ void fillMap(Map & adventureMap){
 
         //Getting user input
         while ((numOfObj > Map::getMapSize() / 2)  || (numOfObj <= 0)) {
-            //std::cout << "Give me amount of objects to create: ";
-            //std::cin >> numOfObj;
+            /*std::cout << "GEnter number of objects to create: ";
+            std::cin >> numOfObj;
+            std::cout << "Enter number of items to create"
+            std::cin >> numOfItems;*/
             numOfObj = 5;
         }
 
@@ -177,10 +187,10 @@ void fillMap(Map & adventureMap){
                 numOfKnights++;
                 break;
             default:
-                numOfSlavs = limRange(engine);
-                numOfNomads = limRange(engine);
-                numOfVikings = limRange(engine);
-                numOfKnights = limRange(engine);
+                numOfSlavs = heroesRange(engine);
+                numOfNomads = heroesRange(engine);
+                numOfVikings = heroesRange(engine);
+                numOfKnights = heroesRange(engine);
                 adjustNumberOfObjects(numOfSlavs, numOfNomads, numOfVikings, numOfKnights,
                                       (numOfNomads + numOfSlavs + numOfKnights + numOfVikings) - numOfObj);
                 break;
@@ -190,6 +200,7 @@ void fillMap(Map & adventureMap){
                   << numOfVikings << "; Knights:  " << numOfKnights << ";\tTotal: "
                   << numOfNomads + numOfSlavs + numOfKnights + numOfVikings << "\n";
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);*/
+
         std::string name;
         //Creating and spawning Slav objects
 
@@ -223,6 +234,10 @@ void fillMap(Map & adventureMap){
         }
         //std::cout << "Done " << numOfKnights << " Knights!\n\n";
     }
+    for (int i = 0; i < numOfItems; i++) {
+        generateItem(adventureMap, itemsRange(engine));
+    }
+
 }
 
 void simulation(Map & adventureMap)
@@ -238,5 +253,6 @@ int main() {
     while(true) {
         adventureMap.iteration();
         adventureMap.show();
+        Sleep(2000);
     }
 }

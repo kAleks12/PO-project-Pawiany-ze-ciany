@@ -6,8 +6,6 @@
 class Slav: public Being{
 private:
     static int numOfSlavsCreated_;
-    std::string objArmor_;
-    std::string objWeapon_;
 public:
     Slav();
     ~Slav();

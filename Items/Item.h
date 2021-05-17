@@ -13,7 +13,7 @@
 class Item {
     friend class Being;
 private:
-    bool isTimeLim_;
+    bool isTemp_;
     int duration_;
     bool isBeingUsed_ = false;
     std::string name_;
@@ -21,11 +21,11 @@ private:
     float attackBoost_;
     int speedBoost_;
     int armorBoost_;
-    int weight_;
 public:
     explicit Item(int);
     explicit Item(const std::string &);
-    std::string getName();
+    void destroy();
+    void changeState();
     void show();
 };
 

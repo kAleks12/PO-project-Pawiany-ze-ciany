@@ -4,12 +4,12 @@ int Knight::numOfKnightsCreated_ = 0;
 
 Knight::Knight() {
     Item sword("sword");
+    sword.changeState();
     Item heavyArmor("harmor");
+    heavyArmor.changeState();
 
     backpack_.push_back(sword);
-    objArmor_ = "sword";
     backpack_.push_back(heavyArmor);
-    objWeapon_ =  "heavy armor";
 
     numOfKnightsCreated_++;
 }
@@ -21,12 +21,12 @@ Knight::Knight(std::string name, int tribe){
     speed_ = 1;
 
     Item sword("sword");
+    sword.changeState();
     Item heavyArmor("harmor");
+    heavyArmor.changeState();
 
     backpack_.push_back(sword);
-    objWeapon_ = "sword";
     backpack_.push_back(heavyArmor);
-    objArmor_ =  "heavy armor";
 
     int numOfDigits = 0;
     int tmp = numOfKnightsCreated_;
@@ -61,7 +61,10 @@ void Knight::changeStatus() {
 }
 
 void Knight::show() {
-    std::cout << "\n\nObject is using -> " << objWeapon_ <<  " as weapon, and wears -> " << objArmor_ << "\n" ;
+    std::cout << "\n\nObject's weapons -> ";
+    findWeapon().show();
+    std::cout << "\n\nObject's armor -> ";
+    findArmor().show();
     Being::show();
 }
 

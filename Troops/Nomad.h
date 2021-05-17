@@ -6,8 +6,6 @@
 class Nomad: public Being{
 private:
     static int numOfNomadsCreated_;
-    std::string objArmor_;
-    std::string objWeapon_;
 public:
     Nomad();
     ~Nomad();

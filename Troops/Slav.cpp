@@ -7,11 +7,12 @@ Slav::Slav() {
 
     Item spear("spear");
     Item lightArmor("larmor");
+    spear.changeState();
+    lightArmor.changeState();
 
     backpack_.push_back(lightArmor);
-    objArmor_ = "light armor";
     backpack_.push_back(spear);
-    objWeapon_ =  "spear";
+
 
     numOfSlavsCreated_++;
 }
@@ -32,10 +33,11 @@ Slav::Slav(std::string name, int tribe){
     Item spear("spear");
     Item lightArmor("larmor");
 
+    spear.changeState();
+    lightArmor.changeState();
+
     backpack_.push_back(lightArmor);
-    objArmor_ = "light armor";
     backpack_.push_back(spear);
-    objWeapon_ = "spear";
 
 
     int numOfDigits = 0;
@@ -66,7 +68,10 @@ Slav::Slav(std::string name, int tribe){
 }
 
 void Slav::show() {
-    std::cout << "\n\nObject is using -> " << objWeapon_ << " as a weapon, and wears -> " << objArmor_ << "\n" ;
+    std::cout << "\n\nObject's weapons -> ";
+    findWeapon().show();
+    std::cout << "\n\nObject's armor -> ";
+    findArmor().show();
     Being::show();
 }
 

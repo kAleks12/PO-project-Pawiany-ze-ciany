@@ -6,7 +6,10 @@ int Nomad::numOfNomadsCreated_ = 0;
 Nomad::Nomad()
 {
     Item bulat("bulat");
+    bulat.changeState();
     Item lightArmor("larmor");
+    lightArmor.changeState();
+
     backpack_.push_back(bulat);
     backpack_.push_back(lightArmor);
 
@@ -26,12 +29,13 @@ Nomad::Nomad(std::string name, int tribe)
     strength_=strengthRange(mt);
 
     Item bulat("bulat");
+    bulat.changeState();
     Item lightArmor("larmor");
+    lightArmor.changeState();
 
     backpack_.push_back(lightArmor);
-    objArmor_ = "light armor";
     backpack_.push_back(bulat);
-    objWeapon_ =  "bulat";
+
 
     int numOfDigits = 0;
     int tmp = numOfNomadsCreated_;
@@ -63,7 +67,11 @@ Nomad::Nomad(std::string name, int tribe)
 }
 
 void Nomad::show() {
-    std::cout << "\n\nObject is using -> " << objWeapon_ << " as a weapon, and wears -> " << objArmor_ << "\n" ;
+    std::cout << "\n\nObject's weapons -> ";
+    findWeapon().show();
+    std::cout << "\n\nObject's armor -> ";
+    findArmor().show();
+    Being::show();
     Being::show();
 }
 
