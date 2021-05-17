@@ -13,7 +13,8 @@
 #include <random>
 #include <windows.h>
 #include <list>
-#include <time.h>
+#include <vector>
+#include <algorithm>
 
 class Map {
 private:
@@ -23,24 +24,27 @@ private:
 
 public:
     void spawn(Being *, int, int);
-    void remove(int, int, int);
-    bool isFieldFull(int, int);
-    static int getMapSize();
-    Being * fieldGetHero(int, int, int);
-    void showField(int, int);
-    void show();
-    void changePos(int, int, int, int, int);
-    bool isPosEmpty(int, int, int);
+    void changePos(Being*, int, int);
     void addHero(Being*);
+    static int boundaryCheck(int);
 
-    void move(Being *hero, int moveDirection);
+    static void getItems(Field, Being*);
+    static int getMapSize();
     int getX(Being *hero);
     int getY(Being *hero);
     int getPos(Being *hero);
-    static void getItems(Field, Being*);
+
+    void showField(int, int);
+    void show();
+    bool isFieldFull(int, int);
+    bool isPosEmpty(int, int, int);
+
+
+    void move(Being *hero, int moveDirection);
     void encounter(Field &, int);
     void iteration();
-    int boundryCheck(int);
+
+    void removeHero(Being *);
 };
 
 #endif //PO_MAP_H

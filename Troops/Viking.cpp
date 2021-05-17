@@ -5,7 +5,6 @@
 #include "Viking.h"
 
 int Viking::numOfVikingsCreated_ = 0;
-int Viking::moveCap_ =2 ;
 
 Viking::Viking() {
     Item axe1("axe"), axe2("axe");
@@ -22,7 +21,7 @@ Viking::Viking(std::string name, int tribe) {
 
     tribe_ = tribe;
     name_ = name;
-    moveCap_ = 2;
+    speed_ = 2;
 
     std::uniform_int_distribution <int> strengthRange (17,20);
     strength_=strengthRange(randomSeed);
@@ -65,7 +64,17 @@ Viking::Viking(std::string name, int tribe) {
     numOfVikingsCreated_++;
 }
 
+
+
 void Viking::show() {
     std::cout << "\n\nObject is using -> " << objWeapon1_ << " and " << objWeapon2_ << " as weapons, and wears -> " << objArmor_ << "\n" ;
     Being::show();
+}
+
+void Viking::destroy() {
+    delete this;
+}
+
+Viking::~Viking() {
+    std::cout << "Viking " << id_ << " has been slayed!"<< std::endl;
 }

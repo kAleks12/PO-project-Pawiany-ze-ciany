@@ -6,14 +6,15 @@
 class Nomad: public Being{
 private:
     static int numOfNomadsCreated_;
-    static int moveCap_;
     std::string objArmor_;
     std::string objWeapon_;
 public:
     Nomad();
+    ~Nomad();
     explicit Nomad(std::string, int );
 
     void show() override;
+    void destroy() override;
 };
 
 

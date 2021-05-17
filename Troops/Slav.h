@@ -6,14 +6,15 @@
 class Slav: public Being{
 private:
     static int numOfSlavsCreated_;
-    static int moveCap_;
     std::string objArmor_;
     std::string objWeapon_;
 public:
     Slav();
+    ~Slav();
     explicit Slav(std::string, int);
 
     void show() override;
+    void destroy() override;
 
 };
 

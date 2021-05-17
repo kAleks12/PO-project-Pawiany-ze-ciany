@@ -4,28 +4,45 @@ void Map::spawn(Being * hero, int xPos, int yPos) {
     if(fields_[xPos][yPos].isSpace()) fields_[xPos][yPos].addBeing(hero);
 }
 
-void Map::remove(int xPos, int yPos, int position) {
-    fields_[xPos][yPos].removeBeing(position);
-}
+void Map::changePos(Being* hero, int verChange, int horChange) {
+    int currX = getX(hero);
+    int currY = getY(hero);
+    int pos = getPos(hero);
+    int newX = boundaryCheck(currX + horChange);
+    int newY = boundaryCheck(currY + verChange);
 
-void Map::changePos(int fromX, int fromY, int pos, int whereX, int whereY) {
-    if((!isFieldFull(whereX, whereY))&&(!isPosEmpty(fromX, fromY, pos))) {
-        fields_[whereX][whereY].addBeing(fields_[fromX][fromY].getHero(pos));
-        fields_[fromX][fromY].removeBeing(pos);
+    if((!isFieldFull(newX, newY))&&(!isPosEmpty(currX, currY, pos))) {
+        fields_[newY][newX].addBeing(fields_[currY][currX].getHero(pos));
+        fields_[currY][currX].removeBeing(pos);
+        std::cout << "Hero " << hero->getId() << " moved from " << currX << ", " << currY << " to " << newX << ", " << newY << std::endl;
     }
-    else std::cout << "Where is full, or From is empty" << std::endl;
+    else std::cout << "Where is full, or From is empty! Spadaj na drzewo" << std::endl;
 }
 
 void Map::addHero(Being* hero) {
     allHeroes_.push_back(hero);
 }
 
+void Map::removeHero(Being* hero){
+    auto pos = std::find(allHeroes_.begin(), allHeroes_.end(), hero);
+    allHeroes_.erase(pos);
+}
+
+int Map::boundaryCheck(int where) {
+    if(where >= mapSize_)
+        where = mapSize_-1;
+    if(where < 0)
+        where = 0;
+    return where;
+}
+
 void Map::show() {
     int height = 0;
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
-    for (Being* n : allHeroes_) {
+    /*for (Being* n : allHeroes_) {
         std::cout << n-> getId() << std::endl;
-    }
+    }*/
+    std::cout << allHeroes_.size();
     std::cout << "                                            Game Map\n";
     std::cout << "===========================================================================================================\n";
     std::cout << "||     0         1         2         3         4         5         6         7         8         9       ||\n";
@@ -51,14 +68,18 @@ void Map::show() {
 ////////////////////////////////////////////
 
 bool Map::isFieldFull(int xPos, int yPos) {
-    return !(fields_[xPos] [yPos].isSpace());
+    return !(fields_[yPos] [xPos].isSpace());
 }
 
  bool Map::isPosEmpty(int xPos, int yPos, int pos) {
-    return (fields_[xPos] [yPos].isPosEmpty(pos));
+    return (fields_[yPos] [xPos].isPosEmpty(pos));
 }
 
 //////////////////////////////////////////////
+void Map::getItems(Field field, Being * hero) {
+    while(field.areItems()) hero -> addItem(field.giveItem());
+}
+
 int Map::getMapSize() {
     return mapSize_*mapSize_;
 }
@@ -67,20 +88,20 @@ int Map::getX(Being* hero) {
     for(int i=0; i<mapSize_;i++){
         for(int j=0; j<mapSize_; j++){
             if(fields_[i][j].getHero(0)!=nullptr)
-                if(fields_[i][j].getHero(0)->getId() == hero -> getId()) return i;
+                if(fields_[i][j].getHero(0)->getId() == hero -> getId()) return j;
             if(fields_[i][j].getHero(1)!=nullptr)
-                if(fields_[i][j].getHero(1)->getId() == hero -> getId() ) return i;
+                if(fields_[i][j].getHero(1)->getId() == hero -> getId() ) return j;
         }
     }
 }
 
 int Map::getY(Being* hero) {
-    for(auto & field : fields_){
+    for(int i=0; i<mapSize_;i++){
         for(int j=0; j<mapSize_; j++){
-            if(field[j].getHero(0)!=nullptr)
-                if(field[j].getHero(0)->getId() == hero -> getId()) return j;
-            if(field[j].getHero(1)!=nullptr)
-                if(field[j].getHero(1)->getId() == hero -> getId() ) return j;
+            if(fields_[i][j].getHero(0)!=nullptr)
+                if(fields_[i][j].getHero(0)->getId() == hero -> getId()) return i;
+            if(fields_[i][j].getHero(1)!=nullptr)
+                if(fields_[i][j].getHero(1)->getId() == hero -> getId() ) return i;
         }
     }
 }
@@ -102,96 +123,84 @@ void Map::showField(int xPos, int yPos) {
 }
 
 void Map::move(Being* hero, int moveDirection) {
-    int speedModificator;
-    switch (hero->getId()[0]) {
-        case 'S':
-            speedModificator = 3;
+
+    int verChange = 0;
+    int horChange = 0 ;
+    switch (moveDirection) {
+        case 0:
+            verChange = -(hero->getSpeed());
             break;
-        case 'N':
-            speedModificator = 2;
+        case 1:
+            verChange = -(hero->getSpeed());
+            horChange = -(hero->getSpeed());
             break;
-        case 'V':
-            speedModificator = 2;
+        case 2:
+            horChange = -(hero->getSpeed());
             break;
-        case 'K':
-            speedModificator = 1;
+        case 3:
+            verChange = hero->getSpeed();
+            horChange = -(hero->getSpeed());
             break;
+        case 4:
+            verChange = hero->getSpeed();
+            break;
+        case 5:
+            verChange = hero->getSpeed();
+            horChange = hero->getSpeed();
+            break;
+        case 6:
+            horChange = hero->getSpeed();
+            break;
+        case 7:
+            verChange = -(hero->getSpeed());
+            horChange = hero->getSpeed();
+            break;
+        default:
+            std::cout << "Wrong direction!";
     }
-            switch (moveDirection) {
-                case 0:
-                    changePos(getX(hero), getY(hero), getPos(hero), getX(hero), boundryCheck(getY(hero) - speedModificator));
-                    break;
-                case 1:
-                    changePos(getX(hero), getY(hero), getPos(hero), boundryCheck(getX(hero) - speedModificator), boundryCheck(getY(hero) - speedModificator));
-                    break;
-                case 2:
-                    changePos(getX(hero), getY(hero), getPos(hero), boundryCheck(getX(hero) - speedModificator), getY(hero));
-                    break;
-                case 3:
-                    changePos(getX(hero), getY(hero), getPos(hero), boundryCheck(getX(hero) - speedModificator), boundryCheck(getY(hero) + speedModificator));
-                    break;
-                case 4:
-                    changePos(getX(hero), getY(hero), getPos(hero), getX(hero), boundryCheck(getY(hero) + speedModificator));
-                    break;
-                case 5:
-                    changePos(getX(hero), getY(hero), getPos(hero), boundryCheck(getX(hero) + speedModificator), boundryCheck(getY(hero) + speedModificator));
-                    break;
-                case 6:
-                    changePos(getX(hero), getY(hero), getPos(hero), boundryCheck(getX(hero) + speedModificator), getY(hero));
-                    break;
-                case 7:
-                    changePos(getX(hero), getY(hero), getPos(hero), boundryCheck(getX(hero) + speedModificator), boundryCheck(getY(hero) - speedModificator));
-                    break;
-                default:
-                    std::cout << "Wrong direction!";
-            }
+    changePos(hero, verChange, horChange);
 
-}
-
-void Map::getItems(Field field, Being * hero) {
-    while(field.areItems()) hero -> addItem(field.giveItem());
 }
 
 void Map::encounter(Field & field, int startingPos){
     if(startingPos == 0){
-        field.getHero(1)->changeHp(field.getHero(0)->getTotalAttackPower());
-        if(field.getHero(1)->isAlive()) field.getHero(0)->changeHp(field.getHero(1)->getTotalAttackPower()/2);
-        else field.removeBeing(1);
-
-        if(!(field.getHero(0)->isAlive())) field.removeBeing(0);;
+        field.getHero(1)->changeHp(-(field.getHero(0)->getTotalAttackPower()));
+        if(field.getHero(1)->isAlive())
+            field.getHero(0)->changeHp(-(field.getHero(1)->getTotalAttackPower()/2));
     }
-    else{
-        field.getHero(0)->changeHp(field.getHero(1)->getTotalAttackPower());
-        if(field.getHero(0)->isAlive()) field.getHero(1)->changeHp(field.getHero(0)->getTotalAttackPower()/2);
-        else field.removeBeing(0);
-
-        if(!(field.getHero(1)->isAlive())) field.removeBeing(1);
+    else {
+        field.getHero(0)->changeHp(-(field.getHero(1)->getTotalAttackPower()));
+        if(field.getHero(0)->isAlive())
+            field.getHero(1)->changeHp(-(field.getHero(0)->getTotalAttackPower()/2));
     }
+
+    if(!(field.getHero(0)->isAlive()))
+        field.removeBeing(0);
+
+    if(!(field.getHero(1)->isAlive()))
+        field.removeBeing(1);
+
 }
 
 void Map::iteration()
 {
-    for(Being* hero : allHeroes_) {
-        if(hero->isAlive()) {
-
-            srand (time(NULL));
-            int movement = rand() % 8;
-
-            move(hero, movement);
-            getItems(fields_[getX(hero)][getY(hero)], hero);
-            if (isFieldFull(getX(hero), getY(hero))) {
-                encounter(fields_[getX(hero)][getY(hero)], getPos(hero));
+    srand(time(nullptr));
+        for (auto &hero : allHeroes_) {
+            if(getX(hero) == -10) {
+                int movement = rand() % 8;
+                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
+                move(hero, movement);
+                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
+                getItems(fields_[getX(hero)][getY(hero)], hero);
+                if (isFieldFull(getX(hero), getY(hero))) {
+                    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
+                    std::cout << "ENCOUNTER!!!!" << std::endl;
+                    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
+                    encounter(fields_[getY(hero)][getX(hero)], getPos(hero));
+                }
+            }
+            else{
+                hero->destroy();
             }
         }
-        else delete hero;
-    }
-
-}
-
-int Map::boundryCheck(int where) {
-    if(where >= mapSize_)
-        where = mapSize_-1;
-    if(where < 0)
-        where = 0;
-    return where;
 }

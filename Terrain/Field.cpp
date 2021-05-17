@@ -8,7 +8,7 @@ Field::Field() {
 
 void Field::addBeing( Being * hero) {
     if((hero != nullptr) && isSpace()){
-        if(heroesAtThisField_[0]== nullptr)
+        if(heroesAtThisField_[0] == nullptr)
             heroesAtThisField_[0] = hero;
         else{
             heroesAtThisField_[1] = hero;

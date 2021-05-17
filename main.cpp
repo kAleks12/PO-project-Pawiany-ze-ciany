@@ -11,7 +11,6 @@
 #include <cstdlib>
 #include <fstream>
 #include <string>
-#include <windows.h>
 
 
 #include "Terrain/Map.h"
@@ -154,7 +153,7 @@ void fillMap(Map & adventureMap){
         while ((numOfObj > Map::getMapSize() / 2)  || (numOfObj <= 0)) {
             //std::cout << "Give me amount of objects to create: ";
             //std::cin >> numOfObj;
-            numOfObj = 10;
+            numOfObj = 5;
         }
 
         //Checking if entered number is too small to draw
@@ -186,11 +185,11 @@ void fillMap(Map & adventureMap){
                                       (numOfNomads + numOfSlavs + numOfKnights + numOfVikings) - numOfObj);
                 break;
         }
-        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
+        /*SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
         std::cout << "\nList of objects -> Slavs: " << numOfSlavs << "; Nomads:  " << numOfNomads << "; Vikings:  "
                   << numOfVikings << "; Knights:  " << numOfKnights << ";\tTotal: "
                   << numOfNomads + numOfSlavs + numOfKnights + numOfVikings << "\n";
-        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);*/
         std::string name;
         //Creating and spawning Slav objects
 
@@ -199,21 +198,21 @@ void fillMap(Map & adventureMap){
             //tmp.show();
             //std::cout << "Done " << i << " out of " << numOfSlavs << "\n";
         }
-        std::cout << "\nDone " << numOfSlavs << " Slavs!\n";
+        //std::cout << "\nDone " << numOfSlavs << " Slavs!\n";
 
         for (int i = 0; i < numOfNomads; i++) {
             adventureMap.addHero(generateClassObject<Nomad>(drawName(), adventureMap,j));
             //tmp.show();
             //std::cout << "Done " << i << " out of " << numOfNomads << "\n";
         }
-        std::cout << "Done " << numOfNomads << " Nomads!\n";
+        //std::cout << "Done " << numOfNomads << " Nomads!\n";
 
         for (int i = 0; i < numOfVikings; i++) {
             adventureMap.addHero(generateClassObject<Viking>(drawName(), adventureMap,j));
             //tmp.show();
             //std::cout << "Done " << i << " out of " << numOfVikings << "\n";
         }
-        std::cout << "Done " << numOfVikings << " Vikings!\n";
+        //std::cout << "Done " << numOfVikings << " Vikings!\n";
 
         // Creating and spawning Knight objects
 
@@ -222,7 +221,7 @@ void fillMap(Map & adventureMap){
             //tmp.show();
             //std::cout << "Done " << i << " out of " << numOfKnights << "\n";
         }
-        std::cout << "Done " << numOfKnights << " Knights!\n\n";
+        //std::cout << "Done " << numOfKnights << " Knights!\n\n";
     }
 }
 
@@ -236,10 +235,8 @@ int main() {
 
     fillMap(adventureMap);
     adventureMap.show();
-    while(1) {
+    while(true) {
         adventureMap.iteration();
         adventureMap.show();
-        char a;
-        std::cin>>a;
     }
 }

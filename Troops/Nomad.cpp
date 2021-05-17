@@ -2,7 +2,7 @@
 #include "Nomad.h"
 
 int Nomad::numOfNomadsCreated_ = 0;
-int Nomad::moveCap_ =2 ;
+
 Nomad::Nomad()
 {
     Item bulat("bulat");
@@ -20,7 +20,7 @@ Nomad::Nomad(std::string name, int tribe)
     std::mt19937 mt(rd());
     tribe_ = tribe;
     name_ = name;
-    moveCap_ = 2;
+    speed_ = 2;
 
     std::uniform_int_distribution <int> strengthRange (12,15);
     strength_=strengthRange(mt);
@@ -65,4 +65,12 @@ Nomad::Nomad(std::string name, int tribe)
 void Nomad::show() {
     std::cout << "\n\nObject is using -> " << objWeapon_ << " as a weapon, and wears -> " << objArmor_ << "\n" ;
     Being::show();
+}
+
+void Nomad::destroy() {
+    delete this;
+}
+
+Nomad::~Nomad() {
+    std::cout << "Nomad " << id_ << " has been slayed!"<< std::endl;
 }

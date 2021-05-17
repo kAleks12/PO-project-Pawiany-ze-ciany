@@ -1,7 +1,7 @@
 #include "Knight.h"
 
 int Knight::numOfKnightsCreated_ = 0;
-int Knight::moveCap_ = 1;
+
 Knight::Knight() {
     Item sword("sword");
     Item heavyArmor("harmor");
@@ -16,9 +16,9 @@ Knight::Knight() {
 
 Knight::Knight(std::string name, int tribe){
     name_ = name;
-    moveCap_ = 1;
     tribe_ = tribe;
     strength_= 15;
+    speed_ = 1;
 
     Item sword("sword");
     Item heavyArmor("harmor");
@@ -65,3 +65,10 @@ void Knight::show() {
     Being::show();
 }
 
+void Knight::destroy() {
+    delete this;
+}
+
+Knight::~Knight() {
+    std::cout << "Knight " << id_ << " has been slayed!" << std::endl;
+}

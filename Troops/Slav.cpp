@@ -1,7 +1,7 @@
 #include "Slav.h"
 
 int Slav::numOfSlavsCreated_ = 0;
-int Slav::moveCap_ = 3;
+
 
 Slav::Slav() {
 
@@ -23,7 +23,7 @@ Slav::Slav(std::string name, int tribe){
 
     tribe_ = tribe;
     name_ = name;
-    moveCap_ = 3;
+    speed_ = 3;
 
     std::uniform_int_distribution <int> strengthRange (10,12);
     strength_=strengthRange(mt);
@@ -68,4 +68,12 @@ Slav::Slav(std::string name, int tribe){
 void Slav::show() {
     std::cout << "\n\nObject is using -> " << objWeapon_ << " as a weapon, and wears -> " << objArmor_ << "\n" ;
     Being::show();
+}
+
+void Slav::destroy() {
+    delete this;
+}
+
+Slav::~Slav() {
+    std::cout << "Slav " << id_ << " has been slayed!"<< std::endl;
 }
