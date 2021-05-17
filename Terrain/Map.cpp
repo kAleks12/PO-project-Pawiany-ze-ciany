@@ -93,6 +93,7 @@ int Map::getX(Being* hero) {
                 if(fields_[i][j].getHero(1)->getId() == hero -> getId() ) return j;
         }
     }
+    return -10;
 }
 
 int Map::getY(Being* hero) {
@@ -104,6 +105,7 @@ int Map::getY(Being* hero) {
                 if(fields_[i][j].getHero(1)->getId() == hero -> getId() ) return i;
         }
     }
+    return -10;
 }
 
 int Map::getPos(Being* hero) {
@@ -115,6 +117,7 @@ int Map::getPos(Being* hero) {
                 if(j.getHero(1)->getId() == hero -> getId() ) return 1;
         }
     }
+    return -10;
 }
 /////////////////////////////////////////////
 
@@ -176,17 +179,15 @@ void Map::encounter(Field & field, int startingPos){
 
     if(!(field.getHero(0)->isAlive()))
         field.removeBeing(0);
-
     if(!(field.getHero(1)->isAlive()))
         field.removeBeing(1);
-
 }
 
 void Map::iteration()
 {
     srand(time(nullptr));
-        for (auto &hero : allHeroes_) {
-            if(getX(hero) == -10) {
+        for(auto & hero : allHeroes_) {
+            if(getX(hero)!=-10) {
                 int movement = rand() % 8;
                 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
                 move(hero, movement);
@@ -200,7 +201,6 @@ void Map::iteration()
                 }
             }
             else{
-                hero->destroy();
             }
         }
 }
