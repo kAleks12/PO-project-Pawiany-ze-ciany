@@ -8,15 +8,15 @@ void Map::changePos(Being* hero, int verChange, int horChange) {
     int currX = getX(hero);
     int currY = getY(hero);
     int pos = getPos(hero);
-    int newX = boundaryCheck(currX + horChange);
-    int newY = boundaryCheck(currY + verChange);
+    int newX = bCheck(currX + horChange);
+    int newY = bCheck(currY + verChange);
 
     if((!isFieldFull(newX, newY))&&(!isPosEmpty(currX, currY, pos))) {
         fields_[newY][newX].addBeing(fields_[currY][currX].getHero(pos));
         fields_[currY][currX].removeBeing(pos);
-        std::cout << "Hero " << hero->getId() << " moved from " << currX << ", " << currY << " to " << newX << ", " << newY << std::endl;
+        std::cout << hero->getHp() << " Hero of tribe nr " << hero->getTribe() << hero->getId() << " moved from " << currX << ", " << currY << " to " << newX << ", " << newY << std::endl;
     }
-    else std::cout << "Where is full, or From is empty! Spadaj na drzewo" << std::endl;
+    else std::cout << hero->getHp() << " Hero of tribe nr " << hero->getTribe() << hero->getId() << " stayed on " << getX(hero) << " " <<getY(hero) << std::endl;
 }
 
 void Map::addHero(Being* hero) {
@@ -28,7 +28,7 @@ void Map::removeHero(Being* hero){
     allHeroes_.erase(pos);
 }
 
-int Map::boundaryCheck(int where) {
+int Map::bCheck(int where) {
     if(where >= mapSize_)
         where = mapSize_-1;
     if(where < 0)
@@ -127,39 +127,52 @@ void Map::showField(int xPos, int yPos) {
 
 void Map::move(Being* hero, int moveDirection) {
 
+    int xWhereToGo = -1;
+    int yWhereToGo = -1;
     int verChange = 0;
-    int horChange = 0 ;
-    switch (moveDirection) {
-        case 0:
-            verChange = -(hero->getSpeed());
-            break;
-        case 1:
-            verChange = -(hero->getSpeed());
-            horChange = -(hero->getSpeed());
-            break;
-        case 2:
-            horChange = -(hero->getSpeed());
-            break;
-        case 3:
-            verChange = hero->getSpeed();
-            horChange = -(hero->getSpeed());
-            break;
-        case 4:
-            verChange = hero->getSpeed();
-            break;
-        case 5:
-            verChange = hero->getSpeed();
-            horChange = hero->getSpeed();
-            break;
-        case 6:
-            horChange = hero->getSpeed();
-            break;
-        case 7:
-            verChange = -(hero->getSpeed());
-            horChange = hero->getSpeed();
-            break;
-        default:
-            std::cout << "Wrong direction!";
+    int horChange = 0;
+
+    seekForInteraction(getX(hero), getY(hero), getPos(hero), hero->getSpeed(), &xWhereToGo, &yWhereToGo);
+
+    if((xWhereToGo == -1) && (yWhereToGo == -1)){
+
+        switch (moveDirection) {
+            case 0:
+                verChange = -(hero->getSpeed());
+                break;
+            case 1:
+                verChange = -(hero->getSpeed());
+                horChange = -(hero->getSpeed());
+                break;
+            case 2:
+                horChange = -(hero->getSpeed());
+                break;
+            case 3:
+                verChange = hero->getSpeed();
+                horChange = -(hero->getSpeed());
+                break;
+            case 4:
+                verChange = hero->getSpeed();
+                break;
+            case 5:
+                verChange = hero->getSpeed();
+                horChange = hero->getSpeed();
+                break;
+            case 6:
+                horChange = hero->getSpeed();
+                break;
+            case 7:
+                verChange = -(hero->getSpeed());
+                horChange = hero->getSpeed();
+                break;
+            default:
+                std::cout << "Wrong direction!";
+        }
+
+    }
+    else{
+        horChange = xWhereToGo - getX(hero);
+        verChange = yWhereToGo - getY(hero);
     }
     changePos(hero, verChange, horChange);
 
@@ -199,8 +212,75 @@ void Map::iteration()
                     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
                     encounter(fields_[getY(hero)][getX(hero)], getPos(hero));
                 }
+                show();
             }
             else{
             }
         }
 }
+
+void Map::seekForInteraction(int yPos, int xPos, int pos, int howFarIllGo, int * xWhereToGo, int * yWhereToGo) {
+
+    bool wannaHeal = false;
+    if(fields_[xPos][yPos].getHero(pos)->getHp()<50)
+        wannaHeal = true;
+
+        int xFriendly = -1;
+        int yFriendly = -1;
+        int xEnemy = -1;
+        int yEnemy = -1;
+
+
+    for(int i= bCheck(xPos - howFarIllGo); i < bCheck(xPos + howFarIllGo); i++){
+        for(int j = bCheck(yPos - howFarIllGo); j < bCheck(yPos + howFarIllGo); j++){
+            if((fields_[i][j].isPosEmpty(0) && !fields_[i][j].isPosEmpty(1)) && ((i != xPos) || (j != yPos))){
+                if(fields_[i][j].getHero(1)->getTribe() == fields_[xPos][yPos].getHero(pos)->getTribe()){
+                    xFriendly = i;
+                    yFriendly = j;
+                }
+                else{
+                    xFriendly = i;
+                    yFriendly = j;
+                }
+            }
+
+
+
+            if((fields_[i][j].isPosEmpty(1) && !fields_[i][j].isPosEmpty(0)) && ((i != xPos) || (j != yPos))){
+                if((fields_[i][j].getHero(0)->getTribe() == fields_[xPos][yPos].getHero(pos)->getTribe())){
+                    xFriendly = i;
+                    yFriendly = j;
+                }
+                else{
+                    xEnemy = i;
+                    yEnemy = j;
+                }
+            }
+        }
+    }
+
+    if((xFriendly != -1) && (yFriendly != -1)){
+        if(wannaHeal && ((xFriendly != xPos ) || (yFriendly != yPos ))){
+            *xWhereToGo = yFriendly;
+            *yWhereToGo = xFriendly;
+        }
+    }
+
+    if((xEnemy != -1) && (yEnemy != -1)){
+        if(!wannaHeal && ((xEnemy != xPos ) || (yEnemy != yPos ))){
+            *xWhereToGo = yEnemy;
+            *yWhereToGo = xEnemy;
+        }
+    }
+    else{
+        if((xFriendly != -1) && (yFriendly != -1)){
+            if(!wannaHeal && ((xFriendly != xPos ) || (yFriendly != yPos ))){
+                *xWhereToGo = yFriendly;
+                *yWhereToGo = xFriendly;
+            }
+        }
+    }
+
+
+}
+

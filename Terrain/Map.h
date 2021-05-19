@@ -26,7 +26,7 @@ public:
     void spawn(Being *, int, int);
     void changePos(Being*, int, int);
     void addHero(Being*);
-    static int boundaryCheck(int);
+    static int bCheck(int);
 
     static void getItems(Field, Being*);
     static int getMapSize();
@@ -43,6 +43,7 @@ public:
     void move(Being *hero, int moveDirection);
     void encounter(Field &, int);
     void iteration();
+    void seekForInteraction(int, int, int, int, int *, int *);
 
     void removeHero(Being *);
 };
