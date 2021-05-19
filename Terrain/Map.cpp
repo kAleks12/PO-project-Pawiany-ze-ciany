@@ -77,7 +77,8 @@ bool Map::isFieldFull(int xPos, int yPos) {
 
 //////////////////////////////////////////////
 void Map::getItems(Field field, Being * hero) {
-    while(field.areItems()) hero -> addItem(field.giveItem());
+    while(field.areItems())
+        hero -> addItem(field.giveItem());
 }
 
 int Map::getMapSize() {
@@ -179,21 +180,29 @@ void Map::move(Being* hero, int moveDirection) {
 }
 
 void Map::encounter(Field & field, int startingPos){
-    if(startingPos == 0){
-        field.getHero(1)->changeHp(-(field.getHero(0)->getTotalAttackPower()));
-        if(field.getHero(1)->isAlive())
-            field.getHero(0)->changeHp(-(field.getHero(1)->getTotalAttackPower()/2));
-    }
-    else {
-        field.getHero(0)->changeHp(-(field.getHero(1)->getTotalAttackPower()));
-        if(field.getHero(0)->isAlive())
-            field.getHero(1)->changeHp(-(field.getHero(0)->getTotalAttackPower()/2));
-    }
+    if(field.getHero(0)->getTribe() != field.getHero(1)->getTribe()) {
+        if (startingPos == 0) {
+            field.getHero(1)->changeHp(-(field.getHero(0)->getTotalAttackPower() - field.getHero(1) -> getDefense()));
+            if (field.getHero(1)->isAlive())
+                field.getHero(0)->changeHp( -((field.getHero(1)->getTotalAttackPower()/2) - field.getHero(0) -> getDefense()) );
+        } else {
+            field.getHero(0)->changeHp(-(field.getHero(1)->getTotalAttackPower() - field.getHero(0) -> getDefense()));
+            if (field.getHero(0)->isAlive())
+                field.getHero(1)->changeHp( -((field.getHero(0)->getTotalAttackPower()/2) - field.getHero(1) -> getDefense()) );
+        }
 
-    if(!(field.getHero(0)->isAlive()))
-        field.removeBeing(0);
-    if(!(field.getHero(1)->isAlive()))
-        field.removeBeing(1);
+        if (!(field.getHero(0)->isAlive()))
+            field.removeBeing(0);
+        if (!(field.getHero(1)->isAlive()))
+            field.removeBeing(1);
+    }
+    else{
+        if (startingPos == 0) {
+            field.getHero(1)->changeHp(10);
+        } else {
+            field.getHero(0)->changeHp(10);
+        }
+    }
 }
 
 void Map::iteration()
@@ -205,14 +214,14 @@ void Map::iteration()
                 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
                 move(hero, movement);
                 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
-                getItems(fields_[getX(hero)][getY(hero)], hero);
                 if (isFieldFull(getX(hero), getY(hero))) {
                     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
-                    std::cout << "ENCOUNTER!!!!" << std::endl;
+                    std::cout << "\nENCOUNTER!!!!" << "\n\n";
                     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
                     encounter(fields_[getY(hero)][getX(hero)], getPos(hero));
                 }
-                show();
+                getItems(fields_[getX(hero)][getY(hero)], hero);
+                hero -> useEq();
             }
             else{
             }
