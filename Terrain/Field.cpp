@@ -7,6 +7,7 @@ Field::Field() {
 }
 
 void Field::addBeing( Being * hero) {
+
     if((hero != nullptr) && isSpace()){
         if(heroesAtThisField_[0] == nullptr)
             heroesAtThisField_[0] = hero;
@@ -14,30 +15,48 @@ void Field::addBeing( Being * hero) {
             heroesAtThisField_[1] = hero;
         }
     }
-}
 
+}
+void Field::addItem(int itemId) {
+
+    Item tmp(itemId);
+    itemsAtThisField_.push_back(tmp);
+
+}
+void Field::addItem(Item item) {
+
+    itemsAtThisField_.push_back(item);
+
+}
 void Field::removeBeing(int position) {
+
     heroesAtThisField_[position] = nullptr;
+
+}
+Item Field::giveItem() {
+
+    if(!itemsAtThisField_.empty()) {
+        Item tmp = itemsAtThisField_.front();
+        itemsAtThisField_.erase(itemsAtThisField_.begin());
+        return tmp;
+    }
+    else return Item(100);
+
 }
 
 Being * Field::getHero(int pos) {
+
     return heroesAtThisField_[pos];
+
+}
+int Field::getItemsNum() {
+
+    return itemsAtThisField_.size();
+
 }
 
-///////////////////////////////////////////
-bool Field::isPosEmpty(int pos) {
-    return (heroesAtThisField_[pos] == nullptr);
-}
-
-bool Field::isSpace() {
-    return !((heroesAtThisField_[0] != nullptr) && (heroesAtThisField_[1] != nullptr));
-}
-
-bool Field::areItems(){
-    return !(itemsAtThisField_.empty());
-}
-////////////////////////////////////////////
 void Field::showField() {
+
     if((isPosEmpty(0))&&(isPosEmpty(1)))
         std::cout << "Pole jest puste" << std::endl;
     else {
@@ -51,17 +70,24 @@ void Field::showField() {
             (heroesAtThisField_[1])->show();
         }
     }
-}
 
-Item Field::giveItem() {
-    if(!itemsAtThisField_.empty()) {
-        Item tmp = itemsAtThisField_.back();
-        itemsAtThisField_.pop_back();
-        return tmp;
+}
+void Field::printItems() {
+
+    for(auto & item: itemsAtThisField_){
+        std::cout << item.getName() << " + ";
     }
+    std::cout << std::endl;
+
 }
 
-void Field::addItem(int itemId) {
-    Item tmp(itemId);
-    itemsAtThisField_.push_back(tmp);
+bool Field::isPosEmpty(int pos) {
+
+    return (heroesAtThisField_[pos] == nullptr);
+
+}
+bool Field::isSpace() {
+
+    return !((heroesAtThisField_[0] != nullptr) && (heroesAtThisField_[1] != nullptr));
+
 }

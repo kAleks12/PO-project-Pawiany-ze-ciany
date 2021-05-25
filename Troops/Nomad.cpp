@@ -1,4 +1,5 @@
 #include <string>
+#include <utility>
 #include "Nomad.h"
 
 int Nomad::numOfNomadsCreated_ = 0;
@@ -16,13 +17,12 @@ Nomad::Nomad()
 
     numOfNomadsCreated_++;
 }
-
 Nomad::Nomad(std::string name, int tribe)
 {
     std::random_device rd;
     std::mt19937 mt(rd());
     tribe_ = tribe;
-    name_ = name;
+    name_ = std::move(name);
     speed_ = 2;
 
     std::uniform_int_distribution <int> strengthRange (12,15);
@@ -64,21 +64,24 @@ Nomad::Nomad(std::string name, int tribe)
     }
 
     numOfNomadsCreated_++;
+
+}
+Nomad::~Nomad() {
+    std::cout << "Nomad " << id_ << " has been slayed!"<< std::endl;
 }
 
 void Nomad::show() {
+
     std::cout << "\n\nObject's weapons -> ";
-    findWeapon().show();
+    findItem(findWeapon()).show();
     std::cout << "\n\nObject's armor -> ";
-    findArmor().show();
+    findItem(findArmor()).show();
     Being::show();
     Being::show();
-}
 
+}
 void Nomad::destroy() {
-    delete this;
-}
 
-Nomad::~Nomad() {
-    std::cout << "Nomad " << id_ << " has been slayed!"<< std::endl;
+    delete this;
+
 }

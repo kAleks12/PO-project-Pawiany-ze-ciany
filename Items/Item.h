@@ -8,25 +8,32 @@
 #include <string>
 #include <iostream>
 #include <map>
+#include <windows.h>
 
 
 class Item {
     friend class Being;
 private:
-    bool isTemp_;
-    int duration_;
-    bool isBeingUsed_ = false;
     std::string name_;
+    int armorPoints_;
+    int attackPoints_;
     int healthBoost_;
-    float attackBoost_;
     int speedBoost_;
-    int armorBoost_;
+
+    bool isBeingUsed_ = false;
+    bool isTemp_;
+
+    int duration_=0;
 public:
     explicit Item(int);
     explicit Item(const std::string &);
-    void destroy();
+
     void changeState();
+
+    std::string getName();
+
     void show();
+    void destroy();
 };
 
 

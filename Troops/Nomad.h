@@ -8,8 +8,8 @@ private:
     static int numOfNomadsCreated_;
 public:
     Nomad();
-    ~Nomad();
     explicit Nomad(std::string, int );
+    ~Nomad();
 
     void show() override;
     void destroy() override;

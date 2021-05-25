@@ -1,5 +1,7 @@
 #include "Knight.h"
 
+#include <utility>
+
 int Knight::numOfKnightsCreated_ = 0;
 
 Knight::Knight() {
@@ -13,9 +15,9 @@ Knight::Knight() {
 
     numOfKnightsCreated_++;
 }
-
 Knight::Knight(std::string name, int tribe){
-    name_ = name;
+
+    name_ = std::move(name);
     tribe_ = tribe;
     strength_= 15;
     speed_ = 1;
@@ -54,24 +56,31 @@ Knight::Knight(std::string name, int tribe){
     }
 
     numOfKnightsCreated_++;
+
+}
+Knight::~Knight() {
+
+    std::cout << "Knight " << id_ << " has been slayed!" << std::endl;
+
 }
 
 void Knight::changeStatus() {
+
     isOnHorse = !(isOnHorse);
+
 }
 
 void Knight::show() {
+
     std::cout << "\n\nObject's weapons -> ";
-    findWeapon().show();
+    findItem(findWeapon()).show();
     std::cout << "\n\nObject's armor -> ";
-    findArmor().show();
+    findItem(findArmor()).show();
     Being::show();
-}
 
+}
 void Knight::destroy() {
-    delete this;
-}
 
-Knight::~Knight() {
-    std::cout << "Knight " << id_ << " has been slayed!" << std::endl;
+    delete this;
+
 }

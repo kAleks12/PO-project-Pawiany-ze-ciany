@@ -10,16 +10,21 @@ private:
     std::vector <Item> itemsAtThisField_;
 public:
     Field();
+
     void addBeing(Being *);
-    void removeBeing(int);
-    Being * getHero(int);
-    bool isPosEmpty(int);
-    bool isSpace();
-    void showField();
     void addItem(int);
+    void addItem(Item);
+    void removeBeing(int);
     Item giveItem();
 
-    bool areItems();
+    Being * getHero(int);
+    int getItemsNum();
+
+    void showField();
+    void printItems();
+
+    bool isPosEmpty(int);
+    bool isSpace();
 };
 
 

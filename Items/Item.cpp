@@ -12,9 +12,9 @@ Item::Item(int itemId)
             this -> duration_ = -1;
             this -> name_ = "health potion";
             this -> healthBoost_ = 20;
-            this -> attackBoost_ = 0;
+            this -> attackPoints_ = 0;
             this -> speedBoost_ = 0;
-            this -> armorBoost_ = 0;
+            this -> armorPoints_ = 0;
 
             break;
         case 1:
@@ -22,88 +22,93 @@ Item::Item(int itemId)
             this -> duration_ = 3;
             this -> name_ = "strength potion";
             this -> healthBoost_ = 0;
-            this -> attackBoost_ = 7;
+            this -> attackPoints_ = 7;
             this -> speedBoost_ = 0;
-            this -> armorBoost_ = 0;
+            this -> armorPoints_ = 0;
             break;
         case 2:
             this -> isTemp_ = true;
             this -> duration_ = 3;
             this -> name_ = "speed potion";
             this -> healthBoost_ = 0;
-            this -> attackBoost_ = 0;
+            this -> attackPoints_ = 0;
             this -> speedBoost_ = 2;
-            this -> armorBoost_ = 0;
+            this -> armorPoints_ = 0;
             break;
         case 3:
             this -> name_ = "light armor";
             this -> healthBoost_ = 0;
-            this -> attackBoost_ = 0;
+            this -> attackPoints_ = 0;
             this -> speedBoost_ = 0;
-            this -> armorBoost_ = 10;
+            this -> armorPoints_ = 10;
             this -> isTemp_ = false;
             break;
         case 4:
             this -> name_ = "heavy armor";
             this -> healthBoost_ = 0;
-            this -> attackBoost_ = 0;
+            this -> attackPoints_ = 0;
             this -> speedBoost_ = 0;
-            this -> armorBoost_ = 20;
+            this -> armorPoints_ = 20;
             this -> isTemp_ = false;
             break;
         case 5:
             this -> name_ = "excalibur";
             this -> healthBoost_ = 0;
-            this -> attackBoost_ = 50;
+            this -> attackPoints_ = 50;
             this -> speedBoost_ = 0;
-            this -> armorBoost_ = 0;
+            this -> armorPoints_ = 0;
             this -> isTemp_ = false;
             break;
         case 6:
             this -> name_ = "spear";
             this -> healthBoost_ = 0;
-            this -> attackBoost_ = 27;
+            this -> attackPoints_ = 27;
             this -> speedBoost_ = 0;
-            this -> armorBoost_ = 0;
+            this -> armorPoints_ = 0;
             this -> isTemp_ = false;
             break;
         case 7:
             this -> name_ = "axe";
             this -> healthBoost_ = 0;
-            this -> attackBoost_ = 14;
+            this -> attackPoints_ = 14;
             this -> speedBoost_ = 0;
-            this -> armorBoost_ = 0;
+            this -> armorPoints_ = 0;
             this -> isTemp_ = false;
             break;
         case 8:
             this -> name_ = "bulat";
             this -> healthBoost_ = 0;
-            this -> attackBoost_ = 30;
+            this -> attackPoints_ = 30;
             this -> speedBoost_ = 0;
-            this -> armorBoost_ = 0;
+            this -> armorPoints_ = 0;
             this -> isTemp_ = false;
             break;
         case 9:
             this -> name_ = "two-handed sword";
             this -> healthBoost_ = 0;
-            this -> attackBoost_ = 37;
+            this -> attackPoints_ = 37;
             this -> speedBoost_ = 0;
-            this -> armorBoost_ = 0;
+            this -> armorPoints_ = 0;
             this -> isTemp_ = false;
             break;
     }
+
 }
 Item::Item(const std::string & itemName){
-    const std::map <std::string, int> namesId {{"hpotion",0} , {"stpotion", 1} , {"spotion", 2}, {"larmor",3}, {"harmor",4}, {"excalibur",5} , {"spear",6}, {"double axes",7}, {"bulat",8}, {"sword",9}};
+
+    const std::map <std::string, int> namesId {
+        {"hpotion",0} , {"stpotion", 1} , {"spotion", 2}, {"larmor",3}, {"harmor",4}, {"excalibur",5} , {"spear",6}, {"double axes",7}, {"bulat",8}, {"sword",9}
+    };
+
     switch(namesId.at(itemName))  {
         case 0:
             this -> isTemp_ = true;
             this -> duration_ = -1;
             this -> name_ = "health potion";
             this -> healthBoost_ = 20;
-            this -> attackBoost_ = 0;
+            this -> attackPoints_ = 0;
             this -> speedBoost_ = 0;
-            this -> armorBoost_ = 0;
+            this -> armorPoints_ = 0;
 
             break;
         case 1:
@@ -111,89 +116,77 @@ Item::Item(const std::string & itemName){
             this -> duration_ = 3;
             this -> name_ = "strength potion";
             this -> healthBoost_ = 0;
-            this -> attackBoost_ = 7;
+            this -> attackPoints_ = 7;
             this -> speedBoost_ = 0;
-            this -> armorBoost_ = 0;
+            this -> armorPoints_ = 0;
             break;
         case 2:
             this -> isTemp_ = true;
             this -> duration_ = 3;
             this -> name_ = "speed potion";
             this -> healthBoost_ = 0;
-            this -> attackBoost_ = 0;
+            this -> attackPoints_ = 0;
             this -> speedBoost_ = 2;
-            this -> armorBoost_ = 0;
+            this -> armorPoints_ = 0;
             break;
         case 3:
             this -> isTemp_ = false;
             this -> name_ = "light armor";
             this -> healthBoost_ = 0;
-            this -> attackBoost_ = 0;
+            this -> attackPoints_ = 0;
             this -> speedBoost_ = 0;
-            this -> armorBoost_ = 10;
+            this -> armorPoints_ = 10;
             break;
         case 4:
             this -> isTemp_ = false;
             this -> name_ = "heavy armor";
             this -> healthBoost_ = 0;
-            this -> attackBoost_ = 0;
+            this -> attackPoints_ = 0;
             this -> speedBoost_ = 0;
-            this -> armorBoost_ = 20;
+            this -> armorPoints_ = 20;
             break;
         case 5:
             this -> isTemp_ = false;
             this -> name_ = "excalibur";
             this -> healthBoost_ = 0;
-            this -> attackBoost_ = 50;
+            this -> attackPoints_ = 50;
             this -> speedBoost_ = 0;
-            this -> armorBoost_ = 0;
+            this -> armorPoints_ = 0;
             break;
         case 6:
             this -> isTemp_ = false;
             this -> name_ = "spear";
             this -> healthBoost_ = 0;
-            this -> attackBoost_ = 27;
+            this -> attackPoints_ = 27;
             this -> speedBoost_ = 0;
-            this -> armorBoost_ = 0;
+            this -> armorPoints_ = 0;
             break;
         case 7:
             this -> isTemp_ = false;
             this -> name_ = "axe";
             this -> healthBoost_ = 0;
-            this -> attackBoost_ = 14;
+            this -> attackPoints_ = 14;
             this -> speedBoost_ = 0;
-            this -> armorBoost_ = 0;
+            this -> armorPoints_ = 0;
             break;
         case 8:
             this -> isTemp_ = false;
             this -> name_ = "bulat";
             this -> healthBoost_ = 0;
-            this -> attackBoost_ = 30;
+            this -> attackPoints_ = 30;
             this -> speedBoost_ = 0;
-            this -> armorBoost_ = 0;
+            this -> armorPoints_ = 0;
             break;
         case 9:
             this -> isTemp_ = false;
             this -> name_ = "two-handed sword";
             this -> healthBoost_ = 0;
-            this -> attackBoost_ = 37;
+            this -> attackPoints_ = 37;
             this -> speedBoost_ = 0;
-            this -> armorBoost_ = 0;
+            this -> armorPoints_ = 0;
             break;
     }
-}
 
-void Item::show() {
-    std::cout << "Item \"";
-    std::cout << name_ << "\" :\n";
-    if(healthBoost_ != 0) std::cout << "[*] health + " << healthBoost_ << ";\n";
-    if(speedBoost_ != 0) std::cout << "[*] speed + " << speedBoost_ << ";\n";
-    if(attackBoost_ != 0) std::cout << "[*] attack + " << attackBoost_ << ";\n";
-    if(armorBoost_ != 0) std::cout << "[*] armor + " << armorBoost_ << ";\n";
-    if(isBeingUsed_) {
-        std::cout << "Is in use "  ";\n";
-        if(isTemp_) std::cout << "will be active for -> " << duration_ << ";\n";
-    } else std::cout << "Is not in use;\n";
 }
 
 void Item::changeState() {
@@ -203,6 +196,28 @@ void Item::changeState() {
         isBeingUsed_ = true;
 }
 
+std::string Item::getName() {
+    return name_;
+}
+
+void Item::show() {
+
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
+    std::cout << "\nItem \"";
+    std::cout << name_ << "\" :\n";
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
+    if(healthBoost_ != 0) std::cout << "[*] health + " << healthBoost_ << ";\n";
+    if(speedBoost_ != 0) std::cout << "[*] speed + " << speedBoost_ << ";\n";
+    if(attackPoints_ != 0) std::cout << "[*] attack + " << attackPoints_ << ";\n";
+    if(armorPoints_ != 0) std::cout << "[*] armor + " << armorPoints_ << ";\n";
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
+    if(isBeingUsed_) {
+        std::cout << "Is in use;\n";
+        if(isTemp_) std::cout << "will be active for -> " << duration_ << ";\n";
+    } else std::cout << "Is not in use;\n";
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
+
+}
 void Item::destroy() {
     delete this;
 }

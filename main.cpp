@@ -50,7 +50,12 @@ template <typename ClassName> inline ClassName* generateClassObject(std::string 
 
 inline void generateItem(Map & map, int itemId)
 {
-
+    int tmpX, tmpY;
+    do {
+        tmpX = drawPos();
+        tmpY = drawPos();
+    } while(map.isFieldFull(tmpX, tmpY));
+    map.addItem(tmpX, tmpY, itemId);
 }
 
 inline void adjustNumberOfObjects( int & numOfObjects1, int & numOfObjects2, int & numOfObjects3, int & numOfObjects4, int difference)
@@ -163,7 +168,8 @@ void fillMap(Map & adventureMap){
             std::cin >> numOfObj;
             std::cout << "Enter number of items to create"
             std::cin >> numOfItems;*/
-            numOfObj = 5;
+            numOfObj = 1;
+            numOfItems = 500;
         }
 
         //Checking if entered number is too small to draw
@@ -240,19 +246,17 @@ void fillMap(Map & adventureMap){
 
 }
 
-void simulation(Map & adventureMap)
-{
-
-}
 
 int main() {
+
     Map adventureMap;
 
     fillMap(adventureMap);
+
     adventureMap.show();
-    while(true) {
+
+    while(adventureMap.numOfTribes() > 1) {
         adventureMap.iteration();
-        adventureMap.show();
-        Sleep(2000);
+        system("Pause");
     }
 }

@@ -23,21 +23,29 @@ public:
 
     void changeHp(int);
     void addItem(const Item&);
-
-    bool isAlive();
+    void changeWeapon();
+    void useTempItems();
+    void deactivateItem(const std::string&);
 
     std::string getId();
-    int getTotalAttackPower();
+    int getHP();
+    int getTotalAP();
     int getDefense();
     [[nodiscard]] int getSpeed() const;
     [[nodiscard]] int getTribe() const;
-    Item& findArmor();
-    Item& findWeapon();
-    void useEq();
-    int getHp();
 
+    Item findItem(const std::string&);
+
+    std::string findArmor();
+    std::string findWeapon();
+    std::string findPotion(std::string);
+
+    void printBackpack();
     virtual void show() = 0;
     virtual void destroy() = 0;
+
+    bool isAlive();
+    bool whetherPickUp(const Item &);
 };
 
 #endif //PO_BEING_H

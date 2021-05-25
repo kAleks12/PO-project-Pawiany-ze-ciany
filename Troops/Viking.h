@@ -15,8 +15,8 @@ private:
 
 public:
     Viking();
-    ~Viking();
     explicit Viking(std::string, int);
+    ~Viking();
 
     void show() override;
     void destroy() override;

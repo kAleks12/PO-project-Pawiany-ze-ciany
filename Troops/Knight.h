@@ -8,10 +8,11 @@ class Knight: public Being{
     bool isOnHorse;
 public:
     Knight();
-    ~Knight();
     explicit Knight(std::string, int);
+    ~Knight();
 
     void changeStatus();
+
     void show() override;
     void destroy() override;
 };
