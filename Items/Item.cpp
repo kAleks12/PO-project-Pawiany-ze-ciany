@@ -9,87 +9,87 @@ Item::Item(int itemId)
     switch(itemId){
         case 0:
             this -> isTemp_ = true;
-            this -> duration_ = -1;
-            this -> name_ = "health potion";
-            this -> healthBoost_ = 20;
-            this -> attackPoints_ = 0;
-            this -> speedBoost_ = 0;
-            this -> armorPoints_ = 0;
+            duration_ = -1;
+            name_ = "health potion";
+            healthBoost_ = 20;
+            attackPoints_ = 0;
+            speedBoost_ = 0;
+            armorPoints_ = 0;
 
             break;
         case 1:
-            this -> isTemp_ = true;
-            this -> duration_ = 3;
-            this -> name_ = "strength potion";
-            this -> healthBoost_ = 0;
-            this -> attackPoints_ = 7;
-            this -> speedBoost_ = 0;
-            this -> armorPoints_ = 0;
+            isTemp_ = true;
+            duration_ = 3;
+            name_ = "strength potion";
+            healthBoost_ = 0;
+            attackPoints_ = 7;
+            speedBoost_ = 0;
+            armorPoints_ = 0;
             break;
         case 2:
-            this -> isTemp_ = true;
-            this -> duration_ = 3;
-            this -> name_ = "speed potion";
-            this -> healthBoost_ = 0;
-            this -> attackPoints_ = 0;
-            this -> speedBoost_ = 2;
-            this -> armorPoints_ = 0;
+            isTemp_ = true;
+            duration_ = 3;
+            name_ = "speed potion";
+            healthBoost_ = 0;
+            attackPoints_ = 0;
+            speedBoost_ = 2;
+            armorPoints_ = 0;
             break;
         case 3:
-            this -> name_ = "light armor";
-            this -> healthBoost_ = 0;
-            this -> attackPoints_ = 0;
-            this -> speedBoost_ = 0;
-            this -> armorPoints_ = 10;
-            this -> isTemp_ = false;
+            name_ = "light armor";
+            healthBoost_ = 0;
+            attackPoints_ = 0;
+            speedBoost_ = 0;
+            armorPoints_ = 10;
+            isTemp_ = false;
             break;
         case 4:
-            this -> name_ = "heavy armor";
-            this -> healthBoost_ = 0;
-            this -> attackPoints_ = 0;
-            this -> speedBoost_ = 0;
-            this -> armorPoints_ = 20;
-            this -> isTemp_ = false;
+            name_ = "heavy armor";
+            healthBoost_ = 0;
+            attackPoints_ = 0;
+            speedBoost_ = 0;
+            armorPoints_ = 20;
+            isTemp_ = false;
             break;
         case 5:
-            this -> name_ = "excalibur";
-            this -> healthBoost_ = 0;
-            this -> attackPoints_ = 50;
-            this -> speedBoost_ = 0;
-            this -> armorPoints_ = 0;
-            this -> isTemp_ = false;
+            name_ = "excalibur";
+            healthBoost_ = 0;
+            attackPoints_ = 50;
+            speedBoost_ = 0;
+            armorPoints_ = 0;
+            isTemp_ = false;
             break;
         case 6:
-            this -> name_ = "spear";
-            this -> healthBoost_ = 0;
-            this -> attackPoints_ = 27;
-            this -> speedBoost_ = 0;
-            this -> armorPoints_ = 0;
-            this -> isTemp_ = false;
+            name_ = "spear";
+            healthBoost_ = 0;
+            attackPoints_ = 27;
+            speedBoost_ = 0;
+            armorPoints_ = 0;
+            isTemp_ = false;
             break;
         case 7:
-            this -> name_ = "axe";
-            this -> healthBoost_ = 0;
-            this -> attackPoints_ = 14;
-            this -> speedBoost_ = 0;
-            this -> armorPoints_ = 0;
-            this -> isTemp_ = false;
+            name_ = "axe";
+            healthBoost_ = 0;
+            attackPoints_ = 14;
+            speedBoost_ = 0;
+            armorPoints_ = 0;
+            isTemp_ = false;
             break;
         case 8:
-            this -> name_ = "bulat";
-            this -> healthBoost_ = 0;
-            this -> attackPoints_ = 30;
-            this -> speedBoost_ = 0;
-            this -> armorPoints_ = 0;
-            this -> isTemp_ = false;
+            name_ = "bulat";
+            healthBoost_ = 0;
+            attackPoints_ = 30;
+            speedBoost_ = 0;
+            armorPoints_ = 0;
+            isTemp_ = false;
             break;
         case 9:
-            this -> name_ = "two-handed sword";
-            this -> healthBoost_ = 0;
-            this -> attackPoints_ = 37;
-            this -> speedBoost_ = 0;
-            this -> armorPoints_ = 0;
-            this -> isTemp_ = false;
+            name_ = "two-handed sword";
+            healthBoost_ = 0;
+            attackPoints_ = 37;
+            speedBoost_ = 0;
+            armorPoints_ = 0;
+            isTemp_ = false;
             break;
     }
 
@@ -100,90 +100,90 @@ Item::Item(const std::string & itemName){
         {"hpotion",0} , {"stpotion", 1} , {"spotion", 2}, {"larmor",3}, {"harmor",4}, {"excalibur",5} , {"spear",6}, {"double axes",7}, {"bulat",8}, {"sword",9}
     };
 
-    switch(namesId.at(itemName))  {
+    switch(namesId.at(itemName)){
         case 0:
             this -> isTemp_ = true;
-            this -> duration_ = -1;
-            this -> name_ = "health potion";
-            this -> healthBoost_ = 20;
-            this -> attackPoints_ = 0;
-            this -> speedBoost_ = 0;
-            this -> armorPoints_ = 0;
+            duration_ = -1;
+            name_ = "health potion";
+            healthBoost_ = 20;
+            attackPoints_ = 0;
+            speedBoost_ = 0;
+            armorPoints_ = 0;
 
             break;
         case 1:
-            this -> isTemp_ = true;
-            this -> duration_ = 3;
-            this -> name_ = "strength potion";
-            this -> healthBoost_ = 0;
-            this -> attackPoints_ = 7;
-            this -> speedBoost_ = 0;
-            this -> armorPoints_ = 0;
+            isTemp_ = true;
+            duration_ = 3;
+            name_ = "strength potion";
+            healthBoost_ = 0;
+            attackPoints_ = 7;
+            speedBoost_ = 0;
+            armorPoints_ = 0;
             break;
         case 2:
-            this -> isTemp_ = true;
-            this -> duration_ = 3;
-            this -> name_ = "speed potion";
-            this -> healthBoost_ = 0;
-            this -> attackPoints_ = 0;
-            this -> speedBoost_ = 2;
-            this -> armorPoints_ = 0;
+            isTemp_ = true;
+            duration_ = 3;
+            name_ = "speed potion";
+            healthBoost_ = 0;
+            attackPoints_ = 0;
+            speedBoost_ = 2;
+            armorPoints_ = 0;
             break;
         case 3:
-            this -> isTemp_ = false;
-            this -> name_ = "light armor";
-            this -> healthBoost_ = 0;
-            this -> attackPoints_ = 0;
-            this -> speedBoost_ = 0;
-            this -> armorPoints_ = 10;
+            name_ = "light armor";
+            healthBoost_ = 0;
+            attackPoints_ = 0;
+            speedBoost_ = 0;
+            armorPoints_ = 10;
+            isTemp_ = false;
             break;
         case 4:
-            this -> isTemp_ = false;
-            this -> name_ = "heavy armor";
-            this -> healthBoost_ = 0;
-            this -> attackPoints_ = 0;
-            this -> speedBoost_ = 0;
-            this -> armorPoints_ = 20;
+            name_ = "heavy armor";
+            healthBoost_ = 0;
+            attackPoints_ = 0;
+            speedBoost_ = 0;
+            armorPoints_ = 20;
+            isTemp_ = false;
             break;
         case 5:
-            this -> isTemp_ = false;
-            this -> name_ = "excalibur";
-            this -> healthBoost_ = 0;
-            this -> attackPoints_ = 50;
-            this -> speedBoost_ = 0;
-            this -> armorPoints_ = 0;
+            name_ = "excalibur";
+            healthBoost_ = 0;
+            attackPoints_ = 50;
+            speedBoost_ = 0;
+            armorPoints_ = 0;
+            isTemp_ = false;
             break;
         case 6:
-            this -> isTemp_ = false;
-            this -> name_ = "spear";
-            this -> healthBoost_ = 0;
-            this -> attackPoints_ = 27;
-            this -> speedBoost_ = 0;
-            this -> armorPoints_ = 0;
+            name_ = "spear";
+            healthBoost_ = 0;
+            attackPoints_ = 27;
+            speedBoost_ = 0;
+            armorPoints_ = 0;
+            isTemp_ = false;
             break;
         case 7:
-            this -> isTemp_ = false;
-            this -> name_ = "axe";
-            this -> healthBoost_ = 0;
-            this -> attackPoints_ = 14;
-            this -> speedBoost_ = 0;
-            this -> armorPoints_ = 0;
+            name_ = "axe";
+            healthBoost_ = 0;
+            attackPoints_ = 14;
+            speedBoost_ = 0;
+            armorPoints_ = 0;
+            isTemp_ = false;
             break;
         case 8:
-            this -> isTemp_ = false;
-            this -> name_ = "bulat";
-            this -> healthBoost_ = 0;
-            this -> attackPoints_ = 30;
-            this -> speedBoost_ = 0;
-            this -> armorPoints_ = 0;
+            name_ = "bulat";
+            healthBoost_ = 0;
+            attackPoints_ = 30;
+            speedBoost_ = 0;
+            armorPoints_ = 0;
+            isTemp_ = false;
             break;
         case 9:
-            this -> isTemp_ = false;
-            this -> name_ = "two-handed sword";
-            this -> healthBoost_ = 0;
-            this -> attackPoints_ = 37;
-            this -> speedBoost_ = 0;
-            this -> armorPoints_ = 0;
+            name_ = "two-handed sword";
+            healthBoost_ = 0;
+            attackPoints_ = 37;
+            speedBoost_ = 0;
+            armorPoints_ = 0;
+            isTemp_ = false;
             break;
     }
 

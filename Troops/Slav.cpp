@@ -19,17 +19,15 @@ Slav::Slav() {
     numOfSlavsCreated_++;
 
 }
-Slav::Slav(std::string name, int tribe){
+Slav::Slav(std::string name, int tribe, std::mt19937 & engine){
 
-    std::random_device rd;
-    std::mt19937 mt(rd());
 
     tribe_ = tribe;
     name_ = std::move(name);
     speed_ = 3;
 
     std::uniform_int_distribution <int> strengthRange (10,12);
-    strength_=strengthRange(mt);
+    strength_=strengthRange(engine);
 
 
     Item spear("spear");
@@ -52,6 +50,7 @@ Slav::Slav(std::string name, int tribe){
         id_[1] = '0';
         id_[2] = numOfSlavsCreated_ + '0';
         id_[3] = name_[0];
+        id_[4] = '\0';
     }
     else{
         tmp = numOfSlavsCreated_;
@@ -71,7 +70,7 @@ Slav::Slav(std::string name, int tribe){
 }
 Slav::~Slav() {
 
-    std::cout << "Slav " << id_ << " has been slayed!"<< std::endl;
+    //std::cout << "Slav " << id_ << " has been slayed!"<< std::endl;
 
 }
 

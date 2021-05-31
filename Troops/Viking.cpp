@@ -18,17 +18,14 @@ Viking::Viking() {
 
     numOfVikingsCreated_++;
 }
-Viking::Viking(std::string name, int tribe) {
-
-    std::random_device rd;
-    std::mt19937 randomSeed(rd());
+Viking::Viking(std::string name, int tribe, std::mt19937 & engine) {
 
     tribe_ = tribe;
     name_ = std::move(name);
     speed_ = 2;
 
     std::uniform_int_distribution <int> strengthRange (17,20);
-    strength_=strengthRange(randomSeed);
+    strength_=strengthRange(engine);
 
 
     Item axes("double axes"), lightArmor("larmor");
@@ -49,6 +46,7 @@ Viking::Viking(std::string name, int tribe) {
         id_[1] = '0';
         id_[2] = numOfVikingsCreated_ + '0';
         id_[3] = name_[0];
+        id_[4] = '\0';
     }
     else{
         tmp = numOfVikingsCreated_;
@@ -67,7 +65,7 @@ Viking::Viking(std::string name, int tribe) {
 
 }
 Viking::~Viking() {
-    std::cout << "Viking " << id_ << " has been slayed!"<< std::endl;
+    //std::cout << "Viking " << id_ << " has been slayed!"<< std::endl;
 }
 
 void Viking::show() {

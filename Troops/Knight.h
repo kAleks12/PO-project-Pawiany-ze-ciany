@@ -8,8 +8,8 @@ class Knight: public Being{
     bool isOnHorse;
 public:
     Knight();
-    explicit Knight(std::string, int);
-    ~Knight();
+    explicit Knight(std::string, int, std::mt19937&);
+    virtual ~Knight();
 
     void changeStatus();
 

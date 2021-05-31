@@ -14,11 +14,12 @@ public:
     void addBeing(Being *);
     void addItem(int);
     void addItem(Item);
+    void deleteItem();
     void removeBeing(int);
-    Item giveItem();
 
     Being * getHero(int);
     int getItemsNum();
+    Item copyItem();
 
     void showField();
     void printItems();

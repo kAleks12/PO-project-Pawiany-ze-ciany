@@ -8,8 +8,8 @@ private:
     static int numOfSlavsCreated_;
 public:
     Slav();
-    explicit Slav(std::string, int);
-    ~Slav();
+    explicit Slav(std::string, int, std::mt19937&);
+    virtual ~Slav();
 
     void show() override;
     void destroy() override;

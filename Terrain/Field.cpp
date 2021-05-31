@@ -20,27 +20,34 @@ void Field::addBeing( Being * hero) {
 void Field::addItem(int itemId) {
 
     Item tmp(itemId);
-    itemsAtThisField_.push_back(tmp);
+    try {
+        itemsAtThisField_.push_back(tmp);
+    }
+    catch(std::bad_alloc & badAlloc) {
+        std::cout << "Program crashed in Field::addItem :)";
+        exit(69);
+    }
 
 }
 void Field::addItem(Item item) {
 
-    itemsAtThisField_.push_back(item);
+    try {
+        itemsAtThisField_.push_back(item);
+    }
+    catch( const std::bad_alloc & badAlloc) {
+        std::cout << "Program crashed in Field::addItem :)";
+        exit(69);
+    }
+
+}
+void Field::deleteItem() {
+
+    itemsAtThisField_.pop_back();
 
 }
 void Field::removeBeing(int position) {
 
     heroesAtThisField_[position] = nullptr;
-
-}
-Item Field::giveItem() {
-
-    if(!itemsAtThisField_.empty()) {
-        Item tmp = itemsAtThisField_.front();
-        itemsAtThisField_.erase(itemsAtThisField_.begin());
-        return tmp;
-    }
-    else return Item(100);
 
 }
 
@@ -52,6 +59,11 @@ Being * Field::getHero(int pos) {
 int Field::getItemsNum() {
 
     return itemsAtThisField_.size();
+
+}
+Item Field::copyItem() {
+
+    return itemsAtThisField_.back();
 
 }
 

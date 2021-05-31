@@ -15,12 +15,14 @@ Knight::Knight() {
 
     numOfKnightsCreated_++;
 }
-Knight::Knight(std::string name, int tribe){
+Knight::Knight(std::string name, int tribe, std::mt19937 & engine){
 
     name_ = std::move(name);
     tribe_ = tribe;
-    strength_= 15;
     speed_ = 1;
+
+    std::uniform_int_distribution <int> strengthRange (15,18);
+    strength_=strengthRange(engine);
 
     Item sword("sword");
     sword.changeState();
@@ -41,6 +43,7 @@ Knight::Knight(std::string name, int tribe){
         id_[1] = '0';
         id_[2] = numOfKnightsCreated_ + '0';
         id_[3] = name_[0];
+        id_[4] = '\0';
     }
     else{
         tmp = numOfKnightsCreated_;
@@ -60,7 +63,7 @@ Knight::Knight(std::string name, int tribe){
 }
 Knight::~Knight() {
 
-    std::cout << "Knight " << id_ << " has been slayed!" << std::endl;
+    //std::cout << "Knight " << id_ << " has been slayed!" << std::endl;
 
 }
 

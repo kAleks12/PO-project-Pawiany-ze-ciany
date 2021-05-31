@@ -15,16 +15,45 @@
 
 #include "Terrain/Map.h"
 
-std::mt19937 engine {std::random_device{}()};
+std::mt19937 engine{std::random_device{}()};
+
+inline std::string drawName();
+inline int drawPos();
+template <typename ClassName> ClassName* generateClassObject(std::string name, Map & map, int tribe);
+void generateItem(Map & map, int itemId);
+inline void adjustNumberOfObjects( int & numOfObjects1, int & numOfObjects2, int & numOfObjects3, int & numOfObjects4, int difference);
+void fillMap(Map & adventureMap);
+
+
+int main() {
+
+    Map adventureMap;
+
+    fillMap(adventureMap);
+
+    adventureMap.show();
+
+    while(adventureMap.numOfTribes() > 1 || adventureMap.getListSize() <=2) {
+        adventureMap.iteration();
+        //system("Pause");
+        //Sleep(2000);
+    }
+}
 
 inline std::string drawName(){
+
     std::ifstream fNames("names.txt");
+
     if(fNames.good()) {
         std::uniform_int_distribution <int> namesRange(1, 92);
-        int pos = namesRange(engine);
         std::string name;
-        while (pos-- != 0) getline(fNames, name);
+        int pos = namesRange(engine);
+
+        while (pos-- != 0)
+            getline(fNames, name);
+
         fNames.close();
+
         return name;
     }
     else return "File not found!";
@@ -37,24 +66,25 @@ inline int drawPos() {
     return randomNum;
 }
 
-template <typename ClassName> inline ClassName* generateClassObject(std::string name, Map & map, int tribe){
-    int tmpXPos, tmpYPos;
-    auto tmp = new ClassName(name,tribe);
-    do {
-        tmpXPos = drawPos();
-        tmpYPos = drawPos();
-    } while(map.isFieldFull(tmpXPos, tmpYPos));
-    map.spawn(tmp, tmpXPos, tmpYPos);
-    return tmp;
+template <typename ClassName> ClassName* generateClassObject(std::string name, Map & map, int tribe){
+        int tmpXPos, tmpYPos;
+        auto tmp = new ClassName(name, tribe, engine);
+        do {
+            tmpXPos = drawPos();
+            tmpYPos = drawPos();
+        } while (map.isFieldFull(tmpXPos, tmpYPos));
+        map.spawn(tmp, tmpXPos, tmpYPos);
+        return tmp;
 }
 
-inline void generateItem(Map & map, int itemId)
+void generateItem(Map & map, int itemId)
 {
     int tmpX, tmpY;
     do {
         tmpX = drawPos();
         tmpY = drawPos();
     } while(map.isFieldFull(tmpX, tmpY));
+
     map.addItem(tmpX, tmpY, itemId);
 }
 
@@ -169,7 +199,7 @@ void fillMap(Map & adventureMap){
             std::cout << "Enter number of items to create"
             std::cin >> numOfItems;*/
             numOfObj = 1;
-            numOfItems = 500;
+            numOfItems = 10;
         }
 
         //Checking if entered number is too small to draw
@@ -207,7 +237,6 @@ void fillMap(Map & adventureMap){
                   << numOfNomads + numOfSlavs + numOfKnights + numOfVikings << "\n";
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);*/
 
-        std::string name;
         //Creating and spawning Slav objects
 
         for (int i = 0; i < numOfSlavs; i++) {
@@ -244,19 +273,4 @@ void fillMap(Map & adventureMap){
         generateItem(adventureMap, itemsRange(engine));
     }
 
-}
-
-
-int main() {
-
-    Map adventureMap;
-
-    fillMap(adventureMap);
-
-    adventureMap.show();
-
-    while(adventureMap.numOfTribes() > 1) {
-        adventureMap.iteration();
-        system("Pause");
-    }
 }

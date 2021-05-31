@@ -18,26 +18,32 @@ void Map::addItem(int xPos, int yPos, int itemId) {
 }
 void Map::getItems(Field field, Being * hero) {
 
-    std::cout << "\nItems on this field: ";
-    field.printItems();
-    std::cout << std::endl;
+   // std::cout << "\nItems on this field: ";
+    //field.printItems();
+    //std::cout << std::endl;
 
-    int numOfIterations = field.getItemsNum();
+    int iterations = field.getItemsNum();
 
-    for(int i=0; i < numOfIterations; i++) {
+    for(int i=0; i < iterations; i++) {
+        try {
+            Item tmp = field.copyItem();
 
-        Item tmp = field.giveItem();
+            if (hero->whetherPickUp(tmp)) {
 
-        if(hero->whetherPickUp(tmp)) {
-            hero->addItem(tmp);
-            hero->changeWeapon();
+                hero->addItem(tmp);
+                hero->changeWeapon();
+                field.deleteItem();
+            }
         }
-        else field.addItem(tmp);
+        catch( const std::bad_alloc &badAlloc){
+            std::cout << "Program crashed in getItems :)";
+            exit(69);
+        }
 
     }
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
-    std::cout << "Current weapon: " << hero->findWeapon() << std::endl;
-    std::cout << "Current armor: " << hero->findArmor() << "\n\n";
+    //std::cout << "Current weapon: " << hero->findWeapon() << std::endl;
+    //std::cout << "Current armor: " << hero->findArmor() << "\n\n";
 
 }
 void Map::changePos(Being* hero, int verChange, int horChange) {
@@ -70,20 +76,19 @@ void Map::cleanList() {
         }
         else it++;
     }*/
-    std::list<Being*> tmpList;
+    std::list<Being *> tmpList;
     auto it = allHeroes_.begin();
-    while(it != allHeroes_.end())
-    {
-        if(!(*it)->isAlive()) {
-            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
-            (*it)->destroy();
+        while (it != allHeroes_.end()) {
+            if (!(*it)->isAlive()) {
+                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
+                (*it)->destroy();
+            } else
+                tmpList.push_back(*it);
+            it++;
         }
-        else
-            tmpList.push_back(*it);
-        it++;
-    }
-    allHeroes_.clear();
-    allHeroes_.swap(tmpList);
+        allHeroes_.clear();
+        allHeroes_.swap(tmpList);
+
 
 }
 int Map::bCheck(int where) {
@@ -141,6 +146,11 @@ int Map::getPos(Being* hero) {
     return -10;
 
 }
+int Map::getListSize() {
+
+    return allHeroes_.size();
+
+}
 
 
 void Map::move(Being* hero, int moveDirection) {
@@ -184,7 +194,8 @@ void Map::move(Being* hero, int moveDirection) {
                 horChange = hero->getSpeed();
                 break;
             default:
-                std::cout << "Wrong direction!";
+                //std::cout << "Wrong direction!";
+                break;
         }
 
     }
@@ -199,24 +210,32 @@ void Map::encounter(Field & field, int startingPos){
 
     if(field.getHero(0)->getTribe() != field.getHero(1)->getTribe()) {
         if (startingPos == 0) {
-            field.getHero(1)->changeHp(-(field.getHero(0)->getTotalAP() - field.getHero(1) -> getDefense()));
-            std::cout << "\tHero -> " << field.getHero(0)->getId() << " attacked " << field.getHero(1)->getId() << " with " << field.getHero(0)->findWeapon() << " for " << field.getHero(0)->getTotalAP() << " hp\n";
+
+            field.getHero(1) -> changeHp(-(field.getHero(0)->getTotalAP() - field.getHero(1) -> getDefense()));
+            std::cout << "\tHero -> " << field.getHero(0)->getId() << " attacked " << field.getHero(1)->getId() << " with " << field.getHero(0)->findWeapon() <<
+            " for " << field.getHero(0)->getTotalAP() - field.getHero(1) -> getDefense()<< " hp\n";
+
             if (field.getHero(1)->isAlive()) {
-                field.getHero(0)->changeHp(-((field.getHero(1)->getTotalAP() / 2) - field.getHero(0)->getDefense()));
-                std::cout << "Hero -> " << field.getHero(1)->getId() << " attacked back " << field.getHero(0)->getId() << " with " << field.getHero(1)->findWeapon() << " for " << field.getHero(1)->getTotalAP() / 2 << " hp\n\n";
+                field.getHero(0) -> changeHp(-(3*(field.getHero(1)->getTotalAP() / 4) - field.getHero(0)->getDefense()));
+                std::cout << "Hero -> " << field.getHero(1)->getId() << " attacked back " << field.getHero(0)->getId() << " with " << field.getHero(1)->findWeapon() <<
+                " for " << 3*(field.getHero(1)->getTotalAP()/4) - field.getHero(0)->getDefense() << " hp\n\n";
             }
+
         } else {
             field.getHero(0)->changeHp(-(field.getHero(1)->getTotalAP() - field.getHero(0) -> getDefense()));
-            std::cout << "\tHero -> " << field.getHero(1)->getId() << " attacked " << field.getHero(0)->getId() << " with " << field.getHero(1)->findWeapon() << " for " << field.getHero(
-                    1)->getTotalAP() << " hp\n";
+            std::cout << "\tHero -> " << field.getHero(1)->getId() << " attacked " << field.getHero(0)->getId() << " with " << field.getHero(1)->findWeapon() <<
+            " for " << field.getHero(1)->getTotalAP() - field.getHero(0) -> getDefense()  << " hp\n";
+
             if (field.getHero(0)->isAlive()) {
-                field.getHero(1)->changeHp(-((field.getHero(0)->getTotalAP() / 2) - field.getHero(1)->getDefense()));
-                std::cout << "Hero -> " << field.getHero(0)->getId() << " attacked back " << field.getHero(1)->getId() << " with " << field.getHero(0)->findWeapon() << " for " << field.getHero(1)->getTotalAP() / 2 << " hp\n\n";
+                field.getHero(1)->changeHp(-(3*(field.getHero(0)->getTotalAP() / 4) - field.getHero(1)->getDefense()));
+                std::cout << "Hero -> " << field.getHero(0)->getId() << " attacked back " << field.getHero(1)->getId() << " with " << field.getHero(0)->findWeapon() <<
+                " for " << 3*(field.getHero(0)->getTotalAP() / 4) - field.getHero(1)->getDefense() << " hp\n\n";
             }
         }
 
         if (!(field.getHero(0)->isAlive()))
             field.removeBeing(0);
+
         if (!(field.getHero(1)->isAlive()))
             field.removeBeing(1);
     }
@@ -256,15 +275,14 @@ void Map::iteration()
                     encounter(fields_[getY(hero)][getX(hero)], getPos(hero));
                 }
 
-                getItems(fields_[getX(hero)][getY(hero)], hero);
-
-                hero->useTempItems();
-
-                hero->printBackpack();
+                if(getX(hero)!=-10) {
+                    getItems(fields_[getX(hero)][getY(hero)], hero);
+                    hero->useTempItems();
+                    hero->printBackpack();
+                }
 
                 show();
-
-                Sleep(2000);
+                Sleep(500);
                 //system("Pause");
             }
         }

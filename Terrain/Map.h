@@ -32,6 +32,7 @@ public:
     static int bCheck(int);
 
     static int getMapSize();
+    int getListSize();
     int numOfTribes();
     int getX(Being *hero);
     int getY(Being *hero);

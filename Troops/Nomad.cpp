@@ -17,16 +17,15 @@ Nomad::Nomad()
 
     numOfNomadsCreated_++;
 }
-Nomad::Nomad(std::string name, int tribe)
+Nomad::Nomad(std::string name, int tribe, std::mt19937 & engine)
 {
-    std::random_device rd;
-    std::mt19937 mt(rd());
+
     tribe_ = tribe;
     name_ = std::move(name);
     speed_ = 2;
 
     std::uniform_int_distribution <int> strengthRange (12,15);
-    strength_=strengthRange(mt);
+    strength_=strengthRange(engine);
 
     Item bulat("bulat");
     bulat.changeState();
@@ -49,6 +48,7 @@ Nomad::Nomad(std::string name, int tribe)
         id_[1] = '0';
         id_[2] = numOfNomadsCreated_ + '0';
         id_[3] = name_[0];
+        id_[4] = '\0';
     }
     else{
         tmp = numOfNomadsCreated_;
@@ -67,7 +67,7 @@ Nomad::Nomad(std::string name, int tribe)
 
 }
 Nomad::~Nomad() {
-    std::cout << "Nomad " << id_ << " has been slayed!"<< std::endl;
+    //std::cout << "Nomad " << id_ << " has been slayed!"<< std::endl;
 }
 
 void Nomad::show() {

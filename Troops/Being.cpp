@@ -1,20 +1,33 @@
 #include "Being.h"
 #include <iostream>
 
-Being::Being(): name_{"empty"}, id_{"init"}, strength_{0}
-{}
+Being::Being()
+{
+    name_ = "empty";
+    id_[0] = 'i';
+    id_[1] = 'n';
+    id_[2] = 'i';
+    id_[3] = 't';
+    strength_ = 0;
+}
 Being::~Being() = default;
 
 void Being::changeHp(int hpModifier){
 
     if((healthPoints_ + hpModifier < 100))
-        this -> healthPoints_ += hpModifier;
+        healthPoints_ += hpModifier;
     else healthPoints_ = 100;
 
 }
 void Being::addItem(const Item & item) {
 
-    backpack_.push_back(item);
+    try {
+        backpack_.push_back(item);
+    }
+    catch( const std::bad_alloc & badAlloc) {
+        std::cout << "Program crashed in Field::addItem :)";
+        exit(69);
+    }
 
 }
 void Being::changeWeapon() {
@@ -39,28 +52,29 @@ void Being::useTempItems() {
     int pos = 0;
 
     for(auto & item: backpack_) {
-        if (item.isTemp_) {
-            if(item.isBeingUsed_){
-                if(item.duration_ > 0)
-                    item.duration_ --;
-                else {
-                    backpack_.erase(backpack_.begin()+pos);
+            if (item.isTemp_) {
+                if (item.isBeingUsed_) {
+                    if (item.duration_ > 0)
+                        item.duration_--;
+                    else {
+                        backpack_.erase(backpack_.begin() + pos);
+                    }
+                }
+                if (!item.isBeingUsed_ && potLim == 0) {
+                    if (item.duration_ > 0) {
+                        item.duration_--;
+                        item.changeState();
+                    } else {
+                        if (item.duration_ == -1)
+                            changeHp(item.healthBoost_);
+                        backpack_.erase(backpack_.begin() + pos);
+                    }
+                    potLim++;
                 }
             }
-            if(!item.isBeingUsed_ && potLim == 0){
-                if(item.duration_ > 0) {
-                    item.duration_--;
-                    item.changeState();
-                }
-                else {
-                    if(item.duration_ == -1)
-                        changeHp(item.healthBoost_);
-                    backpack_.erase(backpack_.begin()+pos);
-                }
-                potLim++;
-            }
-        }
-        pos++;
+            pos++;
+
+
     }
 
 }
@@ -84,7 +98,7 @@ int Being::getHP() {
 }
 int Being::getTotalAP() {
 
-    int boosts;
+    int boosts = 0;
 
     for(auto & item: backpack_) {
         if(item.attackPoints_ != 0 && item.isBeingUsed_ && !item.isTemp_)
@@ -93,17 +107,20 @@ int Being::getTotalAP() {
             boosts += item.attackPoints_;
     }
 
-    return this -> strength_ + boosts;
+    return strength_ + boosts;
 
 }
 int Being::getDefense() {
 
-    int boosts;
+    int boosts = 0;
 
     for(auto & item: backpack_) {
-        if(item.armorPoints_ != 0 && item.isBeingUsed_) boosts += item.armorPoints_;
+        if(item.armorPoints_ != 0 && item.isBeingUsed_ && !item.isTemp_)
+            boosts += item.armorPoints_;
+        if(item.isTemp_ && item.isBeingUsed_ && item.duration_ >= 0)
+            boosts += item.armorPoints_;
     }
-    return this -> strength_ + boosts;
+    return boosts/2;
 
 }
 int Being::getTribe() const {
