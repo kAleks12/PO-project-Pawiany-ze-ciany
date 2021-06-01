@@ -15,8 +15,6 @@
 
 #include "Terrain/Map.h"
 
-std::mt19937 engine{std::random_device{}()};
-
 inline std::string drawName();
 inline int drawPos();
 template <typename ClassName> ClassName* generateClassObject(std::string name, Map & map, int tribe);
@@ -24,6 +22,7 @@ void generateItem(Map & map, int itemId);
 inline void adjustNumberOfObjects( int & numOfObjects1, int & numOfObjects2, int & numOfObjects3, int & numOfObjects4, int difference);
 void fillMap(Map & adventureMap);
 
+std::mt19937 engine{std::random_device{}()};
 
 int main() {
 
@@ -33,11 +32,44 @@ int main() {
 
     adventureMap.show();
 
-    while(adventureMap.numOfTribes() > 1 || adventureMap.getListSize() <=2) {
+    while(adventureMap.numOfTribes() > 1) {
+        std::cout<<adventureMap.numOfTribes()<<std::endl;
         adventureMap.iteration();
         //system("Pause");
         //Sleep(2000);
     }
+
+    std::cout<<adventureMap.numOfTribes()<<std::endl;
+    std::cout<<"\n\t\t\t\t\tTHE SIMULATION IS OVER\n";
+
+    int victoriousTribe;
+
+    for(int i=0; i<4; i++){
+        if(adventureMap.isThisTribeAlive(i)){
+            std::cout<<"Tribe number "<< i <<" Has won\n\n";
+            victoriousTribe = i;
+        }
+    }
+
+    for(int i=0; i<4; i++)
+        std::cout << "Tribe number " << i << " kills: " << adventureMap.returnTribeKills(i) << std::endl;
+
+    std::cout << std::endl;
+    std::cout << std::endl;
+
+    int listSize = adventureMap.getListSize();
+
+        adventureMap.showAndKillList(victoriousTribe);
+
+
+
+}
+
+inline int drawPos() {
+    std::uniform_int_distribution<int> posRange(0, (sqrt(Map::getMapSize())-1));
+    int randomNum;
+    randomNum = posRange(engine);
+    return randomNum;
 }
 
 inline std::string drawName(){
@@ -59,22 +91,15 @@ inline std::string drawName(){
     else return "File not found!";
 }
 
-inline int drawPos() {
-    std::uniform_int_distribution<int> posRange(0, (sqrt(Map::getMapSize())-1));
-    int randomNum;
-    randomNum = posRange(engine);
-    return randomNum;
-}
-
 template <typename ClassName> ClassName* generateClassObject(std::string name, Map & map, int tribe){
-        int tmpXPos, tmpYPos;
-        auto tmp = new ClassName(name, tribe, engine);
-        do {
-            tmpXPos = drawPos();
-            tmpYPos = drawPos();
-        } while (map.isFieldFull(tmpXPos, tmpYPos));
-        map.spawn(tmp, tmpXPos, tmpYPos);
-        return tmp;
+    int tmpXPos, tmpYPos;
+    auto tmp = new ClassName(name, tribe, engine);
+    do {
+        tmpXPos = drawPos();
+        tmpYPos = drawPos();
+    } while (map.isFieldFull(tmpXPos, tmpYPos));
+    map.spawn(tmp, tmpXPos, tmpYPos);
+    return tmp;
 }
 
 void generateItem(Map & map, int itemId)
@@ -198,7 +223,7 @@ void fillMap(Map & adventureMap){
             std::cin >> numOfObj;
             std::cout << "Enter number of items to create"
             std::cin >> numOfItems;*/
-            numOfObj = 1;
+            numOfObj = 10;
             numOfItems = 10;
         }
 
@@ -274,3 +299,4 @@ void fillMap(Map & adventureMap){
     }
 
 }
+
