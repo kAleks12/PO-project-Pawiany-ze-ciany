@@ -17,6 +17,7 @@ protected:
     int tribe_;
     char id_ [81];
     std::vector <Item> backpack_;
+    int killCounter = 0;
 public:
     Being();
     ~Being();
@@ -29,6 +30,7 @@ public:
 
     std::string getId();
     int getHP();
+    std::string getName();
     int getTotalAP();
     int getDefense();
     [[nodiscard]] int getSpeed() const;
@@ -46,6 +48,9 @@ public:
 
     bool isAlive();
     bool whetherPickUp(const Item &);
+
+    void addKill();
+    int returnKills();
 };
 
 #endif //PO_BEING_H

@@ -21,6 +21,7 @@ private:
     static const int mapSize_ = 10;
     Field fields_ [mapSize_][mapSize_];
     std::list <Being*> allHeroes_;
+    int tribeKills[4]={0, 0, 0, 0};
 
 public:
     void spawn(Being *, int, int);
@@ -30,6 +31,8 @@ public:
     void changePos(Being*, int, int);
     void cleanList();
     static int bCheck(int);
+    void addTribeKill(int);
+    int returnTribeKills(int);
 
     static int getMapSize();
     int getListSize();
@@ -37,9 +40,10 @@ public:
     int getX(Being *hero);
     int getY(Being *hero);
     int getPos(Being *hero);
+    bool isThisTribeAlive(int);
 
     [[maybe_unused]] void showField(int, int);
-    [[maybe_unused]] void showList();
+    void showAndKillList(int);
     void show();
 
     void move(Being *hero, int moveDirection);

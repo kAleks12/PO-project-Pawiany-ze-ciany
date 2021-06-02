@@ -218,3 +218,15 @@ bool Being::whetherPickUp(const Item & item) {
     }
 
 }
+
+void Being::addKill() {
+    killCounter++;
+}
+
+int Being::returnKills() {
+    return killCounter;
+}
+
+std::string Being::getName() {
+    return name_;
+}

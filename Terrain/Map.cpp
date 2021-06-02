@@ -57,9 +57,26 @@ void Map::changePos(Being* hero, int verChange, int horChange) {
     if((!isFieldFull(newX, newY))&&(!isPosEmpty(currX, currY, pos))) {
         fields_[newY][newX].addBeing(fields_[currY][currX].getHero(pos));
         fields_[currY][currX].removeBeing(pos);
-        std::cout << hero->getHP() << " Hero of tribe nr " << hero->getTribe() << hero->getId() << " moved from " << currX << ", " << currY << " to " << newX << ", " << newY;
+
+
+        std::cout << hero->getHP() << "HP Hero of tribe nr " << hero->getTribe() << " " << hero->getId() << " moved from " << currX
+        <<"," << currY << " -> the " << fields_[currX][currY].getTerrain() << " to " << newX << "," << newY
+        << " -> the "<< fields_[newX][newY].getTerrain();
+
+        if(fields_[newX][newY].getTerrain() == "desert"){
+            std::cout<<"\nHero loses 5 HP because he's on the desert\n";
+            if(hero->getHP()>5)
+            hero->changeHp(-5);
+            else
+                std::cout<<"\nhero is about to die!\n";
+        }
+        if(fields_[newX][newY].getTerrain() == "lake"){
+            std::cout<<"\nHero gains 5 HP because he's by the lake\n";
+            hero->changeHp(5);
+        }
     }
-    else std::cout << hero->getHP() << " Hero of tribe nr " << hero->getTribe() << hero->getId() << " stayed on " << getX(hero) << " " << getY(hero);
+    else std::cout << hero->getHP() << "HP Hero of tribe nr " << hero->getTribe() << " " << hero->getId() << " stayed on "
+    << getX(hero) << "," << getY(hero) << " -> the " << fields_[currX][currX].getTerrain();
 
 }
 void Map::cleanList() {
@@ -164,34 +181,45 @@ void Map::move(Being* hero, int moveDirection) {
 
     if((xWhereToGo == -1) && (yWhereToGo == -1)){
 
+        int speed = hero->getSpeed();
+
+        if((hero->getId()[0]=='S')&&(fields_[getX(hero)][getY(hero)].getTerrain()=="forest"))
+            speed = speed + 2;
+
+        if((hero->getId()[0]=='V')&&(fields_[getX(hero)][getY(hero)].getTerrain()=="lake"))
+            speed = speed + 2;
+
+        if((hero->getId()[0]=='K')&&(fields_[getX(hero)][getY(hero)].getTerrain()=="mountains"))
+            speed = speed + 1;
+
         switch (moveDirection) {
             case 0:
-                verChange = -(hero->getSpeed());
+                verChange = -(speed);
                 break;
             case 1:
-                verChange = -(hero->getSpeed());
-                horChange = -(hero->getSpeed());
+                verChange = -(speed);
+                horChange = -(speed);
                 break;
             case 2:
-                horChange = -(hero->getSpeed());
+                horChange = -(speed);
                 break;
             case 3:
-                verChange = hero->getSpeed();
-                horChange = -(hero->getSpeed());
+                verChange = speed;
+                horChange = -(speed);
                 break;
             case 4:
-                verChange = hero->getSpeed();
+                verChange = speed;
                 break;
             case 5:
-                verChange = hero->getSpeed();
-                horChange = hero->getSpeed();
+                verChange = speed;
+                horChange = speed;
                 break;
             case 6:
-                horChange = hero->getSpeed();
+                horChange = speed;
                 break;
             case 7:
-                verChange = -(hero->getSpeed());
-                horChange = hero->getSpeed();
+                verChange = -(speed);
+                horChange = speed;
                 break;
             default:
                 //std::cout << "Wrong direction!";
@@ -208,36 +236,60 @@ void Map::move(Being* hero, int moveDirection) {
 }
 void Map::encounter(Field & field, int startingPos){
 
+    int attackModificator = 1;
+    int damageModificator = 1;
+
+    if((field.getHero(startingPos)->getId()[0]=='S')&&(field.getTerrain()=="forest")){
+        attackModificator = 2;
+        damageModificator = 1;
+    }
+
+    if((field.getHero(startingPos)->getId()[0]=='V')&&(field.getTerrain()=="lake")){
+        attackModificator = 1;
+        damageModificator = 2;
+    }
+
+    if((field.getHero(startingPos)->getId()[0]=='N')&&(field.getTerrain()=="plain")){
+        attackModificator = 2;
+        damageModificator = 2;
+    }
+
     if(field.getHero(0)->getTribe() != field.getHero(1)->getTribe()) {
         if (startingPos == 0) {
 
-            field.getHero(1) -> changeHp(-(field.getHero(0)->getTotalAP() - field.getHero(1) -> getDefense()));
+            field.getHero(1) -> changeHp(-attackModificator*(field.getHero(0)->getTotalAP() - field.getHero(1) -> getDefense()));
             std::cout << "\tHero -> " << field.getHero(0)->getId() << " attacked " << field.getHero(1)->getId() << " with " << field.getHero(0)->findWeapon() <<
-            " for " << field.getHero(0)->getTotalAP() - field.getHero(1) -> getDefense()<< " hp\n";
+            " for " << attackModificator*(field.getHero(0)->getTotalAP() - field.getHero(1) -> getDefense())<< " hp\n";
 
             if (field.getHero(1)->isAlive()) {
-                field.getHero(0) -> changeHp(-(3*(field.getHero(1)->getTotalAP() / 4) - field.getHero(0)->getDefense()));
+                field.getHero(0) -> changeHp(-damageModificator*(3*(field.getHero(1)->getTotalAP() / 4) - field.getHero(0)->getDefense()));
                 std::cout << "Hero -> " << field.getHero(1)->getId() << " attacked back " << field.getHero(0)->getId() << " with " << field.getHero(1)->findWeapon() <<
-                " for " << 3*(field.getHero(1)->getTotalAP()/4) - field.getHero(0)->getDefense() << " hp\n\n";
+                " for " << damageModificator*(3*(field.getHero(1)->getTotalAP()/4) - field.getHero(0)->getDefense()) << " hp\n\n";
             }
 
         } else {
-            field.getHero(0)->changeHp(-(field.getHero(1)->getTotalAP() - field.getHero(0) -> getDefense()));
+            field.getHero(0)->changeHp(-attackModificator*(field.getHero(1)->getTotalAP() - field.getHero(0) -> getDefense()));
             std::cout << "\tHero -> " << field.getHero(1)->getId() << " attacked " << field.getHero(0)->getId() << " with " << field.getHero(1)->findWeapon() <<
-            " for " << field.getHero(1)->getTotalAP() - field.getHero(0) -> getDefense()  << " hp\n";
+            " for " << attackModificator*(field.getHero(1)->getTotalAP() - field.getHero(0) -> getDefense())  << " hp\n";
 
             if (field.getHero(0)->isAlive()) {
-                field.getHero(1)->changeHp(-(3*(field.getHero(0)->getTotalAP() / 4) - field.getHero(1)->getDefense()));
+                field.getHero(1)->changeHp(-damageModificator*(3*(field.getHero(0)->getTotalAP() / 4) - field.getHero(1)->getDefense()));
                 std::cout << "Hero -> " << field.getHero(0)->getId() << " attacked back " << field.getHero(1)->getId() << " with " << field.getHero(0)->findWeapon() <<
-                " for " << 3*(field.getHero(0)->getTotalAP() / 4) - field.getHero(1)->getDefense() << " hp\n\n";
+                " for " << damageModificator*(3*(field.getHero(0)->getTotalAP() / 4) - field.getHero(1)->getDefense()) << " hp\n\n";
             }
         }
 
-        if (!(field.getHero(0)->isAlive()))
+        if (!(field.getHero(0)->isAlive())){
             field.removeBeing(0);
+            addTribeKill(field.getHero(1)->getTribe());
+            field.getHero(1)->addKill();
+        }
 
-        if (!(field.getHero(1)->isAlive()))
+        if (!(field.getHero(1)->isAlive())){
             field.removeBeing(1);
+            addTribeKill(field.getHero(0)->getTribe());
+            field.getHero(0)->addKill();
+        }
     }
     else{
         if (startingPos == 0) {
@@ -282,7 +334,7 @@ void Map::iteration()
                 }
 
                 show();
-                Sleep(500);
+                //Sleep(500);
                 //system("Pause");
             }
         }
@@ -291,62 +343,62 @@ void Map::iteration()
 }
 void Map::seekForInteraction(int yPos, int xPos, int pos, int howFarIllGo, int * xWhereToGo, int * yWhereToGo) {
 
-    bool wannaHeal = false;
-    if(fields_[xPos][yPos].getHero(pos)->getHP() < 50)
-        wannaHeal = true;
-
     int xFriendly = -1;
     int yFriendly = -1;
     int xEnemy = -1;
     int yEnemy = -1;
+    int enemyHp;
+    int myHp = fields_[xPos][yPos].getHero(pos)->getHP();
+
+    bool wannaHeal = false;
+    if (myHp < 50)
+        wannaHeal = true;
 
 
-    for(int i= bCheck(xPos - howFarIllGo); i < bCheck(xPos + howFarIllGo); i++){
-        for(int j = bCheck(yPos - howFarIllGo); j < bCheck(yPos + howFarIllGo); j++){
-            if((fields_[i][j].isPosEmpty(0) && !fields_[i][j].isPosEmpty(1)) && ((i != xPos) || (j != yPos))){
-                if(fields_[i][j].getHero(1)->getTribe() == fields_[xPos][yPos].getHero(pos)->getTribe()){
+    for (int i = bCheck(xPos - howFarIllGo); i < bCheck(xPos + howFarIllGo); i++) {
+        for (int j = bCheck(yPos - howFarIllGo); j < bCheck(yPos + howFarIllGo); j++) {
+            if ((fields_[i][j].isPosEmpty(0) && !fields_[i][j].isPosEmpty(1)) && ((i != xPos) || (j != yPos))) {
+                if (fields_[i][j].getHero(1)->getTribe() == fields_[xPos][yPos].getHero(pos)->getTribe()) {
                     xFriendly = i;
                     yFriendly = j;
-                }
-                else{
-                    xFriendly = i;
-                    yFriendly = j;
+                } else {
+                    xEnemy = i;
+                    yEnemy = j;
+                    enemyHp = fields_[i][j].getHero(1)->getHP();
                 }
             }
 
 
-
-            if((fields_[i][j].isPosEmpty(1) && !fields_[i][j].isPosEmpty(0)) && ((i != xPos) || (j != yPos))){
-                if((fields_[i][j].getHero(0)->getTribe() == fields_[xPos][yPos].getHero(pos)->getTribe())){
+            if ((fields_[i][j].isPosEmpty(1) && !fields_[i][j].isPosEmpty(0)) && ((i != xPos) || (j != yPos))) {
+                if ((fields_[i][j].getHero(0)->getTribe() == fields_[xPos][yPos].getHero(pos)->getTribe())) {
                     xFriendly = i;
                     yFriendly = j;
-                }
-                else{
+                } else {
                     xEnemy = i;
                     yEnemy = j;
+                    enemyHp = fields_[i][j].getHero(0)->getHP();
                 }
             }
         }
     }
 
-    if((xFriendly != -1) && (yFriendly != -1)){
-        if(wannaHeal && ((xFriendly != xPos ) || (yFriendly != yPos ))){
+    if ((xFriendly != -1) && (yFriendly != -1)) {
+        if (wannaHeal && ((xFriendly != xPos) || (yFriendly != yPos))) {
             *xWhereToGo = yFriendly;
             *yWhereToGo = xFriendly;
         }
-    }
-
-    if((xEnemy != -1) && (yEnemy != -1)){
-        if(!wannaHeal && ((xEnemy != xPos ) || (yEnemy != yPos ))){
-            *xWhereToGo = yEnemy;
-            *yWhereToGo = xEnemy;
-        }
-    }
-    else{
-        if((xFriendly != -1) && (yFriendly != -1)){
-            if(!wannaHeal && ((xFriendly != xPos ) || (yFriendly != yPos ))){
-                *xWhereToGo = yFriendly;
-                *yWhereToGo = xFriendly;
+    } else {
+        if ((xEnemy != -1) && (yEnemy != -1)) {
+            if ((enemyHp<=myHp) && ((xEnemy != xPos) || (yEnemy != yPos))) {
+                *xWhereToGo = yEnemy;
+                *yWhereToGo = xEnemy;
+            }
+        } else {
+            if ((xFriendly != -1) && (yFriendly != -1)) {
+                if (!wannaHeal && ((xFriendly != xPos) || (yFriendly != yPos))) {
+                    *xWhereToGo = yFriendly;
+                    *yWhereToGo = xFriendly;
+                }
             }
         }
     }
@@ -360,11 +412,24 @@ void Map::seekForInteraction(int yPos, int xPos, int pos, int howFarIllGo, int *
 
 }
 
-[[maybe_unused]] void Map::showList() {
+void Map::showAndKillList(int tribeName) {
 
-    for(auto & hero: allHeroes_){
-        std::cout << hero << std::endl;
+
+    while(allHeroes_.size() != 0){
+
+        if(allHeroes_.front()->getTribe() == tribeName){
+            std::cout << "ID: " << allHeroes_.front()->getId();
+            std::cout << ", HP: " << allHeroes_.front()->getHP();
+            std::cout << ", Name: " << allHeroes_.front()->getName();
+            std::cout << ", Kill counter: " << allHeroes_.front()->returnKills();
+            std::cout << std::endl;
+        }
+
+        allHeroes_.pop_front();
+
     }
+
+
 
 }
 void Map::show() {
@@ -435,3 +500,28 @@ int Map::numOfTribes() {
 
     return howMany;
 }
+
+bool Map::isThisTribeAlive(int tribeNumber) {
+    int tribesTab[4];
+    tribesTab[0] = 0;
+    tribesTab[1] = 0;
+    tribesTab[2] = 0;
+    tribesTab[3] = 0;
+    for(auto & hero: allHeroes_){
+        tribesTab[hero->getTribe()]++;
+    }
+    if(tribesTab[tribeNumber])
+        return true;
+    else
+        return false;
+}
+
+void Map::addTribeKill(int tribeNumber) {
+    tribeKills[tribeNumber]++;
+
+}
+
+int Map::returnTribeKills(int tribeNumber) {
+    return tribeKills[tribeNumber];
+}
+
