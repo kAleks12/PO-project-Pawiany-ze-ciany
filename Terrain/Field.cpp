@@ -5,7 +5,7 @@
 
 std::mt19937 Field::fieldEngine{std::random_device{}()};
 
-Field::Field() {
+Field::Field() {//creating field
     heroesAtThisField_[0] = nullptr;
     heroesAtThisField_[1] = nullptr;
 
@@ -13,7 +13,7 @@ Field::Field() {
 
     int terrainNumber = randomNumber(fieldEngine, 0, 4);
 
-    switch (terrainNumber) {
+    switch (terrainNumber) {//randomly choosing terrain type
         case 0:
             terrainType_ = "forest";
             std::cout<<"LAS\n";
@@ -43,7 +43,7 @@ Field::Field() {
 
 }
 
-void Field::addBeing( Being * hero) {
+void Field::addBeing( Being * hero) {//adding heroes to fields
 
     if((hero != nullptr) && isSpace()){
         if(heroesAtThisField_[0] == nullptr)
@@ -54,7 +54,7 @@ void Field::addBeing( Being * hero) {
     }
 
 }
-void Field::addItem(int itemId) {
+void Field::addItem(int itemId) {//putting items on field
 
     Item tmp(itemId);
     try {
@@ -66,7 +66,7 @@ void Field::addItem(int itemId) {
     }
 
 }
-void Field::addItem(Item item) {
+void Field::addItem(Item item) {//same thing, but one of them is not used anymore idk which one tbh
 
     try {
         itemsAtThisField_.push_back(item);
@@ -77,20 +77,20 @@ void Field::addItem(Item item) {
     }
 
 }
-void Field::deleteItem() {
+void Field::deleteItem() {//removing item from field
 
     itemsAtThisField_.pop_back();
 
 }
-void Field::removeBeing(int position) {
+void Field::removeBeing(int position) {//removing being from certain position on field
 
     heroesAtThisField_[position] = nullptr;
 
 }
 
-Being * Field::getHero(int pos) {
+Being * Field::getHero(int pos) {//WHO ARE YOU AND WHAT ARE YOU DOING ON MY SWAMP
 
-    return heroesAtThisField_[pos];
+    return heroesAtThisField_[pos];//*all star starts playing*
 
 }
 int Field::getItemsNum() {
@@ -104,7 +104,7 @@ Item Field::copyItem() {
 
 }
 
-void Field::showField() {
+void Field::showField() {//printing fields content (heroes)
 
     if((isPosEmpty(0))&&(isPosEmpty(1)))
         std::cout << "Pole jest puste" << std::endl;
@@ -121,7 +121,7 @@ void Field::showField() {
     }
 
 }
-void Field::printItems() {
+void Field::printItems() {//printing fields content (items)
 
     for(auto & item: itemsAtThisField_){
         std::cout << item.getName() << " + ";
@@ -144,7 +144,7 @@ std::string Field::getTerrain() {
     return terrainType_;
 }
 
-int Field::randomNumber(std::mt19937 & engine, int min, int max) {
+int Field::randomNumber(std::mt19937 & engine, int min, int max) {//PO final grades generator
     std::uniform_int_distribution<int> posRange(min, max);
     int randomNum;
     randomNum = posRange(engine);

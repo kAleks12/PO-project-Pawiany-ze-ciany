@@ -1,7 +1,7 @@
 #include "Being.h"
 #include <iostream>
 
-Being::Being()
+Being::Being()//default being
 {
     name_ = "empty";
     id_[0] = 'i';
@@ -12,14 +12,14 @@ Being::Being()
 }
 Being::~Being() = default;
 
-void Being::changeHp(int hpModifier){
+void Being::changeHp(int hpModifier){//modifying amount of heroes HP points
 
     if((healthPoints_ + hpModifier < 100))
         healthPoints_ += hpModifier;
     else healthPoints_ = 100;
 
 }
-void Being::addItem(const Item & item) {
+void Being::addItem(const Item & item) {//adding items to heroes backpack
 
     try {
         backpack_.push_back(item);
@@ -30,7 +30,7 @@ void Being::addItem(const Item & item) {
     }
 
 }
-void Being::changeWeapon() {
+void Being::changeWeapon() {//finding and choosing the best weapon in heroes backpack
 
     for(auto & item: backpack_) {
         if(!item.isTemp_){
@@ -46,7 +46,7 @@ void Being::changeWeapon() {
     }
 
 }
-void Being::useTempItems() {
+void Being::useTempItems() {//using temporary items (potions)
 
     int potLim =0;
     int pos = 0;
@@ -55,17 +55,17 @@ void Being::useTempItems() {
             if (item.isTemp_) {
                 if (item.isBeingUsed_) {
                     if (item.duration_ > 0)
-                        item.duration_--;
+                        item.duration_--;//items are being used
                     else {
-                        backpack_.erase(backpack_.begin() + pos);
+                        backpack_.erase(backpack_.begin() + pos);//items are being deleted
                     }
                 }
-                if (!item.isBeingUsed_ && potLim == 0) {
+                if (!item.isBeingUsed_ && potLim == 0) {//drinking new potions
                     if (item.duration_ > 0) {
                         item.duration_--;
                         item.changeState();
                     } else {
-                        if (item.duration_ == -1)
+                        if (item.duration_ == -1)//one time use potions
                             changeHp(item.healthBoost_);
                         backpack_.erase(backpack_.begin() + pos);
                     }
@@ -78,7 +78,7 @@ void Being::useTempItems() {
     }
 
 }
-void Being::deactivateItem(const std::string& itemName) {
+void Being::deactivateItem(const std::string& itemName) {//deactivating items
 
     for(auto & item: backpack_)
         if(item.getName() == itemName)
@@ -96,7 +96,7 @@ int Being::getHP() {
     return healthPoints_;
 
 }
-int Being::getTotalAP() {
+int Being::getTotalAP() {//summing every potion, weapon and base attack points
 
     int boosts = 0;
 
@@ -110,7 +110,7 @@ int Being::getTotalAP() {
     return strength_ + boosts;
 
 }
-int Being::getDefense() {
+int Being::getDefense() {//summing every potion and armor
 
     int boosts = 0;
 
@@ -128,7 +128,7 @@ int Being::getTribe() const {
     return tribe_;
 
 }
-int Being::getSpeed() const {
+int Being::getSpeed() const {//summing every potion and basic speed
 
     int boosts;
 
@@ -140,7 +140,7 @@ int Being::getSpeed() const {
 
 }
 
-Item Being::findItem(const std::string& itemName) {
+Item Being::findItem(const std::string& itemName) {//returning certain item
 
     for(auto & item: backpack_)
         if(item.getName() == itemName)
@@ -149,7 +149,7 @@ Item Being::findItem(const std::string& itemName) {
 
 }
 
-std::string Being::findArmor() {
+std::string Being::findArmor() {//returning armor name
 
     for(auto & item: backpack_) {
         if(item.armorPoints_ > 0 && item.isBeingUsed_ && !item.isTemp_)
@@ -158,7 +158,7 @@ std::string Being::findArmor() {
     return "not found";
 
 }
-std::string Being::findWeapon() {
+std::string Being::findWeapon() {//returning weapon name
 
     for(auto & item: backpack_) {
         if(item.attackPoints_ > 0 && item.isBeingUsed_ && !item.isTemp_)
@@ -167,7 +167,7 @@ std::string Being::findWeapon() {
     return "not found";
 
 }
-std::string Being::findPotion(std::string name) {
+std::string Being::findPotion(std::string name) {//confirming whether there is an certain potion *could have been bool function EGHM*
 
     for(auto & item: backpack_) {
         if(item.isTemp_ && item.getName() == name)
@@ -177,19 +177,19 @@ std::string Being::findPotion(std::string name) {
 
 }
 
-void Being::printBackpack() {
+void Being::printBackpack() {//printing backpacks content
 
     for(auto & item:backpack_)
         item.show();
 
 }
-void Being::show() {
+void Being::show() {//printing heroes details
 
     std::cout << "Hero " << name_ << "\n\thp: " << healthPoints_ << "\tstrength: " << strength_ << "\t id: " << id_ << std::endl;
 
 }
 
-bool Being::isAlive() {
+bool Being::isAlive() {//u good bro?
 
     if(healthPoints_ > 0)
         return true;
@@ -197,7 +197,7 @@ bool Being::isAlive() {
         return false;
 
 }
-bool Being::whetherPickUp(const Item & item) {
+bool Being::whetherPickUp(const Item & item) {//?????? ich wolle helfen bitte szun
 
     if(item.isTemp_ && (findPotion(item.name_) == "health potion" ||  findPotion(item.name_) == "not found"))
         return true;

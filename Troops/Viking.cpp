@@ -4,7 +4,7 @@
 
 #include "Viking.h"
 
-int Viking::numOfVikingsCreated_ = 0;
+int Viking::numOfVikingsCreated_ = 0;//THE SAME DETAILS AS IN KNIGHT.CPP
 
 Viking::Viking() {
 

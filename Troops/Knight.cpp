@@ -4,7 +4,7 @@
 
 int Knight::numOfKnightsCreated_ = 0;
 
-Knight::Knight() {
+Knight::Knight() {//default constructor
     Item sword("sword");
     sword.changeState();
     Item heavyArmor("harmor");
@@ -38,14 +38,14 @@ Knight::Knight(std::string name, int tribe, std::mt19937 & engine){
     for(;tmp > 0;numOfDigits++){
         tmp /= 10;
     }
-    if(numOfDigits == 0 || numOfDigits == 1){
+    if(numOfDigits == 0 || numOfDigits == 1){//creating ID
         id_[0] = 'K';
         id_[1] = '0';
         id_[2] = numOfKnightsCreated_ + '0';
         id_[3] = name_[0];
         id_[4] = '\0';
     }
-    else{
+    else{//even for larger numbers of knights
         tmp = numOfKnightsCreated_;
         numOfDigits+=2;
 
@@ -67,13 +67,13 @@ Knight::~Knight() {
 
 }
 
-void Knight::changeStatus() {
+void Knight::changeStatus() {//unused i guess
 
     isOnHorse = !(isOnHorse);
 
 }
 
-void Knight::show() {
+void Knight::show() {//printing hero details
 
     std::cout << "\n\nObject's weapons -> ";
     findItem(findWeapon()).show();
@@ -82,7 +82,7 @@ void Knight::show() {
     Being::show();
 
 }
-void Knight::destroy() {
+void Knight::destroy() {//MUERTA MUAHAHAHA
 
     delete this;
 

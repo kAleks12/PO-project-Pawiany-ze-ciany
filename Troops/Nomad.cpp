@@ -2,7 +2,7 @@
 #include <utility>
 #include "Nomad.h"
 
-int Nomad::numOfNomadsCreated_ = 0;
+int Nomad::numOfNomadsCreated_ = 0;//THE SAME DETAILS AS IN KNIGHT.CPP
 
 Nomad::Nomad()
 {

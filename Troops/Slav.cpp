@@ -2,7 +2,7 @@
 
 #include <utility>
 
-int Slav::numOfSlavsCreated_ = 0;
+int Slav::numOfSlavsCreated_ = 0;//THE SAME DETAILS AS IN KNIGHT.CPP
 
 
 Slav::Slav() {

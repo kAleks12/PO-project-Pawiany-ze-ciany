@@ -32,7 +32,7 @@ int main() {
 
     adventureMap.show();
 
-    while(adventureMap.numOfTribes() > 1) {
+    while(adventureMap.numOfTribes() > 1) {//simulation goes until there will be only one tribe alive
         std::cout<<adventureMap.numOfTribes()<<std::endl;
         adventureMap.iteration();
         //system("Pause");
@@ -42,7 +42,7 @@ int main() {
     std::cout<<adventureMap.numOfTribes()<<std::endl;
     std::cout<<"\n\t\t\t\t\tTHE SIMULATION IS OVER\n";
 
-    int victoriousTribe;
+    int victoriousTribe;//showing details of simulation and stuff
 
     for(int i=0; i<4; i++){
         if(adventureMap.isThisTribeAlive(i)){
@@ -65,14 +65,14 @@ int main() {
 
 }
 
-inline int drawPos() {
+inline int drawPos() {//generating random position on the map
     std::uniform_int_distribution<int> posRange(0, (sqrt(Map::getMapSize())-1));
     int randomNum;
     randomNum = posRange(engine);
     return randomNum;
 }
 
-inline std::string drawName(){
+inline std::string drawName(){//generating names
 
     std::ifstream fNames("names.txt");
 
@@ -91,7 +91,7 @@ inline std::string drawName(){
     else return "File not found!";
 }
 
-template <typename ClassName> ClassName* generateClassObject(std::string name, Map & map, int tribe){
+template <typename ClassName> ClassName* generateClassObject(std::string name, Map & map, int tribe){//spawning new heroes
     int tmpXPos, tmpYPos;
     auto tmp = new ClassName(name, tribe, engine);
     do {
@@ -102,7 +102,7 @@ template <typename ClassName> ClassName* generateClassObject(std::string name, M
     return tmp;
 }
 
-void generateItem(Map & map, int itemId)
+void generateItem(Map & map, int itemId)//spawning items on the map
 {
     int tmpX, tmpY;
     do {
@@ -114,7 +114,7 @@ void generateItem(Map & map, int itemId)
 }
 
 inline void adjustNumberOfObjects( int & numOfObjects1, int & numOfObjects2, int & numOfObjects3, int & numOfObjects4, int difference)
-{
+{//OHMYGOD no clue whats happening here. Simply amounts of heroes and classes are being adjusted
     if(difference < 0) {
         difference = -(difference);
 
@@ -204,12 +204,12 @@ inline void adjustNumberOfObjects( int & numOfObjects1, int & numOfObjects2, int
     }
 }
 
-void fillMap(Map & adventureMap){
+void fillMap(Map & adventureMap){//filling map
     std::uniform_int_distribution <int> heroesRange(1, 99);
     std::uniform_int_distribution <int> itemsRange(1, 9);
     int numOfItems = 0;
 
-    for(int j=0;j<4;j++) {
+    for(int j=0;j<4;j++) {//each tribe
         int numOfObj = Map::getMapSize() * 2 + 400;
 
         int numOfSlavs = 0;
