@@ -8,7 +8,7 @@ Item::Item(int itemId)
 {
     switch(itemId){//generating item type
         case 0:
-            this -> isTemp_ = true;
+            this -> isTmp_ = true;
             duration_ = -1;
             name_ = "health potion";
             healthBoost_ = 20;
@@ -18,7 +18,7 @@ Item::Item(int itemId)
 
             break;
         case 1:
-            isTemp_ = true;
+            isTmp_ = true;
             duration_ = 3;
             name_ = "strength potion";
             healthBoost_ = 0;
@@ -27,7 +27,7 @@ Item::Item(int itemId)
             armorPoints_ = 0;
             break;
         case 2:
-            isTemp_ = true;
+            isTmp_ = true;
             duration_ = 3;
             name_ = "speed potion";
             healthBoost_ = 0;
@@ -41,7 +41,7 @@ Item::Item(int itemId)
             attackPoints_ = 0;
             speedBoost_ = 0;
             armorPoints_ = 10;
-            isTemp_ = false;
+            isTmp_ = false;
             break;
         case 4:
             name_ = "heavy armor";
@@ -49,7 +49,7 @@ Item::Item(int itemId)
             attackPoints_ = 0;
             speedBoost_ = 0;
             armorPoints_ = 20;
-            isTemp_ = false;
+            isTmp_ = false;
             break;
         case 5:
             name_ = "excalibur";
@@ -57,7 +57,7 @@ Item::Item(int itemId)
             attackPoints_ = 50;
             speedBoost_ = 0;
             armorPoints_ = 0;
-            isTemp_ = false;
+            isTmp_ = false;
             break;
         case 6:
             name_ = "spear";
@@ -65,7 +65,7 @@ Item::Item(int itemId)
             attackPoints_ = 27;
             speedBoost_ = 0;
             armorPoints_ = 0;
-            isTemp_ = false;
+            isTmp_ = false;
             break;
         case 7:
             name_ = "axe";
@@ -73,7 +73,7 @@ Item::Item(int itemId)
             attackPoints_ = 14;
             speedBoost_ = 0;
             armorPoints_ = 0;
-            isTemp_ = false;
+            isTmp_ = false;
             break;
         case 8:
             name_ = "bulat";
@@ -81,7 +81,7 @@ Item::Item(int itemId)
             attackPoints_ = 30;
             speedBoost_ = 0;
             armorPoints_ = 0;
-            isTemp_ = false;
+            isTmp_ = false;
             break;
         case 9:
             name_ = "two-handed sword";
@@ -89,7 +89,7 @@ Item::Item(int itemId)
             attackPoints_ = 37;
             speedBoost_ = 0;
             armorPoints_ = 0;
-            isTemp_ = false;
+            isTmp_ = false;
             break;
     }
 
@@ -102,7 +102,7 @@ Item::Item(const std::string & itemName){//generating item details
 
     switch(namesId.at(itemName)){
         case 0:
-            this -> isTemp_ = true;
+            this -> isTmp_ = true;
             duration_ = -1;
             name_ = "health potion";
             healthBoost_ = 20;
@@ -112,7 +112,7 @@ Item::Item(const std::string & itemName){//generating item details
 
             break;
         case 1:
-            isTemp_ = true;
+            isTmp_ = true;
             duration_ = 3;
             name_ = "strength potion";
             healthBoost_ = 0;
@@ -121,7 +121,7 @@ Item::Item(const std::string & itemName){//generating item details
             armorPoints_ = 0;
             break;
         case 2:
-            isTemp_ = true;
+            isTmp_ = true;
             duration_ = 3;
             name_ = "speed potion";
             healthBoost_ = 0;
@@ -135,7 +135,7 @@ Item::Item(const std::string & itemName){//generating item details
             attackPoints_ = 0;
             speedBoost_ = 0;
             armorPoints_ = 10;
-            isTemp_ = false;
+            isTmp_ = false;
             break;
         case 4:
             name_ = "heavy armor";
@@ -143,7 +143,7 @@ Item::Item(const std::string & itemName){//generating item details
             attackPoints_ = 0;
             speedBoost_ = 0;
             armorPoints_ = 20;
-            isTemp_ = false;
+            isTmp_ = false;
             break;
         case 5:
             name_ = "excalibur";
@@ -151,7 +151,7 @@ Item::Item(const std::string & itemName){//generating item details
             attackPoints_ = 50;
             speedBoost_ = 0;
             armorPoints_ = 0;
-            isTemp_ = false;
+            isTmp_ = false;
             break;
         case 6:
             name_ = "spear";
@@ -159,7 +159,7 @@ Item::Item(const std::string & itemName){//generating item details
             attackPoints_ = 27;
             speedBoost_ = 0;
             armorPoints_ = 0;
-            isTemp_ = false;
+            isTmp_ = false;
             break;
         case 7:
             name_ = "axe";
@@ -167,7 +167,7 @@ Item::Item(const std::string & itemName){//generating item details
             attackPoints_ = 14;
             speedBoost_ = 0;
             armorPoints_ = 0;
-            isTemp_ = false;
+            isTmp_ = false;
             break;
         case 8:
             name_ = "bulat";
@@ -175,7 +175,7 @@ Item::Item(const std::string & itemName){//generating item details
             attackPoints_ = 30;
             speedBoost_ = 0;
             armorPoints_ = 0;
-            isTemp_ = false;
+            isTmp_ = false;
             break;
         case 9:
             name_ = "two-handed sword";
@@ -183,7 +183,7 @@ Item::Item(const std::string & itemName){//generating item details
             attackPoints_ = 37;
             speedBoost_ = 0;
             armorPoints_ = 0;
-            isTemp_ = false;
+            isTmp_ = false;
             break;
     }
 
@@ -213,7 +213,7 @@ void Item::show() {//printing item details
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
     if(isBeingUsed_) {
         std::cout << "Is in use;\n";
-        if(isTemp_) std::cout << "will be active for -> " << duration_ << ";\n";
+        if(isTmp_) std::cout << "will be active for -> " << duration_ << ";\n";
     } else std::cout << "Is not in use;\n";
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
 

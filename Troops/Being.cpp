@@ -12,28 +12,57 @@ Being::Being()//default being
 }
 Being::~Being() = default;
 
-void Being::changeHp(int hpModifier){//modifying amount of heroes HP points
+void Being::changeHp(int hpMod){    //modifying amount of heroes HP points
 
-    if((healthPoints_ + hpModifier < 100))
-        healthPoints_ += hpModifier;
+    if((healthPoints_ + hpMod < 100))
+        healthPoints_ += hpMod;
     else healthPoints_ = 100;
 
 }
-void Being::addItem(const Item & item) {//adding items to heroes backpack
+void Being::addKill() {
+    killCounter++;
+}
+void Being::addItem(const Item & item) {    //adding items to heroes backpack
 
-    try {
-        backpack_.push_back(item);
-    }
-    catch( const std::bad_alloc & badAlloc) {
-        std::cout << "Program crashed in Field::addItem :)";
-        exit(69);
+    backpack_.push_back(item);
+
+}
+void Being::useTmpItems() {//using temporary items (potions)
+
+    int potLim =0;
+    int pos = 0;
+
+    for(auto & item: backpack_) {
+        if (item.isTmp_) {
+            if (item.isBeingUsed_) {
+                if (item.duration_ > 0)
+                    item.duration_--;//items are being used
+                else {
+                    backpack_.erase(backpack_.begin() + pos);//items are being deleted
+                }
+            }
+            if (!item.isBeingUsed_ && potLim == 0) {//drinking new potions
+                if (item.duration_ > 0) {
+                    item.duration_--;
+                    item.changeState();
+                } else {
+                    if (item.duration_ == -1)//one time use potions
+                        changeHp(item.healthBoost_);
+                    backpack_.erase(backpack_.begin() + pos);
+                }
+                potLim++;
+            }
+        }
+        pos++;
+
+
     }
 
 }
-void Being::changeWeapon() {//finding and choosing the best weapon in heroes backpack
+void Being::updateWeapon() {    //finding and choosing the best weapon in heroes backpack
 
     for(auto & item: backpack_) {
-        if(!item.isTemp_){
+        if(!item.isTmp_){
             if(item.attackPoints_ > findItem(findWeapon()).attackPoints_ ){
                 item.changeState();
                 deactivateItem(findWeapon());
@@ -43,38 +72,6 @@ void Being::changeWeapon() {//finding and choosing the best weapon in heroes bac
                 deactivateItem(findArmor());
             }
         }
-    }
-
-}
-void Being::useTempItems() {//using temporary items (potions)
-
-    int potLim =0;
-    int pos = 0;
-
-    for(auto & item: backpack_) {
-            if (item.isTemp_) {
-                if (item.isBeingUsed_) {
-                    if (item.duration_ > 0)
-                        item.duration_--;//items are being used
-                    else {
-                        backpack_.erase(backpack_.begin() + pos);//items are being deleted
-                    }
-                }
-                if (!item.isBeingUsed_ && potLim == 0) {//drinking new potions
-                    if (item.duration_ > 0) {
-                        item.duration_--;
-                        item.changeState();
-                    } else {
-                        if (item.duration_ == -1)//one time use potions
-                            changeHp(item.healthBoost_);
-                        backpack_.erase(backpack_.begin() + pos);
-                    }
-                    potLim++;
-                }
-            }
-            pos++;
-
-
     }
 
 }
@@ -91,6 +88,9 @@ std::string Being::getId() {
     return id_;
 
 }
+std::string Being::getName() {
+    return name_;
+}
 int Being::getHP() {
 
     return healthPoints_;
@@ -101,9 +101,9 @@ int Being::getTotalAP() {//summing every potion, weapon and base attack points
     int boosts = 0;
 
     for(auto & item: backpack_) {
-        if(item.attackPoints_ != 0 && item.isBeingUsed_ && !item.isTemp_)
+        if(item.attackPoints_ != 0 && item.isBeingUsed_ && !item.isTmp_)
             boosts += item.attackPoints_;
-        if(item.isTemp_ && item.isBeingUsed_ && item.duration_ >= 0)
+        if(item.isTmp_ && item.isBeingUsed_ && item.duration_ >= 0)
             boosts += item.attackPoints_;
     }
 
@@ -115,9 +115,9 @@ int Being::getDefense() {//summing every potion and armor
     int boosts = 0;
 
     for(auto & item: backpack_) {
-        if(item.armorPoints_ != 0 && item.isBeingUsed_ && !item.isTemp_)
+        if(item.armorPoints_ != 0 && item.isBeingUsed_ && !item.isTmp_)
             boosts += item.armorPoints_;
-        if(item.isTemp_ && item.isBeingUsed_ && item.duration_ >= 0)
+        if(item.isTmp_ && item.isBeingUsed_ && item.duration_ >= 0)
             boosts += item.armorPoints_;
     }
     return boosts/2;
@@ -133,11 +133,14 @@ int Being::getSpeed() const {//summing every potion and basic speed
     int boosts;
 
     for(auto & item: backpack_) {
-        if(item.isTemp_ && item.isBeingUsed_ && item.duration_ >= 0)
+        if(item.isTmp_ && item.isBeingUsed_ && item.duration_ >= 0)
             boosts += item.speedBoost_;
     }
     return speed_;
 
+}
+int Being::getKills() {
+    return killCounter;
 }
 
 Item Being::findItem(const std::string& itemName) {//returning certain item
@@ -152,7 +155,7 @@ Item Being::findItem(const std::string& itemName) {//returning certain item
 std::string Being::findArmor() {//returning armor name
 
     for(auto & item: backpack_) {
-        if(item.armorPoints_ > 0 && item.isBeingUsed_ && !item.isTemp_)
+        if(item.armorPoints_ > 0 && item.isBeingUsed_ && !item.isTmp_)
             return item.getName();
     }
     return "not found";
@@ -161,7 +164,7 @@ std::string Being::findArmor() {//returning armor name
 std::string Being::findWeapon() {//returning weapon name
 
     for(auto & item: backpack_) {
-        if(item.attackPoints_ > 0 && item.isBeingUsed_ && !item.isTemp_)
+        if(item.attackPoints_ > 0 && item.isBeingUsed_ && !item.isTmp_)
             return item.getName();
     }
     return "not found";
@@ -170,7 +173,7 @@ std::string Being::findWeapon() {//returning weapon name
 std::string Being::findPotion(std::string name) {//confirming whether there is an certain potion *could have been bool function EGHM*
 
     for(auto & item: backpack_) {
-        if(item.isTemp_ && item.getName() == name)
+        if(item.isTmp_ && item.getName() == name)
             return name;
     }
     return "not found";
@@ -197,12 +200,12 @@ bool Being::isAlive() {//u good bro?
         return false;
 
 }
-bool Being::whetherPickUp(const Item & item) {//?????? ich wolle helfen bitte szun
+bool Being::whetherPickUp(const Item & item) {//does hero wants to pick up an item
 
-    if(item.isTemp_ && (findPotion(item.name_) == "health potion" ||  findPotion(item.name_) == "not found"))
+    if(item.isTmp_ && (findPotion(item.name_) == "health potion" || findPotion(item.name_) == "not found"))
         return true;
     else{
-        if(item.isTemp_)
+        if(item.isTmp_)
             return false;
         else{
             if (item.attackPoints_ > 0) {
@@ -217,16 +220,4 @@ bool Being::whetherPickUp(const Item & item) {//?????? ich wolle helfen bitte sz
         }
     }
 
-}
-
-void Being::addKill() {
-    killCounter++;
-}
-
-int Being::returnKills() {
-    return killCounter;
-}
-
-std::string Being::getName() {
-    return name_;
 }

@@ -21,7 +21,7 @@ private:
     int speedBoost_;
 
     bool isBeingUsed_ = false;
-    bool isTemp_;
+    bool isTmp_;
 
     int duration_=0;
 public:

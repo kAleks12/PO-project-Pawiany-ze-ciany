@@ -40,7 +40,7 @@ public:
     int getX(Being *hero);
     int getY(Being *hero);
     int getPos(Being *hero);
-    bool isThisTribeAlive(int);
+    bool isTribeAlive(int);
 
     [[maybe_unused]] void showField(int, int);
     void showAndKillList(int);

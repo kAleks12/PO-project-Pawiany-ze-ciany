@@ -9,6 +9,7 @@ Slav::Slav() {
 
     Item spear("spear");
     Item lightArmor("larmor");
+
     spear.changeState();
     lightArmor.changeState();
 

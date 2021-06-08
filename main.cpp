@@ -7,8 +7,6 @@
 
 #include <iostream>
 #include <random>
-#include <ctime>
-#include <cstdlib>
 #include <fstream>
 #include <string>
 
@@ -22,7 +20,7 @@ void generateItem(Map & map, int itemId);
 inline void adjustNumberOfObjects( int & numOfObjects1, int & numOfObjects2, int & numOfObjects3, int & numOfObjects4, int difference);
 void fillMap(Map & adventureMap);
 
-std::mt19937 engine{std::random_device{}()};
+std::mt19937 mainEngine{std::random_device{}()};
 
 int main() {
 
@@ -32,21 +30,21 @@ int main() {
 
     adventureMap.show();
 
-    while(adventureMap.numOfTribes() > 1) {//simulation goes until there will be only one tribe alive
-        std::cout<<adventureMap.numOfTribes()<<std::endl;
-        adventureMap.iteration();
+    while(adventureMap.numOfTribes() > 1) {     //simulation goes until there will be only one tribe alive
+        adventureMap.iteration( );
         //system("Pause");
-        //Sleep(2000);
+        //(2000);
     }
 
-    std::cout<<adventureMap.numOfTribes()<<std::endl;
     std::cout<<"\n\t\t\t\t\tTHE SIMULATION IS OVER\n";
 
-    int victoriousTribe;//showing details of simulation and stuff
+    int victoriousTribe;
+
+    //showing details of simulation and stuff
 
     for(int i=0; i<4; i++){
-        if(adventureMap.isThisTribeAlive(i)){
-            std::cout<<"Tribe number "<< i <<" Has won\n\n";
+        if(adventureMap.isTribeAlive(i)){
+            std::cout << "Tribe number " << i << " Has won\n\n";
             victoriousTribe = i;
         }
     }
@@ -57,29 +55,30 @@ int main() {
     std::cout << std::endl;
     std::cout << std::endl;
 
-    int listSize = adventureMap.getListSize();
-
-        adventureMap.showAndKillList(victoriousTribe);
+    adventureMap.showAndKillList(victoriousTribe);
 
 
 
 }
 
-inline int drawPos() {//generating random position on the map
+inline int drawPos() {  //generating random position on the map
     std::uniform_int_distribution<int> posRange(0, (sqrt(Map::getMapSize())-1));
     int randomNum;
-    randomNum = posRange(engine);
+
+    randomNum = posRange(mainEngine);
+
     return randomNum;
 }
 
-inline std::string drawName(){//generating names
+inline std::string drawName(){  //generating names
 
     std::ifstream fNames("names.txt");
 
     if(fNames.good()) {
-        std::uniform_int_distribution <int> namesRange(1, 92);
+        std::uniform_int_distribution <int> namesRange(1, 93);
         std::string name;
-        int pos = namesRange(engine);
+
+        int pos = namesRange(mainEngine);
 
         while (pos-- != 0)
             getline(fNames, name);
@@ -91,18 +90,21 @@ inline std::string drawName(){//generating names
     else return "File not found!";
 }
 
-template <typename ClassName> ClassName* generateClassObject(std::string name, Map & map, int tribe){//spawning new heroes
+template <typename ClassName> ClassName* generateClassObject(std::string name, Map & map, int tribe){   //spawning new heroes
     int tmpXPos, tmpYPos;
-    auto tmp = new ClassName(name, tribe, engine);
+
+    auto tmp = new ClassName(name, tribe, mainEngine);
     do {
         tmpXPos = drawPos();
         tmpYPos = drawPos();
     } while (map.isFieldFull(tmpXPos, tmpYPos));
+
     map.spawn(tmp, tmpXPos, tmpYPos);
+
     return tmp;
 }
 
-void generateItem(Map & map, int itemId)//spawning items on the map
+void generateItem(Map & map, int itemId)    //spawning items on the map
 {
     int tmpX, tmpY;
     do {
@@ -114,7 +116,7 @@ void generateItem(Map & map, int itemId)//spawning items on the map
 }
 
 inline void adjustNumberOfObjects( int & numOfObjects1, int & numOfObjects2, int & numOfObjects3, int & numOfObjects4, int difference)
-{//OHMYGOD no clue whats happening here. Simply amounts of heroes and classes are being adjusted
+{   //OHMYGOD no clue whats happening here. Simply amounts of heroes and classes are being adjusted
     if(difference < 0) {
         difference = -(difference);
 
@@ -204,12 +206,12 @@ inline void adjustNumberOfObjects( int & numOfObjects1, int & numOfObjects2, int
     }
 }
 
-void fillMap(Map & adventureMap){//filling map
+void fillMap(Map & adventureMap){   //filling map
     std::uniform_int_distribution <int> heroesRange(1, 99);
     std::uniform_int_distribution <int> itemsRange(1, 9);
     int numOfItems = 0;
 
-    for(int j=0;j<4;j++) {//each tribe
+    for(int j=0;j<4;j++) {  //each tribe
         int numOfObj = Map::getMapSize() * 2 + 400;
 
         int numOfSlavs = 0;
@@ -219,11 +221,13 @@ void fillMap(Map & adventureMap){//filling map
 
         //Getting user input
         while ((numOfObj > Map::getMapSize() / 2)  || (numOfObj <= 0)) {
-            /*std::cout << "GEnter number of objects to create: ";
+/*
+            std::cout << "Enter number of objects to create: ";
             std::cin >> numOfObj;
             std::cout << "Enter number of items to create"
-            std::cin >> numOfItems;*/
-            numOfObj = 10;
+            std::cin >> numOfItems;
+*/
+            numOfObj = 25;
             numOfItems = 10;
         }
 
@@ -248,55 +252,51 @@ void fillMap(Map & adventureMap){//filling map
                 numOfKnights++;
                 break;
             default:
-                numOfSlavs = heroesRange(engine);
-                numOfNomads = heroesRange(engine);
-                numOfVikings = heroesRange(engine);
-                numOfKnights = heroesRange(engine);
+                numOfSlavs = heroesRange(mainEngine);
+                numOfNomads = heroesRange(mainEngine);
+                numOfVikings = heroesRange(mainEngine);
+                numOfKnights = heroesRange(mainEngine);
                 adjustNumberOfObjects(numOfSlavs, numOfNomads, numOfVikings, numOfKnights,
                                       (numOfNomads + numOfSlavs + numOfKnights + numOfVikings) - numOfObj);
                 break;
         }
-        /*SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
+/*
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
         std::cout << "\nList of objects -> Slavs: " << numOfSlavs << "; Nomads:  " << numOfNomads << "; Vikings:  "
                   << numOfVikings << "; Knights:  " << numOfKnights << ";\tTotal: "
                   << numOfNomads + numOfSlavs + numOfKnights + numOfVikings << "\n";
-        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);*/
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
+*/
 
         //Creating and spawning Slav objects
 
         for (int i = 0; i < numOfSlavs; i++) {
             adventureMap.addHero(generateClassObject<Slav>(drawName(), adventureMap,j));
-            //tmp.show();
-            //std::cout << "Done " << i << " out of " << numOfSlavs << "\n";
         }
-        //std::cout << "\nDone " << numOfSlavs << " Slavs!\n";
+
+        // Creating and spawning Nomad objects
 
         for (int i = 0; i < numOfNomads; i++) {
-            adventureMap.addHero(generateClassObject<Nomad>(drawName(), adventureMap,j));
-            //tmp.show();
-            //std::cout << "Done " << i << " out of " << numOfNomads << "\n";
+            adventureMap.addHero(generateClassObject<Nomad>(drawName(), adventureMap, j));
         }
-        //std::cout << "Done " << numOfNomads << " Nomads!\n";
+
+        // Creating and spawning Viking objects
 
         for (int i = 0; i < numOfVikings; i++) {
             adventureMap.addHero(generateClassObject<Viking>(drawName(), adventureMap,j));
-            //tmp.show();
-            //std::cout << "Done " << i << " out of " << numOfVikings << "\n";
         }
-        //std::cout << "Done " << numOfVikings << " Vikings!\n";
 
         // Creating and spawning Knight objects
 
         for (int i = 0; i < numOfKnights; i++) {
             adventureMap.addHero(generateClassObject<Knight>(drawName(), adventureMap,j));
-            //tmp.show();
-            //std::cout << "Done " << i << " out of " << numOfKnights << "\n";
         }
-        //std::cout << "Done " << numOfKnights << " Knights!\n\n";
-    }
-    for (int i = 0; i < numOfItems; i++) {
-        generateItem(adventureMap, itemsRange(engine));
     }
 
+    // Creating and spawning Items
+
+    for (int i = 0; i < numOfItems ;i++) {
+        generateItem(adventureMap, itemsRange(mainEngine));
+    }
 }
 

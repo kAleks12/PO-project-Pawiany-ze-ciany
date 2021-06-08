@@ -1,99 +1,102 @@
 #include "Map.h"
 
-void Map::spawn(Being * hero, int xPos, int yPos) {//adding heroes to the map
+void Map::spawn(Being * hero, int xPos, int yPos) {     //adding heroes to the specific field on the map
 
     if(fields_[xPos][yPos].isSpace())
         fields_[xPos][yPos].addBeing(hero);
 
 }
-void Map::addHero(Being* hero) {//adding heroes to the list
+void Map::addHero(Being* hero) {    //adding heroes to the heroes list
 
     allHeroes_.push_back(hero);
 
 }
-void Map::addItem(int xPos, int yPos, int itemId) {
+void Map::addItem(int xPos, int yPos, int itemId) {     //adding item to the specific field on the map
 
     fields_[yPos][xPos].addItem(itemId);
 
 }
-void Map::getItems(Field field, Being * hero) {//printing items on field
+void Map::getItems(Field field, Being * hero) {     //picking up objects from the certain field by hero
 
-   // std::cout << "\nItems on this field: ";
-    //field.printItems();
-    //std::cout << std::endl;
+/*
+    std::cout << "\nItems on this field: ";
+    field.printItems();
+    std::cout << std::endl;
+*/
 
+    //getting number of items on this field
     int iterations = field.getItemsNum();
 
-    for(int i=0; i < iterations; i++) {
-        try {
-            Item tmp = field.copyItem();
 
-            if (hero->whetherPickUp(tmp)) {
-
-                hero->addItem(tmp);
-                hero->changeWeapon();
+    //checking for each item if the hero wants to pick it up
+    for(int iterator = 0; iterator < iterations; iterator++){
+        Item tmpItem = field.copyItem();
+            if (hero->whetherPickUp(tmpItem)) {
+                hero->addItem(tmpItem);
+                hero->updateWeapon();
                 field.deleteItem();
             }
-        }
-        catch( const std::bad_alloc &badAlloc){
-            std::cout << "Program crashed in getItems :)";
-            exit(69);
-        }
-
     }
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
-    //std::cout << "Current weapon: " << hero->findWeapon() << std::endl;
-    //std::cout << "Current armor: " << hero->findArmor() << "\n\n";
+
+/*
+    std::cout << "Current weapon: " << hero->findWeapon() << std::endl;
+    std::cout << "Current armor: " << hero->findArmor() << "\n\n";
+*/
 
 }
-void Map::changePos(Being* hero, int verChange, int horChange) {//relocating heroes
+void Map::changePos(Being* hero, int verChange, int horChange) {    //relocating heroes from field to another field
 
     int currX = getX(hero);
     int currY = getY(hero);
     int pos = getPos(hero);
+
     int newX = bCheck(currX + horChange);
     int newY = bCheck(currY + verChange);
 
-    if((!isFieldFull(newX, newY))&&(!isPosEmpty(currX, currY, pos))) {//moving hero if there is any hero and space on the dest.
+    if((!isFieldFull(newX, newY))&&(!isPosEmpty(currX, currY, pos))) {      //moving hero if there is anyone to be moved and any space on the destination
         fields_[newY][newX].addBeing(fields_[currY][currX].getHero(pos));
         fields_[currY][currX].removeBeing(pos);
 
         //printing movement details
         std::cout << hero->getHP() << "HP Hero of tribe nr " << hero->getTribe() << " " << hero->getId() << " moved from " << currX
-        <<"," << currY << " -> the " << fields_[currX][currY].getTerrain() << " to " << newX << "," << newY
-        << " -> the "<< fields_[newX][newY].getTerrain();
+                  << "," << currY << " -> the " << fields_[currX][currY].getTerType() << " to " << newX << "," << newY
+        << " -> the "<< fields_[newX][newY].getTerType();
 
-        if(fields_[newX][newY].getTerrain() == "desert"){//depending on terrain, dealing damage
+        if(fields_[newX][newY].getTerType() == "desert"){      //depending on terrain, dealing damage
             std::cout<<"\nHero loses 5 HP because he's on the desert\n";
             if(hero->getHP()>5)
             hero->changeHp(-5);
             else
                 std::cout<<"\nhero is about to die!\n";
         }
-        if(fields_[newX][newY].getTerrain() == "lake"){//or healing
+        if(fields_[newX][newY].getTerType() == "lake"){     //or healing
             std::cout<<"\nHero gains 5 HP because he's by the lake\n";
             hero->changeHp(5);
         }
     }//if hero doesnt move
     else std::cout << hero->getHP() << "HP Hero of tribe nr " << hero->getTribe() << " " << hero->getId() << " stayed on "
-    << getX(hero) << "," << getY(hero) << " -> the " << fields_[currX][currX].getTerrain();
+    << getX(hero) << "," << getY(hero) << " -> the " << fields_[currX][currX].getTerType();
 
 }
-void Map::cleanList() {//deleting dead heroes from the list
-    /*
+void Map::cleanList() {     //deleting dead heroes from the list
+
     std::list<Being*>::iterator it = allHeroes_.begin();
+
     while (it != allHeroes_.end())
     {
-        if (!(*it)->isAlive())
+        if (getX(*it) == -10)
         {
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
             (*it)->destroy();
             it = allHeroes_.erase(it);  // alternatively, i = items.erase(i);
-            //showList();
-            //system("Pause");
         }
         else it++;
-    }*/
+    }
+
+/*
     std::list<Being *> tmpList;
+
     auto it = allHeroes_.begin();
         while (it != allHeroes_.end()) {
             if (!(*it)->isAlive()) {
@@ -106,9 +109,9 @@ void Map::cleanList() {//deleting dead heroes from the list
         allHeroes_.clear();
         allHeroes_.swap(tmpList);
 
-
+*/
 }
-int Map::bCheck(int where) {//checking whether action isnt trying to reach outside map
+int Map::bCheck(int where) {    //checking whether action isn't trying to reach outside map
 
     if(where >= mapSize_)
         where = mapSize_-1;
@@ -124,7 +127,7 @@ int Map::getMapSize() {
     return mapSize_*mapSize_;
 
 }
-int Map::getX(Being* hero) {//seeking trough an entire map to find exact hero, and return its coords
+int Map::getX(Being* hero) {    //seeking trough an entire map to find certain hero, and return its coords
 
     for(int i=0; i<mapSize_;i++){
         for(int j=0; j<mapSize_; j++){
@@ -134,12 +137,12 @@ int Map::getX(Being* hero) {//seeking trough an entire map to find exact hero, a
                 if(fields_[i][j].getHero(1)->getId() == hero -> getId() ) return j;
         }
     }
-    return -10;
+    return -10;     //he dead :(
 
 }
 int Map::getY(Being* hero) {
 
-    for(int i=0; i<mapSize_;i++){//same here
+    for(int i=0; i<mapSize_;i++){   //same here
         for(int j=0; j<mapSize_; j++){
             if(fields_[i][j].getHero(0)!=nullptr)
                 if(fields_[i][j].getHero(0)->getId() == hero -> getId()) return i;
@@ -150,7 +153,7 @@ int Map::getY(Being* hero) {
     return -10;
 
 }
-int Map::getPos(Being* hero) {//seeking trough an entire map to find exact hero, and return its position on the field
+int Map::getPos(Being* hero) {      //seeking trough an entire map to find certain hero, and return its position on the field
 
     for(auto & field : fields_){
         for(auto & j : field){
@@ -170,29 +173,31 @@ int Map::getListSize() {
 }
 
 
-void Map::move(Being* hero, int moveDirection) {//movement section
+void Map::move(Being* hero, int moveDirection) {    //movement section
 
     int xWhereToGo = -1;
     int yWhereToGo = -1;
     int verChange = 0;
     int horChange = 0;
+
     //seeking for interaction
     seekForInteraction(getX(hero), getY(hero), getPos(hero), hero->getSpeed(), &xWhereToGo, &yWhereToGo);
 
-    if((xWhereToGo == -1) && (yWhereToGo == -1)){//if there is no friendly or enemy unit
+    if((xWhereToGo == -1) && (yWhereToGo == -1)){   //if there is no friendly or enemy unit
 
         int speed = hero->getSpeed();
+
         //changing heroes speed depending on terrain
-        if((hero->getId()[0]=='S')&&(fields_[getX(hero)][getY(hero)].getTerrain()=="forest"))
+        if( (hero->getId()[0]=='S') && (fields_[getX(hero)][getY(hero)].getTerType() == "forest") )
             speed = speed + 2;
 
-        if((hero->getId()[0]=='V')&&(fields_[getX(hero)][getY(hero)].getTerrain()=="lake"))
+        if( (hero->getId()[0]=='V') && (fields_[getX(hero)][getY(hero)].getTerType() == "lake") )
             speed = speed + 2;
 
-        if((hero->getId()[0]=='K')&&(fields_[getX(hero)][getY(hero)].getTerrain()=="mountains"))
+        if( (hero->getId()[0]=='K') && (fields_[getX(hero)][getY(hero)].getTerType() == "mountains") )
             speed = speed + 1;
 
-        switch (moveDirection) {//drawing where to go
+        switch (moveDirection) {    //drawing where to go
             case 0:
                 verChange = -(speed);
                 break;
@@ -227,71 +232,73 @@ void Map::move(Being* hero, int moveDirection) {//movement section
         }
 
     }
-    else{//go towards potential interaction
+    else{      //go towards potential interaction
         horChange = xWhereToGo - getX(hero);
         verChange = yWhereToGo - getY(hero);
     }
+
     changePos(hero, verChange, horChange);
 
 }
-void Map::encounter(Field & field, int startingPos){//interaction with other players
+    void Map::encounter(Field & field, int startingPos){    //interaction with other heroes
 
-    int attackModificator = 1;
-    int damageModificator = 1;
+    int attackMod = 1;
+    int dmgMod = 1;
+
     //setting attack modificators
-    if((field.getHero(startingPos)->getId()[0]=='S')&&(field.getTerrain()=="forest")){
-        attackModificator = 2;
-        damageModificator = 1;
+    if((field.getHero(startingPos)->getId()[0]=='S')&&(field.getTerType() == "forest")){
+        attackMod = 2;
+        dmgMod = 1;
     }
 
-    if((field.getHero(startingPos)->getId()[0]=='V')&&(field.getTerrain()=="lake")){
-        attackModificator = 1;
-        damageModificator = 2;
+    if((field.getHero(startingPos)->getId()[0]=='V')&&(field.getTerType() == "lake")){
+        attackMod = 1;
+        dmgMod = 2;
     }
 
-    if((field.getHero(startingPos)->getId()[0]=='N')&&(field.getTerrain()=="plain")){
-        attackModificator = 2;
-        damageModificator = 2;
+    if((field.getHero(startingPos)->getId()[0]=='N')&&(field.getTerType() == "plain")){
+        attackMod = 2;
+        dmgMod = 2;
     }
 
-    if(field.getHero(0)->getTribe() != field.getHero(1)->getTribe()) {//interaction with enemy unit
+    if(field.getHero(0)->getTribe() != field.getHero(1)->getTribe()) {  //interaction with enemy unit
         if (startingPos == 0) {
         //mutual dealing damage and printing fight details
-            field.getHero(1) -> changeHp(-attackModificator*(field.getHero(0)->getTotalAP() - field.getHero(1) -> getDefense()));
+            field.getHero(1) -> changeHp(-attackMod * (field.getHero(0)->getTotalAP() - field.getHero(1) -> getDefense()));
             std::cout << "\tHero -> " << field.getHero(0)->getId() << " attacked " << field.getHero(1)->getId() << " with " << field.getHero(0)->findWeapon() <<
-            " for " << attackModificator*(field.getHero(0)->getTotalAP() - field.getHero(1) -> getDefense())<< " hp\n";
+                      " for " << attackMod * (field.getHero(0)->getTotalAP() - field.getHero(1) -> getDefense()) << " hp\n";
 
             if (field.getHero(1)->isAlive()) {
-                field.getHero(0) -> changeHp(-damageModificator*(3*(field.getHero(1)->getTotalAP() / 4) - field.getHero(0)->getDefense()));
+                field.getHero(0) -> changeHp(-dmgMod * (3 * (field.getHero(1)->getTotalAP() / 4) - field.getHero(0)->getDefense()));
                 std::cout << "Hero -> " << field.getHero(1)->getId() << " attacked back " << field.getHero(0)->getId() << " with " << field.getHero(1)->findWeapon() <<
-                " for " << damageModificator*(3*(field.getHero(1)->getTotalAP()/4) - field.getHero(0)->getDefense()) << " hp\n\n";
+                          " for " << dmgMod * (3 * (field.getHero(1)->getTotalAP() / 4) - field.getHero(0)->getDefense()) << " hp\n\n";
             }
 
-        } else {//same thing here
-            field.getHero(0)->changeHp(-attackModificator*(field.getHero(1)->getTotalAP() - field.getHero(0) -> getDefense()));
+        } else {    //same thing here
+            field.getHero(0)->changeHp(-attackMod * (field.getHero(1)->getTotalAP() - field.getHero(0) -> getDefense()));
             std::cout << "\tHero -> " << field.getHero(1)->getId() << " attacked " << field.getHero(0)->getId() << " with " << field.getHero(1)->findWeapon() <<
-            " for " << attackModificator*(field.getHero(1)->getTotalAP() - field.getHero(0) -> getDefense())  << " hp\n";
+                      " for " << attackMod * (field.getHero(1)->getTotalAP() - field.getHero(0) -> getDefense()) << " hp\n";
 
             if (field.getHero(0)->isAlive()) {
-                field.getHero(1)->changeHp(-damageModificator*(3*(field.getHero(0)->getTotalAP() / 4) - field.getHero(1)->getDefense()));
+                field.getHero(1)->changeHp(-dmgMod * (3 * (field.getHero(0)->getTotalAP() / 4) - field.getHero(1)->getDefense()));
                 std::cout << "Hero -> " << field.getHero(0)->getId() << " attacked back " << field.getHero(1)->getId() << " with " << field.getHero(0)->findWeapon() <<
-                " for " << damageModificator*(3*(field.getHero(0)->getTotalAP() / 4) - field.getHero(1)->getDefense()) << " hp\n\n";
+                          " for " << dmgMod * (3 * (field.getHero(0)->getTotalAP() / 4) - field.getHero(1)->getDefense()) << " hp\n\n";
             }
         }
 
-        if (!(field.getHero(0)->isAlive())){//kill counters and removing heroes
+        if (!(field.getHero(0)->isAlive())){    //kill counters and removing heroes
             field.removeBeing(0);
             addTribeKill(field.getHero(1)->getTribe());
             field.getHero(1)->addKill();
         }
 
-        if (!(field.getHero(1)->isAlive())){//same here
+        if (!(field.getHero(1)->isAlive())){    //same here
             field.removeBeing(1);
             addTribeKill(field.getHero(0)->getTribe());
             field.getHero(0)->addKill();
         }
     }
-    else{//interaction with friendly unit
+    else{   //interaction with friendly unit
         if (startingPos == 0) {
             field.getHero(0)->changeHp(10);
             std::cout << "\tHero -> " << field.getHero(0)->getId() << " got healed (10hp)\n\n";
@@ -302,7 +309,7 @@ void Map::encounter(Field & field, int startingPos){//interaction with other pla
     }
 
 }
-void Map::iteration()//iteration xD
+void Map::iteration()   //iteration
 {
     srand(time(nullptr));
 
@@ -316,20 +323,20 @@ void Map::iteration()//iteration xD
 
                 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
 
-                move(hero, movement);//every hero moves on its turn
+                move(hero, movement);   //every hero moves on its turn
 
                 SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
 
-                if (isFieldFull(getX(hero), getY(hero))) {//if he meets someone there is an ENCOUNTER!!!
+                if (isFieldFull(getX(hero), getY(hero))) {  //if he meets someone there is an ENCOUNTER!!!
                     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
                     std::cout << "\nENCOUNTER!!!!";
                     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
                     encounter(fields_[getY(hero)][getX(hero)], getPos(hero));
                 }
 
-                if(getX(hero)!=-10) {//if hero is alive he picks up all items on field he stands on
+                if(getX(hero)!=-10) {   //if hero is alive he picks up all items on field he stands on (except the ones he doesnt want to pick up)
                     getItems(fields_[getX(hero)][getY(hero)], hero);
-                    hero->useTempItems();
+                    hero->useTmpItems();
                     hero->printBackpack();
                 }
 
@@ -342,19 +349,22 @@ void Map::iteration()//iteration xD
 
 }
 void Map::seekForInteraction(int yPos, int xPos, int pos, int howFarIllGo, int * xWhereToGo, int * yWhereToGo) {
-//tiny movement engine
+//tiny movement mainEngine
     int xFriendly = -1;
     int yFriendly = -1;
+
     int xEnemy = -1;
     int yEnemy = -1;
+
     int enemyHp;
     int myHp = fields_[xPos][yPos].getHero(pos)->getHP();
 
     bool wannaHeal = false;//if hero is low hp he prefers to heal himself
+
     if (myHp < 50)
         wannaHeal = true;
 
-    //looking for random enemy or friendly in heroes range
+    //looking for any enemy or friendly in heroes move range
     for (int i = bCheck(xPos - howFarIllGo); i < bCheck(xPos + howFarIllGo); i++) {
         for (int j = bCheck(yPos - howFarIllGo); j < bCheck(yPos + howFarIllGo); j++) {
             if ((fields_[i][j].isPosEmpty(0) && !fields_[i][j].isPosEmpty(1)) && ((i != xPos) || (j != yPos))) {
@@ -387,13 +397,13 @@ void Map::seekForInteraction(int yPos, int xPos, int pos, int howFarIllGo, int *
             *xWhereToGo = yFriendly;
             *yWhereToGo = xFriendly;
         }
-    } else {//if hero doesnt wanna heal or there is no friendly he chooses to fight enemy (only if enemy has less or equal hp than hero)
+    } else {    //if hero doesnt wanna heal or there is no friendly he chooses to fight enemy (only if enemy has less or equal hp than hero)
         if ((xEnemy != -1) && (yEnemy != -1)) {
             if ((enemyHp<=myHp) && ((xEnemy != xPos) || (yEnemy != yPos))) {
                 *xWhereToGo = yEnemy;
                 *yWhereToGo = xEnemy;
             }
-        } else {//if there is no enemy hero tries to at least heal himself
+        } else {    //if there is no enemy hero tries to at least heal himself
             if ((xFriendly != -1) && (yFriendly != -1)) {
                 if (!wannaHeal && ((xFriendly != xPos) || (yFriendly != yPos))) {
                     *xWhereToGo = yFriendly;
@@ -406,13 +416,13 @@ void Map::seekForInteraction(int yPos, int xPos, int pos, int howFarIllGo, int *
 }
 
 
-[[maybe_unused]] void Map::showField(int xPos, int yPos) {
+void Map::showField(int xPos, int yPos) {
 
     fields_[xPos][yPos].showField();
 
 }
 
-void Map::showAndKillList(int tribeName) {//printing entire list of tribe that has won (only alive heroes)
+void Map::showAndKillList(int tribeName) {  //printing entire list of tribe that has won (only alive heroes)
 
 
     while(allHeroes_.size() != 0){
@@ -421,7 +431,7 @@ void Map::showAndKillList(int tribeName) {//printing entire list of tribe that h
             std::cout << "ID: " << allHeroes_.front()->getId();
             std::cout << ", HP: " << allHeroes_.front()->getHP();
             std::cout << ", Name: " << allHeroes_.front()->getName();
-            std::cout << ", Kill counter: " << allHeroes_.front()->returnKills();
+            std::cout << ", Kill counter: " << allHeroes_.front()->getKills();
             std::cout << std::endl;
         }
 
@@ -432,7 +442,7 @@ void Map::showAndKillList(int tribeName) {//printing entire list of tribe that h
 
 
 }
-void Map::show() {//printing map
+void Map::show() {  //printing map
 
     int height = 0;
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
@@ -479,41 +489,39 @@ bool Map::isPosEmpty(int xPos, int yPos, int pos) {
 
 }
 
-int Map::numOfTribes() {//how many tribes there are
+int Map::numOfTribes() {    //how many tribes there are
+
     int tribesTab[4];
     tribesTab[0] = 0;
     tribesTab[1] = 0;
     tribesTab[2] = 0;
     tribesTab[3] = 0;
+
     for(auto & hero: allHeroes_){
         tribesTab[hero->getTribe()]++;
     }
-    int howMany = 4;
-    if(tribesTab[0] == 0)
-        howMany --;
-    if(tribesTab[1] == 0)
-        howMany --;
-    if(tribesTab[2] == 0)
-        howMany --;
-    if(tribesTab[3] == 0)
-        howMany --;
 
-    return howMany;
+    int tribesNum = 4;
+
+    if(tribesTab[0] == 0)
+        tribesNum --;
+    if(tribesTab[1] == 0)
+        tribesNum --;
+    if(tribesTab[2] == 0)
+        tribesNum --;
+    if(tribesTab[3] == 0)
+        tribesNum --;
+
+    return tribesNum;
 }
 
-bool Map::isThisTribeAlive(int tribeNumber) {//checking whether exact tribe is alive
-    int tribesTab[4];
-    tribesTab[0] = 0;
-    tribesTab[1] = 0;
-    tribesTab[2] = 0;
-    tribesTab[3] = 0;
+bool Map::isTribeAlive(int tribeNumber) {   //checking whether exact tribe is alive
+
     for(auto & hero: allHeroes_){
-        tribesTab[hero->getTribe()]++;
+        if( hero->getTribe() == tribeNumber)
+            return true;
     }
-    if(tribesTab[tribeNumber])
-        return true;
-    else
-        return false;
+    return false;
 }
 
 void Map::addTribeKill(int tribeNumber) {
@@ -524,4 +532,3 @@ void Map::addTribeKill(int tribeNumber) {
 int Map::returnTribeKills(int tribeNumber) {
     return tribeKills[tribeNumber];
 }
-

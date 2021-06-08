@@ -8,6 +8,7 @@ Nomad::Nomad()
 {
     Item bulat("bulat");
     bulat.changeState();
+
     Item lightArmor("larmor");
     lightArmor.changeState();
 
@@ -29,6 +30,7 @@ Nomad::Nomad(std::string name, int tribe, std::mt19937 & engine)
 
     Item bulat("bulat");
     bulat.changeState();
+
     Item lightArmor("larmor");
     lightArmor.changeState();
 

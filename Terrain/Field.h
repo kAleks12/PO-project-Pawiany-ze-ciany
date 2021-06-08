@@ -15,10 +15,10 @@ public:
 
     void addBeing(Being *);
     void addItem(int);
-    void addItem(Item);
+    //void addItem(Item);
     void deleteItem();
     void removeBeing(int);
-    std::string getTerrain();
+    std::string getTerType();
 
     Being * getHero(int);
     int getItemsNum();

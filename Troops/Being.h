@@ -11,30 +11,34 @@
 class Being {
 protected:
     std::string name_;
+    char id_ [81];
+
     int healthPoints_ = 100;
     int strength_;
     int speed_;
     int tribe_;
-    char id_ [81];
-    std::vector <Item> backpack_;
     int killCounter = 0;
+
+    std::vector <Item> backpack_;
 public:
     Being();
     ~Being();
 
     void changeHp(int);
+    void addKill();
     void addItem(const Item&);
-    void changeWeapon();
-    void useTempItems();
+    void useTmpItems();
+    void updateWeapon();
     void deactivateItem(const std::string&);
 
     std::string getId();
-    int getHP();
     std::string getName();
+    int getHP();
     int getTotalAP();
     int getDefense();
-    [[nodiscard]] int getSpeed() const;
-    [[nodiscard]] int getTribe() const;
+    int getSpeed() const;
+    int getTribe() const;
+    int getKills();
 
     Item findItem(const std::string&);
 
@@ -48,9 +52,6 @@ public:
 
     bool isAlive();
     bool whetherPickUp(const Item &);
-
-    void addKill();
-    int returnKills();
 };
 
 #endif //PO_BEING_H

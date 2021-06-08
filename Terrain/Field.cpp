@@ -5,7 +5,7 @@
 
 std::mt19937 Field::fieldEngine{std::random_device{}()};
 
-Field::Field() {//creating field
+Field::Field() {    //creating field
     heroesAtThisField_[0] = nullptr;
     heroesAtThisField_[1] = nullptr;
 
@@ -13,7 +13,7 @@ Field::Field() {//creating field
 
     int terrainNumber = randomNumber(fieldEngine, 0, 4);
 
-    switch (terrainNumber) {//randomly choosing terrain type
+    switch (terrainNumber) {    //randomly choosing terrain type
         case 0:
             terrainType_ = "forest";
             std::cout<<"LAS\n";
@@ -43,7 +43,7 @@ Field::Field() {//creating field
 
 }
 
-void Field::addBeing( Being * hero) {//adding heroes to fields
+void Field::addBeing( Being * hero) {   //adding heroes to fields
 
     if((hero != nullptr) && isSpace()){
         if(heroesAtThisField_[0] == nullptr)
@@ -54,7 +54,7 @@ void Field::addBeing( Being * hero) {//adding heroes to fields
     }
 
 }
-void Field::addItem(int itemId) {//putting items on field
+void Field::addItem(int itemId) {   //putting items on field
 
     Item tmp(itemId);
     try {
@@ -66,7 +66,8 @@ void Field::addItem(int itemId) {//putting items on field
     }
 
 }
-void Field::addItem(Item item) {//same thing, but one of them is not used anymore idk which one tbh
+/*
+void Field::addItem(Item item) {   //other version of version above
 
     try {
         itemsAtThisField_.push_back(item);
@@ -77,18 +78,19 @@ void Field::addItem(Item item) {//same thing, but one of them is not used anymor
     }
 
 }
-void Field::deleteItem() {//removing item from field
+*/
+void Field::deleteItem() {      //removing item from field
 
     itemsAtThisField_.pop_back();
 
 }
-void Field::removeBeing(int position) {//removing being from certain position on field
+void Field::removeBeing(int position) {     //removing being from certain position on field
 
     heroesAtThisField_[position] = nullptr;
 
 }
 
-Being * Field::getHero(int pos) {//WHO ARE YOU AND WHAT ARE YOU DOING ON MY SWAMP
+Being * Field::getHero(int pos) {   //WHO ARE YOU AND WHAT ARE YOU DOING ON MY SWAMP
 
     return heroesAtThisField_[pos];//*all star starts playing*
 
@@ -104,12 +106,12 @@ Item Field::copyItem() {
 
 }
 
-void Field::showField() {//printing fields content (heroes)
+void Field::showField() {   //printing fields content (heroes)
 
     if((isPosEmpty(0))&&(isPosEmpty(1)))
-        std::cout << "Pole jest puste" << std::endl;
+        std::cout << "Field is empty" << std::endl;
     else {
-        std::cout << "Zawartosc pola: \n\n";
+        std::cout << "Field's content: \n\n";
         if (heroesAtThisField_[0] != nullptr) {
             std::cout << "Hero 1 \n";
             (heroesAtThisField_[0])->show();
@@ -121,7 +123,7 @@ void Field::showField() {//printing fields content (heroes)
     }
 
 }
-void Field::printItems() {//printing fields content (items)
+void Field::printItems() {  //printing fields content (items)
 
     for(auto & item: itemsAtThisField_){
         std::cout << item.getName() << " + ";
@@ -130,24 +132,27 @@ void Field::printItems() {//printing fields content (items)
 
 }
 
-bool Field::isPosEmpty(int pos) {
+bool Field::isPosEmpty(int pos) {   //checking whether specific one of two positions on field is empty
 
     return (heroesAtThisField_[pos] == nullptr);
 
 }
-bool Field::isSpace() {
+bool Field::isSpace() {     //checking whether at least one of two positions on field is empty
 
     return !((heroesAtThisField_[0] != nullptr) && (heroesAtThisField_[1] != nullptr));
 }
 
-std::string Field::getTerrain() {
+std::string Field::getTerType() {
     return terrainType_;
 }
 
-int Field::randomNumber(std::mt19937 & engine, int min, int max) {//PO final grades generator
-    std::uniform_int_distribution<int> posRange(min, max);
+int Field::randomNumber(std::mt19937 & engine, int min, int max) {  //PO final grades generator
+
+    std::uniform_int_distribution<int> numRange(min, max);
     int randomNum;
-    randomNum = posRange(engine);
+
+    randomNum = numRange(engine);
+
     return randomNum;
 
 }

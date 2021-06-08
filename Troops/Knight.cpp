@@ -7,6 +7,7 @@ int Knight::numOfKnightsCreated_ = 0;
 Knight::Knight() {//default constructor
     Item sword("sword");
     sword.changeState();
+
     Item heavyArmor("harmor");
     heavyArmor.changeState();
 
@@ -26,6 +27,7 @@ Knight::Knight(std::string name, int tribe, std::mt19937 & engine){
 
     Item sword("sword");
     sword.changeState();
+
     Item heavyArmor("harmor");
     heavyArmor.changeState();
 
@@ -66,13 +68,13 @@ Knight::~Knight() {
     //std::cout << "Knight " << id_ << " has been slayed!" << std::endl;
 
 }
-
+/*
 void Knight::changeStatus() {//unused i guess
 
     isOnHorse = !(isOnHorse);
 
 }
-
+*/
 void Knight::show() {//printing hero details
 
     std::cout << "\n\nObject's weapons -> ";
