@@ -72,7 +72,6 @@ Slav::Slav(std::string name, int tribe, std::mt19937 & engine){
 Slav::~Slav() {
 
     //std::cout << "Slav " << id_ << " has been slayed!"<< std::endl;
-
 }
 
 

@@ -1,6 +1,7 @@
 #include "Being.h"
 #include <iostream>
 
+
 Being::Being()//default being
 {
     name_ = "empty";
@@ -130,7 +131,7 @@ int Being::getTribe() const {
 }
 int Being::getSpeed() const {//summing every potion and basic speed
 
-    int boosts;
+    int boosts = 0;
 
     for(auto & item: backpack_) {
         if(item.isTmp_ && item.isBeingUsed_ && item.duration_ >= 0)

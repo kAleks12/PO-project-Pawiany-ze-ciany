@@ -66,7 +66,6 @@ Knight::Knight(std::string name, int tribe, std::mt19937 & engine){
 Knight::~Knight() {
 
     //std::cout << "Knight " << id_ << " has been slayed!" << std::endl;
-
 }
 /*
 void Knight::changeStatus() {//unused i guess

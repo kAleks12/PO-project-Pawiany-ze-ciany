@@ -16,27 +16,22 @@ Field::Field() {    //creating field
     switch (terrainNumber) {    //randomly choosing terrain type
         case 0:
             terrainType_ = "forest";
-            std::cout<<"LAS\n";
             break;
 
         case 1:
             terrainType_ = "mountains";
-            std::cout<<"GORY\n";
             break;
 
         case 2:
             terrainType_ = "desert";
-            std::cout<<"PUSTYNIA\n";
             break;
 
         case 3:
             terrainType_ = "lake";
-            std::cout<<"JEZIORO\n";
             break;
 
         case 4:
             terrainType_ = "plain";
-            std::cout<<"NIZINY\n";
             break;
 
     }

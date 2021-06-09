@@ -1,5 +1,20 @@
 #include "Map.h"
 
+int Map::numOfMapsCreated = 0;
+
+Map::Map() {
+
+    name_ = "Map_" + std::to_string(numOfMapsCreated) + "_";
+    summary_.open(name_ + "_summary.txt", std::ios::out | std::ios::trunc);
+
+    if(summary_.good()) {
+        summary_ << "Welcome to the simulation summary file!" << std::endl << std::endl << std::endl << "Cemetery(graves of brave heroes will remind us of them forever):" << std::endl << std::endl;
+    }
+
+    numOfMapsCreated++;
+    summary_.close();
+}
+
 void Map::spawn(Being * hero, int xPos, int yPos) {     //adding heroes to the specific field on the map
 
     if(fields_[xPos][yPos].isSpace())
@@ -82,14 +97,16 @@ void Map::changePos(Being* hero, int verChange, int horChange) {    //relocating
 void Map::cleanList() {     //deleting dead heroes from the list
 
     std::list<Being*>::iterator it = allHeroes_.begin();
+    summary_.open(name_ + "_summary.txt", std::ios::out | std::ios::app );
 
     while (it != allHeroes_.end())
     {
         if (getX(*it) == -10)
         {
             SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
+            summary_ << "[*] " << (*it)->getTribe() << (*it)->getId() << "\t" << (*it)->getName() << " || kills: " << (*it)->getKills() << std::endl;
             (*it)->destroy();
-            it = allHeroes_.erase(it);  // alternatively, i = items.erase(i);
+            it = allHeroes_.erase(it);
         }
         else it++;
     }
@@ -110,6 +127,7 @@ void Map::cleanList() {     //deleting dead heroes from the list
         allHeroes_.swap(tmpList);
 
 */
+summary_.close();
 }
 int Map::bCheck(int where) {    //checking whether action isn't trying to reach outside map
 
@@ -166,12 +184,17 @@ int Map::getPos(Being* hero) {      //seeking trough an entire map to find certa
     return -10;
 
 }
-int Map::getListSize() {
-
-    return allHeroes_.size();
-
+int Map::heroesOnMap() {
+    int number = 0;
+    for(auto hero: allHeroes_){
+        if(getX(hero) != -10)
+            number ++;
+    }
+    return number;
 }
-
+bool Map::getStatus(){
+    return isFinished_;
+}
 
 void Map::move(Being* hero, int moveDirection) {    //movement section
 
@@ -313,39 +336,44 @@ void Map::iteration()   //iteration
 {
     srand(time(nullptr));
 
-        for(auto & hero : allHeroes_) {
-            if(getX(hero)!=-10) {
+    for(auto & hero : allHeroes_) {
 
-                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 11);
+        goToXY(0,21);
 
-                std::cout << "\n\nTurn of: " << hero->getId() << " !\n\n";
-                int movement = rand() % 8;
+        if(getX(hero)!=-10) {
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 11);
 
-                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
+            std::cout << "\n\nTurn of: " << hero->getId() << " ! " << hero->getHP() << "\n\n";
+            int movement = rand() % 8;
 
-                move(hero, movement);   //every hero moves on its turn
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
 
-                SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
+            move(hero, movement);
 
-                if (isFieldFull(getX(hero), getY(hero))) {  //if he meets someone there is an ENCOUNTER!!!
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
+            
+            if(getX(hero)!= -10) {
+                if (isFieldFull(getX(hero), getY(hero))) {
                     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
                     std::cout << "\nENCOUNTER!!!!";
                     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
                     encounter(fields_[getY(hero)][getX(hero)], getPos(hero));
                 }
-
-                if(getX(hero)!=-10) {   //if hero is alive he picks up all items on field he stands on (except the ones he doesnt want to pick up)
+                if(getX(hero)!= -10) {
                     getItems(fields_[getX(hero)][getY(hero)], hero);
                     hero->useTmpItems();
                     hero->printBackpack();
                 }
-
-                show();
-                //Sleep(500);
-                //system("Pause");
             }
+
+            goToXY(0,1);
+            show();
+            Sleep(1000);
+            clearScreen(31,107);
         }
-        cleanList();
+    }
+    iterationCount_++;
+    cleanList();
 
 }
 void Map::seekForInteraction(int yPos, int xPos, int pos, int howFarIllGo, int * xWhereToGo, int * yWhereToGo) {
@@ -414,18 +442,36 @@ void Map::seekForInteraction(int yPos, int xPos, int pos, int howFarIllGo, int *
     }
 
 }
+void Map::generateSummary() {
+    int victoriousTribe;
+    summary_.open(name_ + "_summary.txt", std::ios::out | std::ios::app );
+
+    summary_ << std::endl;
+    for(int i=0; i<4; i++) {
+        summary_ << "Tribe number " << i << " kills: " << getTribeKills(i) << std::endl;
+        std::cout << "Tribe number " << i << " kills: " << getTribeKills(i) << std::endl;
+    }
+    summary_ << std::endl;
+    std::cout << std::endl;
 
 
-void Map::showField(int xPos, int yPos) {
+    for(int i=0; i<4; i++){
+        if(isTribeAlive(i)){
+            summary_ << std::endl << "\t\tTribe number " << i << " Has won" << std::endl << std::endl;
+            std::cout << std::endl << "\t\tTribe number " << i << " Has won" << std::endl << std::endl;
+            victoriousTribe = i;
+        }
+    }
 
-    fields_[xPos][yPos].showField();
-
+    summary_.close();
+    generateKillList(victoriousTribe);
 }
 
-void Map::showAndKillList(int tribeName) {  //printing entire list of tribe that has won (only alive heroes)
 
+void Map::generateKillList(int tribeName) {  //printing entire list of tribe that has won (only alive heroes)
 
-    while(allHeroes_.size() != 0){
+    summary_.open(name_ + "_summary.txt", std::ios::out | std::ios::app );
+    while(!allHeroes_.empty()){
 
         if(allHeroes_.front()->getTribe() == tribeName){
             std::cout << "ID: " << allHeroes_.front()->getId();
@@ -433,13 +479,18 @@ void Map::showAndKillList(int tribeName) {  //printing entire list of tribe that
             std::cout << ", Name: " << allHeroes_.front()->getName();
             std::cout << ", Kill counter: " << allHeroes_.front()->getKills();
             std::cout << std::endl;
+            summary_ << "ID: " << allHeroes_.front()->getId();
+            summary_ << ", HP: " << allHeroes_.front()->getHP();
+            summary_ << ", Name: " << allHeroes_.front()->getName();
+            summary_ << ", Kill counter: " << allHeroes_.front()->getKills();
+            summary_ << std::endl;
         }
 
         allHeroes_.pop_front();
 
     }
 
-
+    summary_.close();
 
 }
 void Map::show() {  //printing map
@@ -450,12 +501,12 @@ void Map::show() {  //printing map
     /*for (Being* n : allHeroes_) {
         std::cout << n->getId() << "\t" << n->getItemsQt() << std::endl;
     }*/
-    std::cout << allHeroes_.size();
+    std::cout << heroesOnMap();
     std::cout << "                                            Game Map\n";
     std::cout << "===========================================================================================================\n";
     std::cout << "||     0         1         2         3         4         5         6         7         8         9       ||\n";
     for(auto & field : fields_){
-        std::cout << "| |";
+        std::cout << "||";
         for(auto & j : field){
             SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
             if(j.isPosEmpty(0)&&j.isPosEmpty(1)) {
@@ -476,6 +527,23 @@ void Map::show() {  //printing map
     std::cout << "===========================================================================================================\n";
 
 }
+void Map::goToXY(int x, int y){
+    COORD pos;
+    pos.X = x;
+    pos.Y = y;
+
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+}
+void Map::clearScreen(int lines, int characters){
+
+    for(int it = 0; it < lines; it++){
+        for(int it2 = 0; it2 < characters; it2++){
+            std::cout << " ";
+        }
+        std::cout << std::endl;
+    }
+}
+
 
 
 bool Map::isFieldFull(int xPos, int yPos) {
@@ -529,6 +597,10 @@ void Map::addTribeKill(int tribeNumber) {
 
 }
 
-int Map::returnTribeKills(int tribeNumber) {
+int Map::getTribeKills(int tribeNumber) {
     return tribeKills[tribeNumber];
+}
+
+void Map::deactivateMap() {
+    isFinished_ = true;
 }

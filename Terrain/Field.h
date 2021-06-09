@@ -18,8 +18,8 @@ public:
     //void addItem(Item);
     void deleteItem();
     void removeBeing(int);
-    std::string getTerType();
 
+    std::string getTerType();
     Being * getHero(int);
     int getItemsNum();
     int randomNumber(std::mt19937 &, int, int);

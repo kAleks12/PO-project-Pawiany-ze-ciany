@@ -15,15 +15,25 @@
 #include <list>
 #include <vector>
 #include <algorithm>
+#include <fstream>
 
 class Map {
 private:
+    std::fstream summary_;
+    std::string name_ ;
+
     static const int mapSize_ = 10;
-    Field fields_ [mapSize_][mapSize_];
-    std::list <Being*> allHeroes_;
+    static int numOfMapsCreated;
+    int iterationCount_ = 0;
     int tribeKills[4]={0, 0, 0, 0};
 
+    bool isFinished_ = false;
+
+    Field fields_ [mapSize_][mapSize_];
+    std::list <Being*> allHeroes_;
+
 public:
+    Map();
     void spawn(Being *, int, int);
     void addHero(Being*);
     void addItem(int, int, int);
@@ -32,27 +42,32 @@ public:
     void cleanList();
     static int bCheck(int);
     void addTribeKill(int);
-    int returnTribeKills(int);
+    int getTribeKills(int);
 
     static int getMapSize();
-    int getListSize();
     int numOfTribes();
     int getX(Being *hero);
     int getY(Being *hero);
     int getPos(Being *hero);
-    bool isTribeAlive(int);
+    int heroesOnMap();
+    bool getStatus();
 
-    [[maybe_unused]] void showField(int, int);
-    void showAndKillList(int);
+    void generateKillList(int);
     void show();
 
     void move(Being *hero, int moveDirection);
     void encounter(Field &, int);
     void iteration();
     void seekForInteraction(int, int, int, int, int *, int *);
+    void generateSummary();
+
+    void goToXY(int, int);
+    void clearScreen(int, int);
 
     bool isFieldFull(int, int);
     bool isPosEmpty(int, int, int);
+    bool isTribeAlive(int);
+    void deactivateMap();
 };
 
 #endif //PO_MAP_H

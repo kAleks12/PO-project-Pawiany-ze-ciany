@@ -7,59 +7,70 @@
 
 #include <iostream>
 #include <random>
-#include <fstream>
 #include <string>
+#include <vector>
 
 
 #include "Terrain/Map.h"
 
+void createMaps(std::vector <Map*> &);
 inline std::string drawName();
 inline int drawPos();
-template <typename ClassName> ClassName* generateClassObject(std::string name, Map & map, int tribe);
-void generateItem(Map & map, int itemId);
-inline void adjustNumberOfObjects( int & numOfObjects1, int & numOfObjects2, int & numOfObjects3, int & numOfObjects4, int difference);
-void fillMap(Map & adventureMap);
+template <typename ClassName> ClassName* generateHeroes(std::string , Map & , int );
+void generateItem(Map & , int );
+inline void adjustNumberOfObjects( int & , int & , int & , int & , int );
+void fillMap(Map & );
 
 std::mt19937 mainEngine{std::random_device{}()};
 
+
+
+
 int main() {
 
-    Map adventureMap;
+    std::vector <Map*> maps;
+    createMaps(maps);
 
-    fillMap(adventureMap);
-
-    adventureMap.show();
-
-    while(adventureMap.numOfTribes() > 1) {     //simulation goes until there will be only one tribe alive
-        adventureMap.iteration( );
-        //system("Pause");
-        //(2000);
+    for(auto & map: maps){
+        fillMap(*map);
     }
 
-    std::cout<<"\n\t\t\t\t\tTHE SIMULATION IS OVER\n";
-
-    int victoriousTribe;
-
-    //showing details of simulation and stuff
-
-    for(int i=0; i<4; i++){
-        if(adventureMap.isTribeAlive(i)){
-            std::cout << "Tribe number " << i << " Has won\n\n";
-            victoriousTribe = i;
+    int i = 0;
+    while(!maps.empty()){
+        for(auto & map: maps){
+            if(map -> numOfTribes() > 1){
+                map->goToXY(0, 0);
+                map->clearScreen(0,81);
+                map->goToXY(0, 0);
+                std::cout << "Utuututututtuu Iteratione of map no: " << i % maps.size() << std::endl;
+                map->iteration();
+                map->goToXY(0, 20);
+                system("pause");
+            }
+            else{
+                map -> goToXY(0,0);
+                map -> clearScreen(40,120);
+                map -> goToXY(0,0);
+                map->generateSummary();
+                map -> deactivateMap();
+                system("pause");
+                for (auto it = maps.begin(); it != maps.end(); ) {
+                    if ((*it)->getStatus()) {
+                        it = maps.erase(it);
+                    } else {
+                        ++it;
+                    }
+                }
+            }
+            i++;
         }
     }
-
-    for(int i=0; i<4; i++)
-        std::cout << "Tribe number " << i << " kills: " << adventureMap.returnTribeKills(i) << std::endl;
-
-    std::cout << std::endl;
-    std::cout << std::endl;
-
-    adventureMap.showAndKillList(victoriousTribe);
-
-
-
 }
+
+
+
+
+
 
 inline int drawPos() {  //generating random position on the map
     std::uniform_int_distribution<int> posRange(0, (sqrt(Map::getMapSize())-1));
@@ -75,7 +86,7 @@ inline std::string drawName(){  //generating names
     std::ifstream fNames("names.txt");
 
     if(fNames.good()) {
-        std::uniform_int_distribution <int> namesRange(1, 93);
+        std::uniform_int_distribution <int> namesRange(1, 94);
         std::string name;
 
         int pos = namesRange(mainEngine);
@@ -90,7 +101,7 @@ inline std::string drawName(){  //generating names
     else return "File not found!";
 }
 
-template <typename ClassName> ClassName* generateClassObject(std::string name, Map & map, int tribe){   //spawning new heroes
+template <typename ClassName> ClassName* generateHeroes(std::string name, Map & map, int tribe){   //spawning new heroes
     int tmpXPos, tmpYPos;
 
     auto tmp = new ClassName(name, tribe, mainEngine);
@@ -227,7 +238,7 @@ void fillMap(Map & adventureMap){   //filling map
             std::cout << "Enter number of items to create"
             std::cin >> numOfItems;
 */
-            numOfObj = 25;
+            numOfObj = 10;
             numOfItems = 10;
         }
 
@@ -271,25 +282,25 @@ void fillMap(Map & adventureMap){   //filling map
         //Creating and spawning Slav objects
 
         for (int i = 0; i < numOfSlavs; i++) {
-            adventureMap.addHero(generateClassObject<Slav>(drawName(), adventureMap,j));
+            adventureMap.addHero(generateHeroes<Slav>(drawName(), adventureMap, j));
         }
 
         // Creating and spawning Nomad objects
 
         for (int i = 0; i < numOfNomads; i++) {
-            adventureMap.addHero(generateClassObject<Nomad>(drawName(), adventureMap, j));
+            adventureMap.addHero(generateHeroes<Nomad>(drawName(), adventureMap, j));
         }
 
         // Creating and spawning Viking objects
 
         for (int i = 0; i < numOfVikings; i++) {
-            adventureMap.addHero(generateClassObject<Viking>(drawName(), adventureMap,j));
+            adventureMap.addHero(generateHeroes<Viking>(drawName(), adventureMap, j));
         }
 
         // Creating and spawning Knight objects
 
         for (int i = 0; i < numOfKnights; i++) {
-            adventureMap.addHero(generateClassObject<Knight>(drawName(), adventureMap,j));
+            adventureMap.addHero(generateHeroes<Knight>(drawName(), adventureMap, j));
         }
     }
 
@@ -297,6 +308,18 @@ void fillMap(Map & adventureMap){   //filling map
 
     for (int i = 0; i < numOfItems ;i++) {
         generateItem(adventureMap, itemsRange(mainEngine));
+    }
+}
+
+void createMaps(std::vector<Map*> & mapsVector) {
+    int numOfMaps;
+
+    std::cout << "How many maps do you want to create?: ";
+    std::cin >>  numOfMaps;
+
+    for(int it = 0; it < numOfMaps; it++){
+        mapsVector.push_back( (Map*) new Map);
+
     }
 }
 

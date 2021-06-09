@@ -6,6 +6,7 @@
 #include <string>
 #include <cstdio>
 #include <random>
+#include <fstream>
 
 
 class Being {
