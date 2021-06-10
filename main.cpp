@@ -13,13 +13,14 @@
 
 #include "Terrain/Map.h"
 
-void createMaps(std::vector <Map*> &);
+void createMaps(std::vector <Map*> &, int);
 inline std::string drawName();
 inline int drawPos();
 template <typename ClassName> ClassName* generateHeroes(std::string , Map & , int );
 void generateItem(Map & , int );
 inline void adjustNumberOfObjects( int & , int & , int & , int & , int );
-void fillMap(Map & );
+void fillMap(Map & , int, int);
+bool isIntiger(std::string);
 
 std::mt19937 mainEngine{std::random_device{}()};
 
@@ -29,10 +30,59 @@ std::mt19937 mainEngine{std::random_device{}()};
 int main() {
 
     std::vector <Map*> maps;
-    createMaps(maps);
+
+    std::string strAmountOfTroops = "1";
+    std::string strAmountOfMaps = "1";
+    std::string strAmountOfItems = "1";
+    int amountOfTroops = 1;
+    int amountOfMaps = 1;
+    int amountOfItems = 1;
+
+    inputAmountMaps:
+
+    std::cout<<"How many maps should there be?\n";
+    std::cin>>strAmountOfMaps;
+
+    if(isIntiger(strAmountOfMaps) && (amountOfMaps > 0))
+        amountOfMaps = stoi(strAmountOfMaps);
+    else{
+        std::cout<<"invalid number\n";
+        goto inputAmountMaps;
+    }
+
+    inputAmountTroops:
+
+    std::cout<<"How many troops in each tribe should there be?\n";
+    std::cin>>strAmountOfTroops;
+
+    if(isIntiger(strAmountOfTroops)) {
+        amountOfTroops = stoi(strAmountOfTroops);
+        if ((amountOfTroops > Map::getMapSize() / 2) || (amountOfTroops <= 0)){
+            std::cout<<"number is to high or low\n";
+            goto inputAmountTroops;
+        }
+    }
+    else{
+        std::cout<<"invalid number\n";
+        goto inputAmountTroops;
+    }
+
+    inputAmountItems:
+
+    std::cout<<"How many items on map should there be?\n";
+    std::cin>>strAmountOfItems;
+
+    if(isIntiger(strAmountOfItems))
+        amountOfTroops = stoi(strAmountOfItems);
+    else{
+        std::cout<<"invalid number\n";
+        goto inputAmountItems;
+    }
+
+    createMaps(maps, amountOfMaps);
 
     for(auto & map: maps){
-        fillMap(*map);
+        fillMap(*map, amountOfTroops, amountOfItems);
     }
 
     int i = 0;
@@ -42,7 +92,7 @@ int main() {
                 map->goToXY(0, 0);
                 map->clearScreen(0,81);
                 map->goToXY(0, 0);
-                std::cout << "Utuututututtuu Iteratione of map no: " << i % maps.size() << std::endl;
+                std::cout << "Iteration of map no: " << i % maps.size() << std::endl;
                 map->iteration();
                 map->goToXY(0, 20);
                 system("pause");
@@ -217,30 +267,22 @@ inline void adjustNumberOfObjects( int & numOfObjects1, int & numOfObjects2, int
     }
 }
 
-void fillMap(Map & adventureMap){   //filling map
+void fillMap(Map & adventureMap, int amountOfTroops, int amountOfobjects){   //filling map
     std::uniform_int_distribution <int> heroesRange(1, 99);
     std::uniform_int_distribution <int> itemsRange(1, 9);
     int numOfItems = 0;
 
     for(int j=0;j<4;j++) {  //each tribe
-        int numOfObj = Map::getMapSize() * 2 + 400;
+        int numOfObj;
 
         int numOfSlavs = 0;
         int numOfNomads = 0;
         int numOfKnights = 0;
         int numOfVikings = 0;
 
-        //Getting user input
-        while ((numOfObj > Map::getMapSize() / 2)  || (numOfObj <= 0)) {
-/*
-            std::cout << "Enter number of objects to create: ";
-            std::cin >> numOfObj;
-            std::cout << "Enter number of items to create"
-            std::cin >> numOfItems;
-*/
-            numOfObj = 10;
-            numOfItems = 10;
-        }
+
+            numOfObj = amountOfTroops;
+            numOfItems = amountOfobjects;
 
         //Checking if entered number is too small to draw
         switch (numOfObj) {
@@ -311,11 +353,7 @@ void fillMap(Map & adventureMap){   //filling map
     }
 }
 
-void createMaps(std::vector<Map*> & mapsVector) {
-    int numOfMaps;
-
-    std::cout << "How many maps do you want to create?: ";
-    std::cin >>  numOfMaps;
+void createMaps(std::vector<Map*> & mapsVector, int numOfMaps) {
 
     for(int it = 0; it < numOfMaps; it++){
         mapsVector.push_back( (Map*) new Map);
@@ -323,3 +361,9 @@ void createMaps(std::vector<Map*> & mapsVector) {
     }
 }
 
+bool isIntiger(std::string str) {
+    for (int i = 0; i < str.length(); i++)
+        if (isdigit(str[i]) == false)
+            return false;
+    return true;
+}
