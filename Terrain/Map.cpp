@@ -1,4 +1,5 @@
 #include "Map.h"
+#include "../Config.h"
 
 int Map::numOfMapsCreated = 0;
 
@@ -367,8 +368,12 @@ void Map::iteration()   //iteration
             }
 
             goToXY(0,1);
+
+            #ifdef USEROUTPUT
             show();
             Sleep(1000);
+            #endif
+
             clearScreen(31,107);
         }
     }

@@ -10,15 +10,16 @@
 #include <string>
 #include <vector>
 
-
 #include "Terrain/Map.h"
 
+#define USEROUTPUT
+
 void createMaps(std::vector <Map*> &, int);
-inline std::string drawName();
-inline int drawPos();
+std::string drawName();
+int drawPos();
 template <typename ClassName> ClassName* generateHeroes(std::string , Map & , int );
 void generateItem(Map & , int );
-inline void adjustNumberOfObjects( int & , int & , int & , int & , int );
+void adjustNumberOfObjects( int & , int & , int & , int & , int );
 void fillMap(Map & , int, int);
 bool isIntiger(std::string);
 
@@ -73,12 +74,11 @@ int main() {
     std::cin>>strAmountOfItems;
 
     if(isIntiger(strAmountOfItems))
-        amountOfTroops = stoi(strAmountOfItems);
+        amountOfItems = stoi(strAmountOfItems);
     else{
         std::cout<<"invalid number\n";
         goto inputAmountItems;
     }
-
     createMaps(maps, amountOfMaps);
 
     for(auto & map: maps){
@@ -95,7 +95,7 @@ int main() {
                 std::cout << "Iteration of map no: " << i % maps.size() << std::endl;
                 map->iteration();
                 map->goToXY(0, 20);
-                system("pause");
+                //system("pause");
             }
             else{
                 map -> goToXY(0,0);
@@ -103,7 +103,7 @@ int main() {
                 map -> goToXY(0,0);
                 map->generateSummary();
                 map -> deactivateMap();
-                system("pause");
+                //system("pause");
                 for (auto it = maps.begin(); it != maps.end(); ) {
                     if ((*it)->getStatus()) {
                         it = maps.erase(it);
@@ -122,7 +122,7 @@ int main() {
 
 
 
-inline int drawPos() {  //generating random position on the map
+int drawPos() {  //generating random position on the map
     std::uniform_int_distribution<int> posRange(0, (sqrt(Map::getMapSize())-1));
     int randomNum;
 
@@ -131,7 +131,7 @@ inline int drawPos() {  //generating random position on the map
     return randomNum;
 }
 
-inline std::string drawName(){  //generating names
+std::string drawName(){  //generating names
 
     std::ifstream fNames("names.txt");
 
@@ -176,7 +176,7 @@ void generateItem(Map & map, int itemId)    //spawning items on the map
     map.addItem(tmpX, tmpY, itemId);
 }
 
-inline void adjustNumberOfObjects( int & numOfObjects1, int & numOfObjects2, int & numOfObjects3, int & numOfObjects4, int difference)
+void adjustNumberOfObjects( int & numOfObjects1, int & numOfObjects2, int & numOfObjects3, int & numOfObjects4, int difference)
 {   //OHMYGOD no clue whats happening here. Simply amounts of heroes and classes are being adjusted
     if(difference < 0) {
         difference = -(difference);
@@ -267,7 +267,7 @@ inline void adjustNumberOfObjects( int & numOfObjects1, int & numOfObjects2, int
     }
 }
 
-void fillMap(Map & adventureMap, int amountOfTroops, int amountOfobjects){   //filling map
+void fillMap(Map & adventureMap, int amountOfTroops, int amountOfItems){   //filling map
     std::uniform_int_distribution <int> heroesRange(1, 99);
     std::uniform_int_distribution <int> itemsRange(1, 9);
     int numOfItems = 0;
@@ -282,7 +282,7 @@ void fillMap(Map & adventureMap, int amountOfTroops, int amountOfobjects){   //f
 
 
             numOfObj = amountOfTroops;
-            numOfItems = amountOfobjects;
+            numOfItems = amountOfItems;
 
         //Checking if entered number is too small to draw
         switch (numOfObj) {

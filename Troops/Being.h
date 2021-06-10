@@ -18,7 +18,7 @@ protected:
     int strength_;
     int speed_;
     int tribe_;
-    int killCounter = 0;
+    int killCounter_ = 0;
 
     std::vector <Item> backpack_;
 public:

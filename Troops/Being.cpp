@@ -21,7 +21,7 @@ void Being::changeHp(int hpMod){    //modifying amount of heroes HP points
 
 }
 void Being::addKill() {
-    killCounter++;
+    killCounter_++;
 }
 void Being::addItem(const Item & item) {    //adding items to heroes backpack
 
@@ -141,7 +141,7 @@ int Being::getSpeed() const {//summing every potion and basic speed
 
 }
 int Being::getKills() {
-    return killCounter;
+    return killCounter_;
 }
 
 Item Being::findItem(const std::string& itemName) {//returning certain item
