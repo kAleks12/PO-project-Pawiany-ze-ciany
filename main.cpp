@@ -12,7 +12,6 @@
 
 #include "Terrain/Map.h"
 
-#define USEROUTPUT
 
 void createMaps(std::vector <Map*> &, int);
 std::string drawName();
@@ -21,7 +20,7 @@ template <typename ClassName> ClassName* generateHeroes(std::string , Map & , in
 void generateItem(Map & , int );
 void adjustNumberOfObjects( int & , int & , int & , int & , int );
 void fillMap(Map & , int, int);
-bool isIntiger(std::string);
+bool isInteger(const std::string &);
 
 std::mt19937 mainEngine{std::random_device{}()};
 
@@ -44,7 +43,7 @@ int main() {
     std::cout<<"How many maps should there be?\n";
     std::cin>>strAmountOfMaps;
 
-    if(isIntiger(strAmountOfMaps) && (amountOfMaps > 0))
+    if(isInteger(strAmountOfMaps) && (amountOfMaps > 0))
         amountOfMaps = stoi(strAmountOfMaps);
     else{
         std::cout<<"invalid number\n";
@@ -56,7 +55,7 @@ int main() {
     std::cout<<"How many troops in each tribe should there be?\n";
     std::cin>>strAmountOfTroops;
 
-    if(isIntiger(strAmountOfTroops)) {
+    if(isInteger(strAmountOfTroops)) {
         amountOfTroops = stoi(strAmountOfTroops);
         if ((amountOfTroops > Map::getMapSize() / 2) || (amountOfTroops <= 0)){
             std::cout<<"number is to high or low\n";
@@ -73,12 +72,14 @@ int main() {
     std::cout<<"How many items on map should there be?\n";
     std::cin>>strAmountOfItems;
 
-    if(isIntiger(strAmountOfItems))
+    if(isInteger(strAmountOfItems))
         amountOfItems = stoi(strAmountOfItems);
     else{
         std::cout<<"invalid number\n";
         goto inputAmountItems;
     }
+
+    system("cls");
     createMaps(maps, amountOfMaps);
 
     for(auto & map: maps){
@@ -89,18 +90,21 @@ int main() {
     while(!maps.empty()){
         for(auto & map: maps){
             if(map -> numOfTribes() > 1){
-                map->goToXY(0, 0);
-                map->clearScreen(0,81);
-                map->goToXY(0, 0);
+
+                #ifdef USER_OUTPUT
+                Map::goToXY(0, 0);
+                Map::clearScreen(0,81);
+                Map::goToXY(0, 0);
                 std::cout << "Iteration of map no: " << i % maps.size() << std::endl;
+                #endif
+
                 map->iteration();
-                map->goToXY(0, 20);
                 //system("pause");
             }
             else{
-                map -> goToXY(0,0);
-                map -> clearScreen(40,120);
-                map -> goToXY(0,0);
+                Map::goToXY(0,0);
+                Map::clearScreen(40,120);
+                Map::goToXY(0,0);
                 map->generateSummary();
                 map -> deactivateMap();
                 //system("pause");
@@ -361,9 +365,9 @@ void createMaps(std::vector<Map*> & mapsVector, int numOfMaps) {
     }
 }
 
-bool isIntiger(std::string str) {
-    for (int i = 0; i < str.length(); i++)
-        if (isdigit(str[i]) == false)
+bool isInteger(const std::string & str) {
+    for (char i : str)
+        if (isdigit(i) == false)
             return false;
     return true;
 }

@@ -1,9 +1,9 @@
-//
-// Created by Michał on 10.06.2021.
-//
 
 #ifndef MAIN_CPP_CONFIG_H
+
 #define MAIN_CPP_CONFIG_H
-#define USEROUTPUT
+//#define SCREEN_OUTPUT
+#define EXCEL_OUTPUT
+
 
 #endif //MAIN_CPP_CONFIG_H

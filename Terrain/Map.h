@@ -61,8 +61,8 @@ public:
     void seekForInteraction(int, int, int, int, int *, int *);
     void generateSummary();
 
-    void goToXY(int, int);
-    void clearScreen(int, int);
+    static void goToXY(int, int);
+    static void clearScreen(int, int);
 
     bool isFieldFull(int, int);
     bool isPosEmpty(int, int, int);

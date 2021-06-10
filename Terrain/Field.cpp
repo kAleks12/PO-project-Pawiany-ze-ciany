@@ -52,13 +52,7 @@ void Field::addBeing( Being * hero) {   //adding heroes to fields
 void Field::addItem(int itemId) {   //putting items on field
 
     Item tmp(itemId);
-    try {
-        itemsAtThisField_.push_back(tmp);
-    }
-    catch(std::bad_alloc & badAlloc) {
-        std::cout << "Program crashed in Field::addItem :)";
-        exit(69);
-    }
+    itemsAtThisField_.push_back(tmp);
 
 }
 /*
@@ -100,10 +94,9 @@ Item Field::copyItem() {
     return itemsAtThisField_.back();
 
 }
-
 void Field::showField() {   //printing fields content (heroes)
 
-    if((isPosEmpty(0))&&(isPosEmpty(1)))
+    if ((isPosEmpty(0)) && (isPosEmpty(1)))
         std::cout << "Field is empty" << std::endl;
     else {
         std::cout << "Field's content: \n\n";
@@ -118,6 +111,7 @@ void Field::showField() {   //printing fields content (heroes)
     }
 
 }
+
 void Field::printItems() {  //printing fields content (items)
 
     for(auto & item: itemsAtThisField_){

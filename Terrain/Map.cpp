@@ -1,5 +1,5 @@
 #include "Map.h"
-#include "../Config.h"
+
 
 int Map::numOfMapsCreated = 0;
 
@@ -9,7 +9,9 @@ Map::Map() {
     summary_.open(name_ + "_summary.txt", std::ios::out | std::ios::trunc);
 
     if(summary_.good()) {
+    #ifdef USER_OUTPUT
         summary_ << "Welcome to the simulation summary file!" << std::endl << std::endl << std::endl << "Cemetery(graves of brave heroes will remind us of them forever):" << std::endl << std::endl;
+    #endif
     }
 
     numOfMapsCreated++;
@@ -75,24 +77,41 @@ void Map::changePos(Being* hero, int verChange, int horChange) {    //relocating
         fields_[currY][currX].removeBeing(pos);
 
         //printing movement details
+        #ifdef USER_OUTPUT
+
         std::cout << hero->getHP() << "HP Hero of tribe nr " << hero->getTribe() << " " << hero->getId() << " moved from " << currX
                   << "," << currY << " -> the " << fields_[currX][currY].getTerType() << " to " << newX << "," << newY
         << " -> the "<< fields_[newX][newY].getTerType();
 
-        if(fields_[newX][newY].getTerType() == "desert"){      //depending on terrain, dealing damage
+        #endif
+
+        if(fields_[newX][newY].getTerType() == "desert"){   //depending on terrain, dealing damage
+
+            #ifdef USER_OUTPUT
             std::cout<<"\nHero loses 5 HP because he's on the desert\n";
+            #endif
+
             if(hero->getHP()>5)
             hero->changeHp(-5);
-            else
+            else {
+                #ifdef USER_OUTPUT
                 std::cout<<"\nhero is about to die!\n";
+                #endif
+            }
         }
         if(fields_[newX][newY].getTerType() == "lake"){     //or healing
+
+            #ifdef USER_OUTPUT
             std::cout<<"\nHero gains 5 HP because he's by the lake\n";
+            #endif
+
             hero->changeHp(5);
         }
     }//if hero doesnt move
+    #ifdef USER_OUTPUT
     else std::cout << hero->getHP() << "HP Hero of tribe nr " << hero->getTribe() << " " << hero->getId() << " stayed on "
     << getX(hero) << "," << getY(hero) << " -> the " << fields_[currX][currX].getTerType();
+    #endif
 
 }
 void Map::cleanList() {     //deleting dead heroes from the list
@@ -105,7 +124,15 @@ void Map::cleanList() {     //deleting dead heroes from the list
         if (getX(*it) == -10)
         {
             SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
+
+            #ifdef USER_OUTPUT
             summary_ << "[*] " << (*it)->getTribe() << (*it)->getId() << "\t" << (*it)->getName() << " || kills: " << (*it)->getKills() << std::endl;
+            #endif
+
+            #ifdef EXCEL_OUTPUT
+            summary_ << (*it)->getTribe() << (*it)->getId() << ";" << (*it)->getName() << ";" << (*it)->getKills() << std::endl;
+            #endif
+
             (*it)->destroy();
             it = allHeroes_.erase(it);
         }
@@ -289,24 +316,36 @@ void Map::move(Being* hero, int moveDirection) {    //movement section
         if (startingPos == 0) {
         //mutual dealing damage and printing fight details
             field.getHero(1) -> changeHp(-attackMod * (field.getHero(0)->getTotalAP() - field.getHero(1) -> getDefense()));
+
+            #ifdef SCREEN_OUTPUT
             std::cout << "\tHero -> " << field.getHero(0)->getId() << " attacked " << field.getHero(1)->getId() << " with " << field.getHero(0)->findWeapon() <<
                       " for " << attackMod * (field.getHero(0)->getTotalAP() - field.getHero(1) -> getDefense()) << " hp\n";
+            #endif
 
             if (field.getHero(1)->isAlive()) {
                 field.getHero(0) -> changeHp(-dmgMod * (3 * (field.getHero(1)->getTotalAP() / 4) - field.getHero(0)->getDefense()));
+
+                #ifdef SCREEN_OUTPUT
                 std::cout << "Hero -> " << field.getHero(1)->getId() << " attacked back " << field.getHero(0)->getId() << " with " << field.getHero(1)->findWeapon() <<
                           " for " << dmgMod * (3 * (field.getHero(1)->getTotalAP() / 4) - field.getHero(0)->getDefense()) << " hp\n\n";
+                #endif
             }
 
         } else {    //same thing here
             field.getHero(0)->changeHp(-attackMod * (field.getHero(1)->getTotalAP() - field.getHero(0) -> getDefense()));
+
+            #ifdef SCREEN_OUTPUT
             std::cout << "\tHero -> " << field.getHero(1)->getId() << " attacked " << field.getHero(0)->getId() << " with " << field.getHero(1)->findWeapon() <<
                       " for " << attackMod * (field.getHero(1)->getTotalAP() - field.getHero(0) -> getDefense()) << " hp\n";
+            #endif
 
             if (field.getHero(0)->isAlive()) {
                 field.getHero(1)->changeHp(-dmgMod * (3 * (field.getHero(0)->getTotalAP() / 4) - field.getHero(1)->getDefense()));
+
+                #ifdef SCREEN_OUTPUT
                 std::cout << "Hero -> " << field.getHero(0)->getId() << " attacked back " << field.getHero(1)->getId() << " with " << field.getHero(0)->findWeapon() <<
                           " for " << dmgMod * (3 * (field.getHero(0)->getTotalAP() / 4) - field.getHero(1)->getDefense()) << " hp\n\n";
+                #endif
             }
         }
 
@@ -325,10 +364,17 @@ void Map::move(Being* hero, int moveDirection) {    //movement section
     else{   //interaction with friendly unit
         if (startingPos == 0) {
             field.getHero(0)->changeHp(10);
+
+            #ifdef SCREEN_OUTPUT
             std::cout << "\tHero -> " << field.getHero(0)->getId() << " got healed (10hp)\n\n";
+            #endif
+
         } else {
             field.getHero(1)->changeHp(10);
+
+            #ifdef SCREEN_OUTPUT
             std::cout << "\tHero -> " << field.getHero(1)->getId() << " got healed (10hp)\n\n";
+            #endif
         }
     }
 
@@ -344,7 +390,9 @@ void Map::iteration()   //iteration
         if(getX(hero)!=-10) {
             SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 11);
 
+            #ifdef SCREEN_OUTPUT
             std::cout << "\n\nTurn of: " << hero->getId() << " ! " << hero->getHP() << "\n\n";
+            #endif
             int movement = rand() % 8;
 
             SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
@@ -356,25 +404,30 @@ void Map::iteration()   //iteration
             if(getX(hero)!= -10) {
                 if (isFieldFull(getX(hero), getY(hero))) {
                     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
+
+                    #ifdef SCREEN_OUTPUT
                     std::cout << "\nENCOUNTER!!!!";
+                    #endif
+
                     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
                     encounter(fields_[getY(hero)][getX(hero)], getPos(hero));
                 }
                 if(getX(hero)!= -10) {
                     getItems(fields_[getX(hero)][getY(hero)], hero);
                     hero->useTmpItems();
+
+                    #ifdef SCREEN_OUTPUT
                     hero->printBackpack();
+                    #endif
                 }
             }
 
+            #ifdef SCREEN_OUTPUT
             goToXY(0,1);
-
-            #ifdef USEROUTPUT
             show();
             Sleep(1000);
-            #endif
-
             clearScreen(31,107);
+            #endif
         }
     }
     iterationCount_++;
@@ -453,8 +506,14 @@ void Map::generateSummary() {
 
     summary_ << std::endl;
     for(int i=0; i<4; i++) {
+        #ifdef USER_OUTPUT
         summary_ << "Tribe number " << i << " kills: " << getTribeKills(i) << std::endl;
         std::cout << "Tribe number " << i << " kills: " << getTribeKills(i) << std::endl;
+        #endif
+
+        #ifdef EXCEL_OUTPUT
+        summary_ << i << ";" << getTribeKills(i) << std::endl;
+        #endif
     }
     summary_ << std::endl;
     std::cout << std::endl;
@@ -462,8 +521,10 @@ void Map::generateSummary() {
 
     for(int i=0; i<4; i++){
         if(isTribeAlive(i)){
+            #ifdef USER_OUTPUT
             summary_ << std::endl << "\t\tTribe number " << i << " Has won" << std::endl << std::endl;
             std::cout << std::endl << "\t\tTribe number " << i << " Has won" << std::endl << std::endl;
+            #endif
             victoriousTribe = i;
         }
     }
@@ -479,6 +540,8 @@ void Map::generateKillList(int tribeName) {  //printing entire list of tribe tha
     while(!allHeroes_.empty()){
 
         if(allHeroes_.front()->getTribe() == tribeName){
+
+            #ifdef USER_OUTPUT
             std::cout << "ID: " << allHeroes_.front()->getId();
             std::cout << ", HP: " << allHeroes_.front()->getHP();
             std::cout << ", Name: " << allHeroes_.front()->getName();
@@ -489,6 +552,15 @@ void Map::generateKillList(int tribeName) {  //printing entire list of tribe tha
             summary_ << ", Name: " << allHeroes_.front()->getName();
             summary_ << ", Kill counter: " << allHeroes_.front()->getKills();
             summary_ << std::endl;
+            #endif
+
+            #ifdef EXCEL_OUTPUT
+            summary_ << allHeroes_.front()->getId();
+            summary_ << ";" << allHeroes_.front()->getHP();
+            summary_ << ";" << allHeroes_.front()->getName();
+            summary_ << ";" << allHeroes_.front()->getKills();
+            summary_ << std::endl;
+            #endif
         }
 
         allHeroes_.pop_front();

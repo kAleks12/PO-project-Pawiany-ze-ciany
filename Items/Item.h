@@ -10,6 +10,7 @@
 #include <map>
 #include <windows.h>
 
+#include "../Config.h"
 
 class Item {
     friend class Being;
