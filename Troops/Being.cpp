@@ -34,15 +34,22 @@ void Being::useTmpItems() {//using temporary items (potions)
     int pos = 0;
 
     for(auto & item: backpack_) {
+        //CHECKING WHETHER ITEM IS TMP
         if (item.isTmp_) {
+
+            //CHECKING WHETHER ITEM IS ACTIVE
             if (item.isBeingUsed_) {
+
                 if (item.duration_ > 0)
-                    item.duration_--;//items are being used
+                    item.duration_--;
                 else {
                     backpack_.erase(backpack_.begin() + pos);//items are being deleted
                 }
+
             }
-            if (!item.isBeingUsed_ && potLim == 0) {//drinking new potions
+            //CHECKING WHETHER ITEM CAN BE ACTIVATED
+            if (!item.isBeingUsed_ && potLim == 0) {
+
                 if (item.duration_ > 0) {
                     item.duration_--;
                     item.changeState();
@@ -52,10 +59,11 @@ void Being::useTmpItems() {//using temporary items (potions)
                     backpack_.erase(backpack_.begin() + pos);
                 }
                 potLim++;
+
             }
+
         }
         pos++;
-
 
     }
 
@@ -64,12 +72,19 @@ void Being::updateWeapon() {    //finding and choosing the best weapon in heroes
 
     for(auto & item: backpack_) {
         if(!item.isTmp_){
-            if(item.attackPoints_ > findItem(findWeapon()).attackPoints_ ){
+            if( item.attackPoints_ > findItem(findWeapon()).attackPoints_ ){
                 item.changeState();
+                #ifdef SCREEN_OUTPUT
+                //std::cout << "Hero has changed " << findItem(findWeapon()).name_ << " onto " << item.name_<< std::endl;
+                #endif
+
                 deactivateItem(findWeapon());
             }
             if(item.armorPoints_ > findItem(findArmor()).armorPoints_){
                 item.changeState();
+                #ifdef SCREEN_OUTPUT
+                //std::cout << "Hero has changed " << findItem(findArmor()).name_ << " onto " << item.name_<< std::endl;
+                #endif
                 deactivateItem(findArmor());
             }
         }
@@ -82,6 +97,10 @@ void Being::deactivateItem(const std::string& itemName) {//deactivating items
         if(item.getName() == itemName)
             item.changeState();
 
+}
+
+void Being::setDeathIteration(int iteration){
+    deathIteration_ = iteration;
 }
 
 std::string Being::getId() {
@@ -124,11 +143,14 @@ int Being::getDefense() {//summing every potion and armor
     return boosts/2;
 
 }
-int Being::getTribe() const {
-
-    return tribe_;
-
+int Being::getTribeId() const {
+    return tribeId_;
 }
+
+std::string Being::getTribe() const {
+    return tribe_;
+}
+
 int Being::getSpeed() const {//summing every potion and basic speed
 
     int boosts = 0;
@@ -221,4 +243,8 @@ bool Being::whetherPickUp(const Item & item) {//does hero wants to pick up an it
         }
     }
 
+}
+
+int Being::getDeathIt() {
+    return deathIteration_;
 }

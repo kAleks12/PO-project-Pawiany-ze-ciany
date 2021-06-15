@@ -11,27 +11,32 @@ Field::Field() {    //creating field
 
     //Sleep(1000);
 
-    int terrainNumber = randomNumber(fieldEngine, 0, 4);
+    int terrainNumber = randomNumber(0, 4);
 
     switch (terrainNumber) {    //randomly choosing terrain type
         case 0:
             terrainType_ = "forest";
+            //std::cout << "forest" << std::endl;
             break;
 
         case 1:
             terrainType_ = "mountains";
+            //std::cout << "mountains" << std::endl;
             break;
 
         case 2:
             terrainType_ = "desert";
+            //std::cout << "desert" << std::endl;
             break;
 
         case 3:
             terrainType_ = "lake";
+            //std::cout << "lake" << std::endl;
             break;
 
         case 4:
             terrainType_ = "plain";
+            //std::cout << "plain" << std::endl;
             break;
 
     }
@@ -47,6 +52,7 @@ void Field::addBeing( Being * hero) {   //adding heroes to fields
             heroesAtThisField_[1] = hero;
         }
     }
+    else std::cout << "Field is full or hero corrupted";
 
 }
 void Field::addItem(int itemId) {   //putting items on field
@@ -135,12 +141,12 @@ std::string Field::getTerType() {
     return terrainType_;
 }
 
-int Field::randomNumber(std::mt19937 & engine, int min, int max) {  //PO final grades generator
+int Field::randomNumber(int min, int max) {  //PO final grades generator
 
     std::uniform_int_distribution<int> numRange(min, max);
     int randomNum;
 
-    randomNum = numRange(engine);
+    randomNum = numRange(fieldEngine);
 
     return randomNum;
 

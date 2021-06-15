@@ -6,30 +6,37 @@
 
 class Field {
 private:
+    //PRIVATE ATTRIBUTES
+
     Being * heroesAtThisField_[2];
     std::vector <Item> itemsAtThisField_;
     std::string terrainType_;
+
 public:
+    //PUBLIC ATTRIBUTE
     static std::mt19937 fieldEngine;
+
+    //CONSTRUCTOR
     Field();
 
+    //SETTERS
     void addBeing(Being *);
-    void addItem(int);
-    //void addItem(Item);
-    void deleteItem();
     void removeBeing(int);
+    void addItem(int);
+    void deleteItem();
 
+    //GETTERS
     std::string getTerType();
     Being * getHero(int);
     int getItemsNum();
-    int randomNumber(std::mt19937 &, int, int);
+    int randomNumber(int, int);
     Item copyItem();
-
-    void showField();
-    void printItems();
-
     bool isPosEmpty(int);
     bool isSpace();
+
+    //PRINTERS
+    void showField();
+    void printItems();
 };
 
 

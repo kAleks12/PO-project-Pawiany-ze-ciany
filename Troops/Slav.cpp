@@ -23,7 +23,7 @@ Slav::Slav() {
 Slav::Slav(std::string name, int tribe, std::mt19937 & engine){
 
 
-    tribe_ = tribe;
+    tribeId_ = tribe;
     name_ = std::move(name);
     speed_ = 3;
 
@@ -46,24 +46,46 @@ Slav::Slav(std::string name, int tribe, std::mt19937 & engine){
     for(;tmp > 0;numOfDigits++){
         tmp /= 10;
     }
-    if(numOfDigits == 0 || numOfDigits == 1){
-        id_[0] = 'S';
-        id_[1] = '0';
-        id_[2] = numOfSlavsCreated_ + '0';
-        id_[3] = name_[0];
+
+    char tempTribeLetter;
+
+    switch (tribeId_){
+
+        case 0:
+            strcpy(tribe_,"NORTH");
+            break;
+
+        case 1:
+            strcpy(tribe_,"WEST");
+            break;
+
+        case 2:
+            strcpy(tribe_,"EAST");
+            break;
+
+        case 3:
+            strcpy(tribe_,"SOUTH");
+            break;
+    }
+
+    if(numOfDigits == 0 || numOfDigits == 1){//creating ID
+        id_[0] = tribe_[0];
+        id_[1] = 'S';
+        id_[2] = '0';
+        id_[3] = numOfSlavsCreated_ + '0';
         id_[4] = '\0';
     }
-    else{
+    else{       //even for larger numbers of knights
         tmp = numOfSlavsCreated_;
         numOfDigits+=2;
 
         id_[numOfDigits] = '\0';
-        id_[--numOfDigits] = name_[0];
-        while(numOfDigits>=1) {
+        while(numOfDigits > 1) {
             id_[--numOfDigits] = tmp % 10 + '0';
             tmp /= 10;
         }
-        id_[0]= 'S';
+        id_[1] = 'S';
+        id_[0] = tribe_[0];
     }
 
     numOfSlavsCreated_++;

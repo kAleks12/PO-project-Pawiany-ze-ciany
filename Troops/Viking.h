@@ -9,15 +9,16 @@
 
 class Viking: public Being {
 private:
+    //ATTRIBUTES
     static int numOfVikingsCreated_;
-    std::string objArmor_;
-    std::string objWeapon_;
 
 public:
+    //CONSTRUCTORS AND DESTRUCTOR
     Viking();
     explicit Viking(std::string, int, std::mt19937&);
     virtual ~Viking();
 
+    //PRINTERS
     void show() override;
     void destroy() override;
 };

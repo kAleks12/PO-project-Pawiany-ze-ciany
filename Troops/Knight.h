@@ -4,15 +4,16 @@
 #include "Being.h"
 
 class Knight: public Being{
+    //ATTRIBUTES
     static int numOfKnightsCreated_;
-    bool isOnHorse;
+
 public:
+    //CONSTRUCTORS AND DESTRUCTOR
     Knight();
     explicit Knight(std::string, int, std::mt19937&);
     virtual ~Knight();
 
-    void changeStatus();
-
+    //PRINTERS
     void show() override;
     void destroy() override;
 };

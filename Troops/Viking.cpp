@@ -20,7 +20,7 @@ Viking::Viking() {
 }
 Viking::Viking(std::string name, int tribe, std::mt19937 & engine) {
 
-    tribe_ = tribe;
+    tribeId_ = tribe;
     name_ = std::move(name);
     speed_ = 2;
 
@@ -41,24 +41,45 @@ Viking::Viking(std::string name, int tribe, std::mt19937 & engine) {
     for(;tmp > 0;numOfDigits++){
         tmp /= 10;
     }
-    if(numOfDigits == 0 || numOfDigits == 1){
-        id_[0] = 'V';
-        id_[1] = '0';
-        id_[2] = numOfVikingsCreated_ + '0';
-        id_[3] = name_[0];
+    char tempTribeLetter;
+
+    switch (tribeId_){
+
+        case 0:
+            strcpy(tribe_,"NORTH");
+            break;
+
+        case 1:
+            strcpy(tribe_,"WEST");
+            break;
+
+        case 2:
+            strcpy(tribe_,"EAST");
+            break;
+
+        case 3:
+            strcpy(tribe_,"SOUTH");
+            break;
+    }
+
+    if(numOfDigits == 0 || numOfDigits == 1){//creating ID
+        id_[0] = tribe_[0];
+        id_[1] = 'V';
+        id_[2] = '0';
+        id_[3] = numOfVikingsCreated_ + '0';
         id_[4] = '\0';
     }
-    else{
+    else{       //even for larger numbers of knights
         tmp = numOfVikingsCreated_;
         numOfDigits+=2;
 
         id_[numOfDigits] = '\0';
-        id_[--numOfDigits] = name_[0];
-        while(numOfDigits>=1) {
+        while(numOfDigits > 1) {
             id_[--numOfDigits] = tmp % 10 + '0';
             tmp /= 10;
         }
-        id_[0]= 'V';
+        id_[1] = 'V';
+        id_[0] = tribe_[0];
     }
 
     numOfVikingsCreated_++;

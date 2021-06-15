@@ -202,22 +202,28 @@ std::string Item::getName() {
 
 void Item::show() {//printing item details
 
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
-    std::cout << "\nItem \"";
-    std::cout << name_ << "\" :\n";
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 6);
-    if(healthBoost_ != 0) std::cout << "[*] health + " << healthBoost_ << ";\n";
-    if(speedBoost_ != 0) std::cout << "[*] speed + " << speedBoost_ << ";\n";
-    if(attackPoints_ != 0) std::cout << "[*] attack + " << attackPoints_ << ";\n";
-    if(armorPoints_ != 0) std::cout << "[*] armor + " << armorPoints_ << ";\n";
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
-    if(isBeingUsed_) {
-        std::cout << "Is in use;\n";
-        if(isTmp_) std::cout << "will be active for -> " << duration_ << ";\n";
-    } else std::cout << "Is not in use;\n";
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 9);
+    changeColor(Colors::blue);
+    std::cout << "\n[*] ";
+    if(isBeingUsed_ && !isTmp_) {
+        std::cout << name_ << " (in use): ";
+    }
+    else{
+        if(!isBeingUsed_)
+            std::cout << name_ << " (unused): ";
+        else
+            std::cout << name_ << " (in use " << duration_ << "iterations left): ";
+    }
+    std::cout << std::endl;
 
-}
-void Item::destroy() {
-    delete this;
+
+    changeColor(Colors::yellow);
+    if(healthBoost_ != 0) std::cout << "- health + " << healthBoost_ << ";\n";
+    if(speedBoost_ != 0) std::cout << "- speed + " << speedBoost_ << ";\n";
+    if(attackPoints_ != 0) std::cout << "- attack + " << attackPoints_ << ";\n";
+    if(armorPoints_ != 0) std::cout << "- armor + " << armorPoints_ << ";\n";
+
+
+    changeColor(Colors::blue);
+
+
 }

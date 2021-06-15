@@ -19,7 +19,7 @@ Knight::Knight() {//default constructor
 Knight::Knight(std::string name, int tribe, std::mt19937 & engine){
 
     name_ = std::move(name);
-    tribe_ = tribe;
+    tribeId_ = tribe;
     speed_ = 1;
 
     std::uniform_int_distribution <int> strengthRange (15,18);
@@ -40,24 +40,45 @@ Knight::Knight(std::string name, int tribe, std::mt19937 & engine){
     for(;tmp > 0;numOfDigits++){
         tmp /= 10;
     }
+
+
+    switch (tribeId_){
+
+        case 0:
+            strcpy(tribe_,"NORTH");
+            break;
+
+        case 1:
+            strcpy(tribe_,"WEST");
+            break;
+
+        case 2:
+            strcpy(tribe_,"EAST");
+            break;
+
+        case 3:
+            strcpy(tribe_,"SOUTH");
+            break;
+    }
+
     if(numOfDigits == 0 || numOfDigits == 1){//creating ID
-        id_[0] = 'K';
-        id_[1] = '0';
-        id_[2] = numOfKnightsCreated_ + '0';
-        id_[3] = name_[0];
+        id_[0] = tribe_[0];
+        id_[1] = 'K';
+        id_[2] = '0';
+        id_[3] = numOfKnightsCreated_ + '0';
         id_[4] = '\0';
     }
-    else{//even for larger numbers of knights
+    else{       //even for larger numbers of knights
         tmp = numOfKnightsCreated_;
         numOfDigits+=2;
 
         id_[numOfDigits] = '\0';
-        id_[--numOfDigits] = name_[0];
-        while(numOfDigits>=1) {
+        while(numOfDigits > 1) {
             id_[--numOfDigits] = tmp % 10 + '0';
             tmp /= 10;
         }
-        id_[0]= 'K';
+        id_[1] = 'K';
+        id_[0] = tribe_[0];
     }
 
     numOfKnightsCreated_++;
