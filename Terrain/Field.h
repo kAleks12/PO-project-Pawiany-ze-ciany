@@ -17,13 +17,13 @@ public:
     static std::mt19937 fieldEngine;
 
     //CONSTRUCTOR
-    Field();
+    Field(); //creating field
 
     //SETTERS
-    void addBeing(Being *);
-    void removeBeing(int);
-    void addItem(int);
-    void deleteItem();
+    void addBeing(Being *); //adding heroes to fields
+    void removeBeing(int); //removing being from certain position on field
+    void addItem(int); //putting items on field
+    void deleteItem(); //removing item from field
 
     //GETTERS
     std::string getTerType();
@@ -31,12 +31,12 @@ public:
     int getItemsNum();
     int randomNumber(int, int);
     Item copyItem();
-    bool isPosEmpty(int);
-    bool isSpace();
+    bool isPosEmpty(int); //checking whether specific one of two positions on field is empty
+    bool isSpace(); //checking whether at least one of two positions on field is empty
 
     //PRINTERS
-    void showField();
-    void printItems();
+    void showField(); //printing fields content (heroes)
+    void printItems(); //printing fields content (items)
 };
 
 

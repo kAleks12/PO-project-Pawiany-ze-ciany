@@ -49,46 +49,46 @@ public:
     Map();
 
     //SETTERS
-    void spawn(Being *, int, int);
-    void addToList(Being*);
-    void cleanList();
-    void addItem(int, int, int);
+    void spawn(Being *, int, int); //adding heroes to the specific field on the map
+    void addToList(Being*); //adding heroes to the heroes list
+    void cleanList(); //deleting dead heroes from the list
+    void addItem(int, int, int); //adding item to the specific field on the map
     void deactivate();
 
     //HEROES SETTERS
     void addTribeKill(int);
-    static void getItems(Field, Being*);
+    static void pickItems(Field, Being*); //picking up objects from the certain field by hero
 
     //MAP GETTERS
     int getTribeKills(int);
     static int getMapSize();
-    bool getStatus();
-    int heroesOnMap();
-    int numOfTribes();
+    bool getStatus(); //has certain simulation already finished
+    int heroesOnMap(); //how many alive heroes are there on  he map
+    int numOfTribes(); //how many tribes there are
     bool isFieldFull(int, int);
     bool isPosEmpty(int, int, int);
     bool isTribeAlive(int);
 
     //HEROES GETTERS
-    int getX(Being *hero);
-    int getY(Being *hero);
-    int getPos(Being *hero);
+    int getX(Being *hero); //seeking trough an entire map to find certain hero, and return its coords
+    int getY(Being *hero); //seeking trough an entire map to find certain hero, and return its coords
+    int getPos(Being *hero); //seeking trough an entire map to find certain hero, and return its position on the field
 
     //PRINTERS
-    static void goToXY(int, int);
-    static void clearScreen(int, int);
-    void printList();
-    void show();
-    void generateSummary(int, float);
-    void generateKillList(int);
+    static void goToXY(int, int); //sets cursor at certain position, used for clearing screen
+    static void clearScreen(int, int); //clear screen
+    void printList(); //used for debugging
+    void show(); //printing map
+    void generateSummary(int, float); //simulations summary
+    void generateKillList(int); //printing entire list of tribe that has won (only alive heroes)
 
     //RUNNING SIMULATION
-    void move(Being *hero, int moveDirection);
-    void planMove(int, int, int, int, int *, int *);
-    static int bCheck(int);
-    void changePos(Being*, int, int);
-    void encounter(Field &, int);
-    void iteration();
+    void move(Being *hero, int moveDirection); //movement section
+    void planMove(int, int, int, int, int *, int *); //tiny movement mainEngine
+    static int bCheck(int); //checking whether action isn't trying to reach outside map
+    void changePos(Being*, int, int); //relocating heroes from field to another field
+    void encounter(Field &, int); //interaction with other heroes
+    void iteration(); //iteration engine
 };
 
 #endif //PO_MAP_H

@@ -6,6 +6,7 @@ int Map::numOfMapsCreated = 0;
 
 Map::Map() {
 #ifdef EXCEL_OUTPUT
+    //in excel output we are creating maps summary
     name_ = "Map_" + std::to_string(numOfMapsCreated) + "_";
     summary_.open(name_ + "_summary.txt", std::ios::out | std::ios::trunc);
 
@@ -21,7 +22,6 @@ Map::Map() {
 
 void Map::spawn(Being * hero, int xPos, int yPos) {     //adding heroes to the specific field on the map
 
-    //if(fields_[xPos][yPos].isSpace())
         fields_[yPos][xPos].addBeing(hero);
 
 }
@@ -35,7 +35,7 @@ void Map::addItem(int xPos, int yPos, int itemId) {     //adding item to the spe
     fields_[yPos][xPos].addItem(itemId);
 
 }
-void Map::getItems(Field field, Being * hero) {     //picking up objects from the certain field by hero
+void Map::pickItems(Field field, Being * hero) {     //picking up objects from the certain field by hero
 
     //getting number of items on this field
     int iterations = field.getItemsNum();
@@ -72,9 +72,7 @@ void Map::changePos(Being* hero, int verChange, int horChange) {    //relocating
 
         //printing movement details
         #ifdef SCREEN_OUTPUT
-
         std::cout << "Hero moved from (" << currX << "," << currY << ") |" << fields_[currY][currX].getTerType() << "| to (" << newX << "," << newY << ") |"<< fields_[newY][newX].getTerType() << "|\n";
-
         #endif
 
         if(fields_[newY][newX].getTerType() == "desert"){   //depending on terrain, dealing damage
@@ -85,11 +83,9 @@ void Map::changePos(Being* hero, int verChange, int horChange) {    //relocating
 
             if(hero->getHP()>5)
             hero->changeHp(-5);
-            else {
-                #ifdef SCREEN_OUTPUT
-                std::cout<<"Hero was about to die!\n";
-                #endif
-            }
+            #ifdef SCREEN_OUTPUT
+            else std::cout<<"Hero was about to die!\n";
+            #endif
         }
         if(fields_[newY][newX].getTerType() == "lake"){     //or healing
 
@@ -188,7 +184,7 @@ int Map::getPos(Being* hero) {      //seeking trough an entire map to find certa
     return -10;
 
 }
-int Map::heroesOnMap() {
+int Map::heroesOnMap() { //how many alive heroes are there on  he map
     int number = 0;
     for(auto hero: allHeroes_){
         if(getX(hero) != -10)
@@ -196,7 +192,8 @@ int Map::heroesOnMap() {
     }
     return number;
 }
-bool Map::getStatus(){
+
+bool Map::getStatus(){      //has certain simulation already finished
     return isFinished_;
 }
 
@@ -357,7 +354,7 @@ void Map::move(Being* hero, int moveDirection) {    //movement section
     }
 
 }
-void Map::iteration()   //iteration
+void Map::iteration()   //iteration engine
 {
     srand(time(nullptr));
 
@@ -365,7 +362,7 @@ void Map::iteration()   //iteration
 
         goToXY(0,21);
 
-        if(getX(hero)!=-10){
+        if(getX(hero)!=-10){    //heroes turn starts if he is alive
             changeColor(Colors::cyan);
 
             #ifdef SCREEN_OUTPUT
@@ -377,7 +374,7 @@ void Map::iteration()   //iteration
             #endif
 
             int movement = rand() % 8;
-            move(hero, movement);
+            move(hero, movement);   //first he moves
 
             
             if(getX(hero)!= -10) {
@@ -389,16 +386,16 @@ void Map::iteration()   //iteration
                     #endif
 
                     changeColor(Colors::orange);
-                    encounter(fields_[getY(hero)][getX(hero)], getPos(hero));
+                    encounter(fields_[getY(hero)][getX(hero)], getPos(hero));   //then he fights
                 }
-                if(getX(hero)!= -10) {
+                if(getX(hero)!= -10) {  //then if he is still alive he picks up items on his field
                     #ifdef SCREEN_OUTPUT
                     changeColor(Colors::green);
                     std::cout << "\n\n\t\t\t\tITEM PHASE\n\n";
                     changeColor(Colors::orange);
                     #endif
 
-                    getItems(fields_[getX(hero)][getY(hero)], hero);
+                    pickItems(fields_[getX(hero)][getY(hero)], hero);
                     hero->useTmpItems();
 
                     #ifdef SCREEN_OUTPUT
@@ -420,8 +417,7 @@ void Map::iteration()   //iteration
     cleanList();
 
 }
-void Map::planMove(int yPos, int xPos, int pos, int howFarIllGo, int * xWhereToGo, int * yWhereToGo) {
-//tiny movement mainEngine
+void Map::planMove(int yPos, int xPos, int pos, int howFarIllGo, int * xWhereToGo, int * yWhereToGo) { //tiny movement mainEngine
     int xFriendly = -1;
     int yFriendly = -1;
 
@@ -486,7 +482,7 @@ void Map::planMove(int yPos, int xPos, int pos, int howFarIllGo, int * xWhereToG
     }
 
 }
-void Map::generateSummary(int numOfHeroes, float multiplier) {
+void Map::generateSummary(int numOfHeroes, float multiplier) {      //simulations summary
     int victoriousTribe;
     summary_.open(name_ + "_summary.txt", std::ios::out | std::ios::app );
 
@@ -637,14 +633,14 @@ void Map::show() {  //printing map
     std::cout << "===========================================================================================================\n";
 
 }
-void Map::goToXY(int x, int y){
+void Map::goToXY(int x, int y){     //sets cursor at certain position, used for clearing screen
     COORD pos;
     pos.X = x;
     pos.Y = y;
 
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
 }
-void Map::clearScreen(int lines, int characters){
+void Map::clearScreen(int lines, int characters){   //clear screen
 
     for(int it = 0; it < lines; it++){
         for(int it2 = 0; it2 < characters; it2++){
@@ -654,7 +650,7 @@ void Map::clearScreen(int lines, int characters){
     }
 }
 
-void Map::printList() {
+void Map::printList() {     //used for debugging
     for(auto & hero: allHeroes_){
         std::cout << hero->getId() << " ++ " << getX(hero) << "," << getY(hero)<< std::endl;
     }

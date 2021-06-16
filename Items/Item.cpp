@@ -6,7 +6,7 @@
 
 Item::Item(int itemId)
 {
-    switch(itemId){//generating item type
+    switch(itemId){     //generating item type
         case 0:
             this -> isTmp_ = true;
             duration_ = -1;
@@ -94,7 +94,7 @@ Item::Item(int itemId)
     }
 
 }
-Item::Item(const std::string & itemName){//generating item details
+Item::Item(const std::string & itemName){      //generating item details
 
     const std::map <std::string, int> namesId {
         {"hpotion",0} , {"stpotion", 1} , {"spotion", 2}, {"larmor",3}, {"harmor",4}, {"excalibur",5} , {"spear",6}, {"double axes",7}, {"bulat",8}, {"sword",9}
@@ -200,7 +200,7 @@ std::string Item::getName() {
     return name_;
 }
 
-void Item::show() {//printing item details
+void Item::show() {     //printing item details
 
     changeColor(Colors::blue);
     std::cout << "\n[*] ";

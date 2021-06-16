@@ -30,17 +30,17 @@ private:
 
 public:
     //CONSTRUCTORS
-    explicit Item(int);
-    explicit Item(const std::string &);
+    explicit Item(int); //generating item type
+    explicit Item(const std::string &); //generating item details
 
     //SETTERS
-    void changeState();
+    void changeState(); //changing item state (used/unused)
 
     //GETTERS
     std::string getName();
 
     //PRINTERS
-    void show();
+    void show(); //printing item details
 };
 
 
