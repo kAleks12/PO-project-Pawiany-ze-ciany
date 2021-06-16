@@ -28,6 +28,10 @@ private:
 #endif
 
 #ifdef EXCEL_OUTPUT
+    //static const int mapSize_ = 50;
+#endif
+
+#ifdef SECOND_EXCEL_OUTPUT
     static const int mapSize_ = 50;
 #endif
 

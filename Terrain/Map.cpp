@@ -5,7 +5,7 @@ int Map::numOfMapsCreated = 0;
 
 
 Map::Map() {
-
+#ifdef EXCEL_OUTPUT
     name_ = "Map_" + std::to_string(numOfMapsCreated) + "_";
     summary_.open(name_ + "_summary.txt", std::ios::out | std::ios::trunc);
 
@@ -14,9 +14,9 @@ Map::Map() {
         summary_ << "Welcome to the simulation summary file!" << std::endl << std::endl << std::endl << "Cemetery(graves of brave heroes will remind us of them forever):" << std::endl << std::endl;
         #endif
     }
-
-    numOfMapsCreated++;
     summary_.close();
+#endif
+    numOfMapsCreated++;
 }
 
 void Map::spawn(Being * hero, int xPos, int yPos) {     //adding heroes to the specific field on the map
@@ -107,8 +107,9 @@ void Map::changePos(Being* hero, int verChange, int horChange) {    //relocating
 void Map::cleanList() {     //deleting dead heroes from the list
 
     std::list<Being*>::iterator it = allHeroes_.begin();
+#ifdef EXCEL_OUTPUT
     summary_.open(name_ + "_summary.txt", std::ios::out | std::ios::app );
-
+#endif
     while (it != allHeroes_.end())
     {
         if (getX(*it) == -10)
@@ -128,9 +129,9 @@ void Map::cleanList() {     //deleting dead heroes from the list
         }
         else it++;
     }
-
+#ifdef EXCEL_OUTPUT
     summary_.close();
-
+#endif
 }
 int Map::bCheck(int where) {    //checking whether action isn't trying to reach outside map
 

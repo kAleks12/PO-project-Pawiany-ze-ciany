@@ -39,115 +39,146 @@ std::mt19937 mainEngine{std::random_device{}()};
 
 
 int main() {
+#ifdef SECOND_EXCEL_OUTPUT
+    for (float iteratorFFS = 0.24; iteratorFFS < 1; iteratorFFS = iteratorFFS + 0.02) {
+#endif
+        float whoHasWon[4] = {0, 0, 0, 0};
 
-    //VARIABLES
-    std::vector <Map*> maps;
+        //VARIABLES
+        std::vector<Map *> maps;
 
-    std::string strAmountOfTroops = "1";
-    std::string strTroopsMultiplier = "1";
-    std::string strAmountOfMaps = "1";
+        std::string strAmountOfTroops = "1";
+        std::string strTroopsMultiplier = "1";
+        std::string strAmountOfMaps = "1";
 
-    int amountOfTroops = 1;
-    float troopsMultiplier = 1;
-    int amountOfMaps = 1;
+        int amountOfTroops = 1;
+        float troopsMultiplier = 1;
+        int amountOfMaps = 1;
 
 
-    //GETTING USER INPUT
-    inputAmountMaps:
+        //GETTING USER INPUT
+        inputAmountMaps:
 
-    std::cout<<"How many maps should there be?\n";
-    std::cin>>strAmountOfMaps;
+        std::cout << "How many maps should there be?\n";
+        //std::cin>>strAmountOfMaps;
+        strAmountOfMaps = "100";
 
-    if(isInteger(strAmountOfMaps) && (amountOfMaps > 0))
-        amountOfMaps = stoi(strAmountOfMaps);
-    else{
-        std::cout<<"invalid number\n";
-        goto inputAmountMaps;
-    }
+        if (isInteger(strAmountOfMaps) && (amountOfMaps > 0))
+            amountOfMaps = stoi(strAmountOfMaps);
+        else {
+            std::cout << "invalid number\n";
+            goto inputAmountMaps;
+        }
 
-    inputAmountTroops:
+        inputAmountTroops:
 
-    std::cout<<"How many troops in each tribe should there be?\n";
-    std::cin>>strAmountOfTroops;
+        std::cout << "How many troops in each tribe should there be?\n";
+        //std::cin>>strAmountOfTroops;
+        strAmountOfTroops = "200";
 
-    if(isInteger(strAmountOfTroops)) {
-        amountOfTroops = stoi(strAmountOfTroops);
-        if ((amountOfTroops > Map::getMapSize() / 2) || (amountOfTroops <= 0)){
-            std::cout<<"number is to high or low\n";
+        if (isInteger(strAmountOfTroops)) {
+            amountOfTroops = stoi(strAmountOfTroops);
+            if ((amountOfTroops > Map::getMapSize() / 2) || (amountOfTroops <= 0)) {
+                std::cout << "number is to high or low\n";
+                goto inputAmountTroops;
+            }
+        } else {
+            std::cout << "invalid number\n";
             goto inputAmountTroops;
         }
-    }
-    else{
-        std::cout<<"invalid number\n";
-        goto inputAmountTroops;
-    }
 
-    inputTroopsMultiplier:
+        inputTroopsMultiplier:
 
-    std::cout<<"What percentage of whole tribe should the troops' main type be?\n";
-    std::cin>>strTroopsMultiplier;
+        std::cout << "What part of whole tribe should the troops' main type be? (float number)\n";
+        //std::cin >> strTroopsMultiplier;
+        troopsMultiplier = iteratorFFS;
 
-    if(isFloat(strTroopsMultiplier)) {
-        troopsMultiplier = stof(strTroopsMultiplier);
-        if ((troopsMultiplier > 0.97) || (troopsMultiplier < 0.5) ){
-            std::cout<<"number is to high or low\n";
+        /*
+            if (isFloat(strTroopsMultiplier)) {
+            troopsMultiplier = stof(strTroopsMultiplier);
+            if ((troopsMultiplier > 0.97) || (troopsMultiplier < 0.5)) {
+                std::cout << "number is to high or low\n";
+                goto inputTroopsMultiplier;
+            }
+        } else {
+            std::cout << "invalid number\n";
             goto inputTroopsMultiplier;
         }
-    }
-    else{
-        std::cout<<"invalid number\n";
-        goto inputTroopsMultiplier;
-    }
+         */
 
-    system("cls");
+        system("cls");
 
 
 
-    //CREATING MAPS AND FILLING THEM
+        //CREATING MAPS AND FILLING THEM
 
-    createMaps(maps, amountOfMaps);
+        createMaps(maps, amountOfMaps);
 
-    for(auto & map: maps){
-        fillMap(*map, amountOfTroops, troopsMultiplier);
-    }
+        for (auto &map: maps) {
+            fillMap(*map, amountOfTroops, troopsMultiplier);
+        }
 
 
-    //RUNNING SIMULATION
-    int i = 0;
-    while(!maps.empty()){
-        for(auto & map: maps){
-            if(map -> numOfTribes() > 1){
+        //RUNNING SIMULATION
+        int i = 0;
+        while (!maps.empty()) {
+            for (auto &map: maps) {
+                if (map->numOfTribes() > 1) {
 
 #ifdef USER_OUTPUT
-                Map::goToXY(0, 0);
-                Map::clearScreen(0,81);
-                Map::goToXY(0, 0);
-                std::cout << "Iteration of map no: " << i % maps.size() << std::endl;
+                    Map::goToXY(0, 0);
+                    Map::clearScreen(0,81);
+                    Map::goToXY(0, 0);
+                    std::cout << "Iteration of map no: " << i % maps.size() << std::endl;
 #endif
 
-                map->iteration();
-                //system("pause");
-            }
-            else{
-#ifdef USER_OUTPUT
-                Map::goToXY(0, 0);
-                Map::clearScreen(0,81);
-                Map::goToXY(0, 0);
+                    map->iteration();
+                    //system("pause");
+                } else {
+#ifdef SECOND_EXCEL_OUTPUT
+                    for (int i = 0; i < 4; i++) {
+                        if (map->isTribeAlive(i))
+                            whoHasWon[i]++;
+                    }
 #endif
-                map->generateSummary(amountOfTroops, troopsMultiplier);
-                map->deactivate();
-                //system("pause");
-                for (auto it = maps.begin(); it != maps.end(); ) {
-                    if ((*it)->getStatus()) {
-                        it = maps.erase(it);
-                    } else {
-                        ++it;
+
+#ifdef USER_OUTPUT
+                    Map::goToXY(0, 0);
+                    Map::clearScreen(0,81);
+                    Map::goToXY(0, 0);
+#endif
+                    map->generateSummary(amountOfTroops, troopsMultiplier);
+                    map->deactivate();
+                    //system("pause");
+                    for (auto it = maps.begin(); it != maps.end();) {
+                        if ((*it)->getStatus()) {
+                            it = maps.erase(it);
+                        } else {
+                            ++it;
+                        }
                     }
                 }
+                i++;
             }
-            i++;
         }
+
+#ifdef SECOND_EXCEL_OUTPUT
+        std::ofstream plik("ExcelOutput.txt", std::ios::out | std::ios::app);
+        plik << "\n" << troopsMultiplier;
+        for (int i = 0; i < 4; i++) {
+            plik << " ; " << whoHasWon[i] / (float) amountOfMaps;
+        }
+#endif
+
+#ifdef EXCEL_OUTPUT
+        std::cout << "Simulation is over\n";
+#endif
+#ifdef SECOND_EXCEL_OUTPUT
+        std::cout << "\nSimulation with " << iteratorFFS*100 << "% of main units is over" << std::endl;
+
     }
+#endif
+    std::cout << "END OF THE SIMULATION"<<std::endl;
 }
 
 
@@ -293,7 +324,8 @@ void fillMap(Map & adventureMap, int amountOfTroops, float multiplier){   //fill
     // Creating and spawning Items
 
     std::uniform_int_distribution <int> itemsRange(1, 9);
-    int amountOfItems = drawPos(0, 100);
+    //int amountOfItems = drawPos(0, 100);
+    int amountOfItems = 40;
 
     for (int i = 0; i < amountOfItems ;i++) {
         generateItem(adventureMap, itemsRange(mainEngine));
