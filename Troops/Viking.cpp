@@ -8,9 +8,11 @@ int Viking::numOfVikingsCreated_ = 0;//THE SAME DETAILS AS IN KNIGHT.CPP
 
 Viking::Viking() {
 
-    Item axes("double axes"), lightArmor("larmor");
-
+    //CREATING STARTING ITEMS
+    Item axes("double axes");
     axes.changeState();
+
+    Item lightArmor("larmor");
     lightArmor.changeState();
 
     backpack_.push_back(lightArmor);
@@ -28,16 +30,20 @@ Viking::Viking(std::string name, int tribe, std::mt19937 & engine) {
     strength_=strengthRange(engine);
 
 
-    Item axes("double axes"), lightArmor("larmor");
+    //CREATING STARTING ITEMS
+    Item axes("double axes");
     axes.changeState();
+
+    Item lightArmor("larmor");
     lightArmor.changeState();
 
     backpack_.push_back(lightArmor);
     backpack_.push_back(axes);
 
-
+    //CREATING ID
     int numOfDigits = 0;
     int tmp = numOfVikingsCreated_;
+
     for(;tmp > 0;numOfDigits++){
         tmp /= 10;
     }

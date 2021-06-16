@@ -6,6 +6,7 @@ int Nomad::numOfNomadsCreated_ = 0;//THE SAME DETAILS AS IN KNIGHT.CPP
 
 Nomad::Nomad()
 {
+    //CREATING STARTING ITEMS
     Item bulat("bulat");
     bulat.changeState();
 
@@ -21,6 +22,7 @@ Nomad::Nomad()
 Nomad::Nomad(std::string name, int tribe, std::mt19937 & engine)
 {
 
+    //INITIALIZING ATTRIBUTES
     tribeId_ = tribe;
     name_ = std::move(name);
     speed_ = 2;
@@ -28,6 +30,7 @@ Nomad::Nomad(std::string name, int tribe, std::mt19937 & engine)
     std::uniform_int_distribution <int> strengthRange (12,15);
     strength_=strengthRange(engine);
 
+    //CREATING STARTING ITEMS
     Item bulat("bulat");
     bulat.changeState();
 
@@ -37,7 +40,7 @@ Nomad::Nomad(std::string name, int tribe, std::mt19937 & engine)
     backpack_.push_back(lightArmor);
     backpack_.push_back(bulat);
 
-
+    //CREATING ID
     int numOfDigits = 0;
     int tmp = numOfNomadsCreated_;
 

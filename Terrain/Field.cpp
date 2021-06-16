@@ -52,25 +52,26 @@ void Field::addBeing( Being * hero) {   //adding heroes to fields
     else std::cout << "Field is full or hero corrupted";
 
 }
+void Field::removeBeing(int position) {     //removing being from certain position on field
 
+    heroesAtThisField_[position] = nullptr;
+
+}
 void Field::addItem(int itemId) {   //putting items on field
 
     Item tmp(itemId);
     itemsAtThisField_.push_back(tmp);
 
 }
-
 void Field::deleteItem() {      //removing item from field
 
     itemsAtThisField_.pop_back();
 
 }
-void Field::removeBeing(int position) {     //removing being from certain position on field
 
-    heroesAtThisField_[position] = nullptr;
-
+std::string Field::getTerType() {
+    return terrainType_;
 }
-
 Being * Field::getHero(int pos) {   //WHO ARE YOU AND WHAT ARE YOU DOING ON MY SWAMP
 
     return heroesAtThisField_[pos];     //*all star starts playing*
@@ -81,11 +82,31 @@ int Field::getItemsNum() {
     return itemsAtThisField_.size();
 
 }
+int Field::randomNumber(int min, int max) {  //PO final grades generator
+
+    std::uniform_int_distribution<int> numRange(min, max);
+    int randomNum;
+
+    randomNum = numRange(fieldEngine);
+
+    return randomNum;
+
+}
 Item Field::copyItem() {
 
     return itemsAtThisField_.back();
 
 }
+bool Field::isPosEmpty(int pos) {   //checking whether specific one of two positions on field is empty
+
+    return (heroesAtThisField_[pos] == nullptr);
+
+}
+bool Field::isSpace() {     //checking whether at least one of two positions on field is empty
+
+    return !((heroesAtThisField_[0] != nullptr) && (heroesAtThisField_[1] != nullptr));
+}
+
 void Field::showField() {   //printing fields content (heroes)
 
     if ((isPosEmpty(0)) && (isPosEmpty(1)))
@@ -103,7 +124,6 @@ void Field::showField() {   //printing fields content (heroes)
     }
 
 }
-
 void Field::printItems() {  //printing fields content (items)
 
     for(auto & item: itemsAtThisField_){
@@ -112,29 +132,3 @@ void Field::printItems() {  //printing fields content (items)
     std::cout << std::endl;
 
 }
-
-bool Field::isPosEmpty(int pos) {   //checking whether specific one of two positions on field is empty
-
-    return (heroesAtThisField_[pos] == nullptr);
-
-}
-bool Field::isSpace() {     //checking whether at least one of two positions on field is empty
-
-    return !((heroesAtThisField_[0] != nullptr) && (heroesAtThisField_[1] != nullptr));
-}
-
-std::string Field::getTerType() {
-    return terrainType_;
-}
-
-int Field::randomNumber(int min, int max) {  //PO final grades generator
-
-    std::uniform_int_distribution<int> numRange(min, max);
-    int randomNum;
-
-    randomNum = numRange(fieldEngine);
-
-    return randomNum;
-
-}
-

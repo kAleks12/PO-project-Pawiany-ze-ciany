@@ -27,11 +27,7 @@ private:
     static const int mapSize_ = 10;
 #endif
 
-#ifdef EXCEL_OUTPUT
-    //static const int mapSize_ = 50;
-#endif
-
-#ifdef SECOND_EXCEL_OUTPUT
+#ifndef SCREEN_OUTPUT
     static const int mapSize_ = 50;
 #endif
 
@@ -63,7 +59,7 @@ public:
     int getTribeKills(int);
     static int getMapSize();
     bool getStatus(); //has certain simulation already finished
-    int heroesOnMap(); //how many alive heroes are there on  he map
+    int heroesOnMap(); //how many alive heroes are there on the map
     int numOfTribes(); //how many tribes there are
     bool isFieldFull(int, int);
     bool isPosEmpty(int, int, int);

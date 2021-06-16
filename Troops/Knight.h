@@ -11,6 +11,7 @@ public:
     //CONSTRUCTORS AND DESTRUCTOR
     Knight();
     explicit Knight(std::string, int, std::mt19937&);
+
     virtual ~Knight();
 
     //PRINTERS

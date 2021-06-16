@@ -7,10 +7,11 @@ int Slav::numOfSlavsCreated_ = 0;//THE SAME DETAILS AS IN KNIGHT.CPP
 
 Slav::Slav() {
 
+    //CREATING STARTING ITEMS
     Item spear("spear");
-    Item lightArmor("larmor");
-
     spear.changeState();
+
+    Item lightArmor("larmor");
     lightArmor.changeState();
 
     backpack_.push_back(lightArmor);
@@ -18,11 +19,10 @@ Slav::Slav() {
 
 
     numOfSlavsCreated_++;
-
 }
 Slav::Slav(std::string name, int tribe, std::mt19937 & engine){
 
-
+    //INITIALIZING ATTRIBUTES
     tribeId_ = tribe;
     name_ = std::move(name);
     speed_ = 3;
@@ -30,24 +30,23 @@ Slav::Slav(std::string name, int tribe, std::mt19937 & engine){
     std::uniform_int_distribution <int> strengthRange (10,12);
     strength_=strengthRange(engine);
 
-
+    //CREATING STARTING ITEMS
     Item spear("spear");
-    Item lightArmor("larmor");
-
     spear.changeState();
+
+    Item lightArmor("larmor");
     lightArmor.changeState();
 
     backpack_.push_back(lightArmor);
     backpack_.push_back(spear);
 
-
+    //CREATING ID
     int numOfDigits = 0;
     int tmp = numOfSlavsCreated_;
     for(;tmp > 0;numOfDigits++){
         tmp /= 10;
     }
 
-    char tempTribeLetter;
 
     switch (tribeId_){
 

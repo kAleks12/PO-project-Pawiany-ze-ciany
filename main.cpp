@@ -12,10 +12,16 @@
 
 #include "Terrain/Map.h"
 
+std::mt19937 mainEngine{std::random_device{}()};
+
 
 //DRAWING FUNCTIONS
 std::string drawName();
-int drawPos(int, int);
+int drawInt(int, int);
+
+//FUNCTIONS CATCHING ERRORS CONNECTED WITH INPUT PARAMETERS
+bool isInteger(const std::string &);
+bool isFloat(const std::string &);
 
 //GENERATING HEROES AND ITEMS
 template <typename ClassName> ClassName* generateHeroes(std::string , Map & , int );
@@ -25,13 +31,6 @@ void generateItem(Map & , int );
 void createMaps(std::vector <Map*> &, int);
 void fillMap(Map & , int, float);
 
-//FUNCTIONS CATCHING ERRORS CONNECTED WITH INPUT PARAMETERS
-bool isInteger(const std::string &);
-bool isFloat(const std::string &);
-
-std::mt19937 mainEngine{std::random_device{}()};
-
-
 
 
 
@@ -39,10 +38,13 @@ std::mt19937 mainEngine{std::random_device{}()};
 
 
 int main() {
-#ifdef SECOND_EXCEL_OUTPUT
-    for (float iteratorFFS = 0.24; iteratorFFS < 1; iteratorFFS = iteratorFFS + 0.02) {
-#endif
-        float whoHasWon[4] = {0, 0, 0, 0};
+
+    #ifdef SECOND_EXCEL_OUTPUT
+    //LOOP FOR GETTING DATA FROM A NUMBER OF SIMULATIONS STARTED WITH DIFFERENT TROOPS RATIO
+    for (float multiplier = 0.24; multiplier < 1; multiplier += 0.02) {
+    #endif
+
+        float tribesWins[4] = {0, 0, 0, 0};
 
         //VARIABLES
         std::vector<Map *> maps;
@@ -59,9 +61,15 @@ int main() {
         //GETTING USER INPUT
         inputAmountMaps:
 
+        #ifdef SECOND_EXCEL_OUTPUT
+        amountOfMaps = 100;
+        amountOfTroops = 200;
+        troopsMultiplier = multiplier;
+        #endif
+
+        #ifdef SCREEN_OUTPUT
         std::cout << "How many maps should there be?\n";
-        //std::cin>>strAmountOfMaps;
-        strAmountOfMaps = "100";
+        std::cin>>strAmountOfMaps;
 
         if (isInteger(strAmountOfMaps) && (amountOfMaps > 0))
             amountOfMaps = stoi(strAmountOfMaps);
@@ -73,8 +81,7 @@ int main() {
         inputAmountTroops:
 
         std::cout << "How many troops in each tribe should there be?\n";
-        //std::cin>>strAmountOfTroops;
-        strAmountOfTroops = "200";
+        std::cin>>strAmountOfTroops;
 
         if (isInteger(strAmountOfTroops)) {
             amountOfTroops = stoi(strAmountOfTroops);
@@ -90,10 +97,8 @@ int main() {
         inputTroopsMultiplier:
 
         std::cout << "What part of whole tribe should the troops' main type be? (float number)\n";
-        //std::cin >> strTroopsMultiplier;
-        troopsMultiplier = iteratorFFS;
+        std::cin >> strTroopsMultiplier;
 
-        /*
             if (isFloat(strTroopsMultiplier)) {
             troopsMultiplier = stof(strTroopsMultiplier);
             if ((troopsMultiplier > 0.97) || (troopsMultiplier < 0.5)) {
@@ -104,7 +109,7 @@ int main() {
             std::cout << "invalid number\n";
             goto inputTroopsMultiplier;
         }
-         */
+        #endif
 
         system("cls");
 
@@ -114,42 +119,43 @@ int main() {
 
         createMaps(maps, amountOfMaps);
 
-        for (auto &map: maps) {
+        for (auto & map: maps) {
             fillMap(*map, amountOfTroops, troopsMultiplier);
         }
 
-
         //RUNNING SIMULATION
-        int i = 0;
+        int mapNumber = 0;
         while (!maps.empty()) {
-            for (auto &map: maps) {
+            for (auto & map: maps) {
                 if (map->numOfTribes() > 1) {
 
-#ifdef USER_OUTPUT
+                    #ifdef SCREEN_OUTPUT
                     Map::goToXY(0, 0);
                     Map::clearScreen(0,81);
                     Map::goToXY(0, 0);
-                    std::cout << "Iteration of map no: " << i % maps.size() << std::endl;
-#endif
+                    std::cout << "Iteration of map no: " << mapNumber % maps.size() << std::endl;
+                    #endif
 
                     map->iteration();
                     //system("pause");
-                } else {
-#ifdef SECOND_EXCEL_OUTPUT
-                    for (int i = 0; i < 4; i++) {
-                        if (map->isTribeAlive(i))
-                            whoHasWon[i]++;
-                    }
-#endif
 
-#ifdef USER_OUTPUT
-                    Map::goToXY(0, 0);
-                    Map::clearScreen(0,81);
-                    Map::goToXY(0, 0);
-#endif
+                } else {
+
+                    #ifdef SECOND_EXCEL_OUTPUT
+                    for (int tribe : tribesWins) {
+                        if (map->isTribeAlive(tribe))
+                            tribesWins[tribe]++;
+                    }
+                    #endif
+
+                    #ifdef SCREEN_OUTPUT
+                    system("cls");
+                    #endif
+
                     map->generateSummary(amountOfTroops, troopsMultiplier);
                     map->deactivate();
-                    //system("pause");
+
+                    //DELETING FINISHED MAPS FROM THE VECTOR
                     for (auto it = maps.begin(); it != maps.end();) {
                         if ((*it)->getStatus()) {
                             it = maps.erase(it);
@@ -158,27 +164,25 @@ int main() {
                         }
                     }
                 }
-                i++;
+                mapNumber++;
+
             }
         }
 
-#ifdef SECOND_EXCEL_OUTPUT
-        std::ofstream plik("ExcelOutput.txt", std::ios::out | std::ios::app);
-        plik << "\n" << troopsMultiplier;
-        for (int i = 0; i < 4; i++) {
-            plik << " ; " << whoHasWon[i] / (float) amountOfMaps;
+        #ifdef SECOND_EXCEL_OUTPUT
+        std::ofstream researchFile("ExcelOutput.txt", std::ios::out | std::ios::app);
+        researchFile << "\n" << troopsMultiplier;
+        for (float tribe : tribesWins) {
+            researchFile << " ; " << tribe / (float)amountOfMaps;
         }
-#endif
-
-#ifdef EXCEL_OUTPUT
-        std::cout << "Simulation is over\n";
-#endif
-#ifdef SECOND_EXCEL_OUTPUT
-        std::cout << "\nSimulation with " << iteratorFFS*100 << "% of main units is over" << std::endl;
-
+        std::cout << "\nSimulation with " << multiplier * 100 << "% of main units is over" << std::endl;
     }
-#endif
+        #endif
+
+    #ifndef SECOND_EXCEL_OUTPUT
     std::cout << "END OF THE SIMULATION"<<std::endl;
+    #endif
+
 }
 
 
@@ -190,7 +194,7 @@ int main() {
 
 
 
-int drawPos(int min, int max) {  //generating random position on the map
+int drawInt(int min, int max) {  //generating random position on the map
     std::uniform_int_distribution<int> posRange(min, max);
     int randomNum;
 
@@ -218,13 +222,34 @@ std::string drawName(){  //generating names
     else return "File not found!";
 }
 
+bool isInteger(const std::string & str) {
+    for(char i : str)
+        if (isdigit(i) == false)
+            return false;
+    return true;
+}
+
+bool isFloat(const std::string & str){
+    for (char i : str)
+        if (isdigit(i) == false && i != '.')
+            return false;
+    return true;
+}
+
+void createMaps(std::vector<Map*> & mapsVector, int numOfMaps) {
+
+    for(int it = 0; it < numOfMaps; it++){
+        mapsVector.push_back( (Map*) new Map);
+    }
+}
+
 template <typename ClassName> ClassName* generateHeroes(std::string name, Map & map, int tribe){   //spawning new heroes
     int tmpXPos, tmpYPos;
 
     auto tmp = new ClassName(name, tribe, mainEngine);
     do {
-        tmpXPos = drawPos(0, (sqrt(Map::getMapSize())-1));
-        tmpYPos = drawPos(0, (sqrt(Map::getMapSize())-1));
+        tmpXPos = drawInt(0, (sqrt(Map::getMapSize()) - 1));
+        tmpYPos = drawInt(0, (sqrt(Map::getMapSize()) - 1));
     } while (map.isFieldFull(tmpXPos, tmpYPos));
 
     map.spawn(tmp, tmpXPos, tmpYPos);
@@ -236,13 +261,12 @@ void generateItem(Map & map, int itemId)    //spawning items on the map
 {
     int tmpX, tmpY;
     do {
-        tmpX = drawPos(0, (sqrt(Map::getMapSize())-1));
-        tmpY = drawPos(0, (sqrt(Map::getMapSize())-1));
+        tmpX = drawInt(0, (sqrt(Map::getMapSize()) - 1));
+        tmpY = drawInt(0, (sqrt(Map::getMapSize()) - 1));
     } while(map.isFieldFull(tmpX, tmpY));
 
     map.addItem(tmpX, tmpY, itemId);
 }
-
 
 void fillMap(Map & adventureMap, int amountOfTroops, float multiplier){   //filling map
 
@@ -251,35 +275,37 @@ void fillMap(Map & adventureMap, int amountOfTroops, float multiplier){   //fill
     int numOfKnights = 0;
     int numOfVikings = 0;
 
-    for(int j=0;j<4;j++) {  //each tribe
+    for(int tribeId =0; tribeId < 4; tribeId++) {  //each tribe
 
-        if( j == 0){
+        if( tribeId == 0){
             numOfVikings = multiplier * amountOfTroops;
             numOfNomads = ((1-multiplier)/3) * amountOfTroops;
-            numOfKnights = numOfNomads;
-            numOfSlavs = numOfNomads;
+            numOfKnights = ((1-multiplier)/3) * amountOfTroops;
+            numOfSlavs = ((1-multiplier)/3) * amountOfTroops;
         }
-        if( j == 1){
+        if( tribeId == 1){
             numOfKnights = multiplier * amountOfTroops;
             numOfNomads = ((1-multiplier)/3) * amountOfTroops;
-            numOfSlavs = numOfNomads;
-            numOfVikings = numOfNomads;
+            numOfSlavs = ((1-multiplier)/3) * amountOfTroops;
+            numOfVikings = ((1-multiplier)/3) * amountOfTroops;
         }
-        if( j == 2){
+        if( tribeId == 2){
             numOfSlavs = multiplier * amountOfTroops;
             numOfNomads = ((1-multiplier)/3) * amountOfTroops;
-            numOfKnights = numOfNomads;
-            numOfVikings = numOfNomads;
+            numOfKnights = ((1-multiplier)/3) * amountOfTroops;
+            numOfVikings = ((1-multiplier)/3) * amountOfTroops;
         }
-        if( j == 3){
+        if( tribeId == 3){
             numOfNomads = multiplier * amountOfTroops;
             numOfSlavs = ((1-multiplier)/3) * amountOfTroops;
-            numOfKnights = numOfSlavs;
-            numOfVikings = numOfSlavs;
+            numOfKnights = ((1-multiplier)/3) * amountOfTroops;
+            numOfVikings = ((1-multiplier)/3) * amountOfTroops;
         }
 
+        //ADJUSTING NUMBER OF TROOPS WITHIN TRIBE IF UNDER THE LIMIT
+
         while(numOfNomads + numOfSlavs + numOfKnights + numOfVikings < amountOfTroops){
-            switch(j){
+            switch(tribeId){
                 case 0:
                     numOfSlavs++;
                     break;
@@ -294,61 +320,63 @@ void fillMap(Map & adventureMap, int amountOfTroops, float multiplier){   //fill
                     break;
             }
         }
+        //ADJUSTING NUMBER OF TROOPS WITHIN TRIBE IF ABOVE THE LIMIT
+
+        while(numOfNomads + numOfSlavs + numOfKnights + numOfVikings > amountOfTroops){
+            switch(tribeId){
+                case 0:
+                    numOfSlavs--;
+                    break;
+                case 1:
+                    numOfNomads--;
+                    break;
+                case 2:
+                    numOfKnights--;
+                    break;
+                case 3:
+                    numOfVikings--;
+                    break;
+            }
+        }
 
 
         //Creating and spawning Slav objects
 
         for (int i = 0; i < numOfSlavs; i++) {
-            adventureMap.addToList(generateHeroes<Slav>(drawName(), adventureMap, j));
+            adventureMap.addToList(generateHeroes<Slav>(drawName(), adventureMap, tribeId));
         }
 
         // Creating and spawning Nomad objects
 
         for (int i = 0; i < numOfNomads; i++) {
-            adventureMap.addToList(generateHeroes<Nomad>(drawName(), adventureMap, j));
+            adventureMap.addToList(generateHeroes<Nomad>(drawName(), adventureMap, tribeId));
         }
 
         // Creating and spawning Viking objects
 
         for (int i = 0; i < numOfVikings; i++) {
-            adventureMap.addToList(generateHeroes<Viking>(drawName(), adventureMap, j));
+            adventureMap.addToList(generateHeroes<Viking>(drawName(), adventureMap, tribeId));
         }
 
         // Creating and spawning Knight objects
 
         for (int i = 0; i < numOfKnights; i++) {
-            adventureMap.addToList(generateHeroes<Knight>(drawName(), adventureMap, j));
+            adventureMap.addToList(generateHeroes<Knight>(drawName(), adventureMap, tribeId));
         }
     }
 
     // Creating and spawning Items
-
     std::uniform_int_distribution <int> itemsRange(1, 9);
-    //int amountOfItems = drawPos(0, 100);
+
+#ifndef SECOND_EXCEL_OUTPUT
+    int amountOfItems = drawInt(0, 100);
+#endif
+
+#ifdef SECOND_EXCEL_OUTPUT
     int amountOfItems = 40;
+#endif
 
     for (int i = 0; i < amountOfItems ;i++) {
         generateItem(adventureMap, itemsRange(mainEngine));
     }
-}
-
-void createMaps(std::vector<Map*> & mapsVector, int numOfMaps) {
-
-    for(int it = 0; it < numOfMaps; it++){
-        mapsVector.push_back( (Map*) new Map);
-
-    }
-}
-
-bool isInteger(const std::string & str) {
-    for (char i : str)
-        if (isdigit(i) == false)
-            return false;
-    return true;
-}
-bool isFloat(const std::string & str){
-    for (char i : str)
-        if (isdigit(i) == false && i != '.')
-            return false;
-    return true;
 }

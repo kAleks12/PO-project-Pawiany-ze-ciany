@@ -30,12 +30,12 @@ public:
     ~Being();
 
     //SETTERS
-    void changeHp(int);
+    void setHP(int hpMod); //CHANGING HP BY hpMod
     void addKill();
     void addItem(const Item&);
-    void useTmpItems();
-    void updateWeapon();
-    void deactivateItem(const std::string&);
+    void useTmpItems(); //USING ONE OF TEMPORARY ITEMS IF POSSIBLE
+    void updateWeapon(); //UPDATING WEAPON AFTER PICKING UP A BETTER ONE
+    void deactivateItem(const std::string&); //CHANGING ITEM'S STATE TO 'UNUSED';
     void setDeathIteration(int);
 
     //GETTERS
@@ -44,24 +44,23 @@ public:
     int getHP();
     int getSpeed() const;
     int getTribeId() const;
-    std::string getTribe() const;
+    std::string getTribe() const; //GET TRIBE'S NAME
     int getKills();
     int getDeathIt();
 
-    int getTotalAP();
-    int getDefense();
+    int getTotalAP(); //GETTING TOTAL ATTACK POWER (WEAPON, ACTIVE POTIONS)
+    int getDefense(); //GETTING TOTAL DEFENSE POWER (ARMOR, ACTIVE POTIONS)
 
-    Item findItem(const std::string&);
-    std::string findArmor();
-    std::string findWeapon();
-    std::string findPotion(std::string);
-
+    Item findItem(const std::string& name); //FINDING ITEM WITH A SPECIFIED NAME IN HERO'S BACKPACK
+    std::string findArmor(); //FINDING ACTIVELY USED ARMOR IN HERO'S BACKPACK
+    std::string findWeapon(); //FINDING ACTIVELY USED WEAPON IN HERO'S BACKPACK
+    std::string findPotion(std::string); //FINDING POTION WITH A SPECIFIED NAME IN HERO'S BACKPACK
     bool isAlive();
-    bool whetherPickUp(const Item &);
+    bool whetherPickUp(const Item &); //CHECKING WHETHER HERO SHOULD TAKE ITEM
 
 
     //PRINTERS
-    void printBackpack();
+    void printBackpack(); //PRINTING ALL ITEMS
     virtual void show() = 0;
     virtual void destroy() = 0;
 

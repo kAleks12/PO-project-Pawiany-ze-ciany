@@ -4,7 +4,9 @@
 
 int Knight::numOfKnightsCreated_ = 0;
 
-Knight::Knight() {//default constructor
+Knight::Knight() {  //default constructor
+
+    //CREATING STARTING ITEMS
     Item sword("sword");
     sword.changeState();
 
@@ -16,8 +18,9 @@ Knight::Knight() {//default constructor
 
     numOfKnightsCreated_++;
 }
-Knight::Knight(std::string name, int tribe, std::mt19937 & engine){
+Knight::Knight(std::string name, int tribe, std::mt19937 & engine){     //CONSTRUCTOR WITH SPECIFIED NAME, TRIBEid AND WITH PROVIDED RANDOM ENGINE USED TO DRAW HERO STRENGTH
 
+    //INITIALIZING ATTRIBUTES
     name_ = std::move(name);
     tribeId_ = tribe;
     speed_ = 1;
@@ -25,6 +28,8 @@ Knight::Knight(std::string name, int tribe, std::mt19937 & engine){
     std::uniform_int_distribution <int> strengthRange (15,18);
     strength_=strengthRange(engine);
 
+
+    //CREATING STARTING ITEMS
     Item sword("sword");
     sword.changeState();
 
@@ -34,6 +39,7 @@ Knight::Knight(std::string name, int tribe, std::mt19937 & engine){
     backpack_.push_back(sword);
     backpack_.push_back(heavyArmor);
 
+    //CREATING ID
     int numOfDigits = 0;
     int tmp = numOfKnightsCreated_;
 
@@ -85,16 +91,9 @@ Knight::Knight(std::string name, int tribe, std::mt19937 & engine){
 
 }
 Knight::~Knight() {
-
-    //std::cout << "Knight " << id_ << " has been slayed!" << std::endl;
+    //std::cout << "Knight " << id_ << " is officially dead  !" << std::endl;
 }
-/*
-void Knight::changeStatus() {//unused i guess
 
-    isOnHorse = !(isOnHorse);
-
-}
-*/
 void Knight::show() {//printing hero details
 
     std::cout << "\n\nObject's weapons -> ";
@@ -105,7 +104,5 @@ void Knight::show() {//printing hero details
 
 }
 void Knight::destroy() {//MUERTA MUAHAHAHA
-
     delete this;
-
 }
